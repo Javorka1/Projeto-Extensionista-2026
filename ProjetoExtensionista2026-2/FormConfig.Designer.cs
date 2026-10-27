@@ -210,7 +210,7 @@ namespace ProjetoExtensionista2026_2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 520);
+            this.ClientSize = new System.Drawing.Size(920, 568);
             this.Controls.Add(this.lblTituloPrincipal);
             this.Controls.Add(this.grpAparencia);
             this.Controls.Add(this.grpBanco);
