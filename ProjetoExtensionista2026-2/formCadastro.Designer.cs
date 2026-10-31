@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btn_cadastrarCategoria = new System.Windows.Forms.Button();
             this.btn_cadastrarCliente = new System.Windows.Forms.Button();
             this.btn_cadastarProduto = new System.Windows.Forms.Button();
             this.panelConteudo = new System.Windows.Forms.Panel();
@@ -39,28 +38,13 @@
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.panel1.Controls.Add(this.btn_cadastrarCategoria);
             this.panel1.Controls.Add(this.btn_cadastrarCliente);
             this.panel1.Controls.Add(this.btn_cadastarProduto);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(904, 39);
+            this.panel1.Size = new System.Drawing.Size(834, 40);
             this.panel1.TabIndex = 0;
-            // 
-            // btn_cadastrarCategoria
-            // 
-            this.btn_cadastrarCategoria.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.btn_cadastrarCategoria.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.btn_cadastrarCategoria.FlatAppearance.BorderSize = 0;
-            this.btn_cadastrarCategoria.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btn_cadastrarCategoria.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn_cadastrarCategoria.Location = new System.Drawing.Point(184, -3);
-            this.btn_cadastrarCategoria.Name = "btn_cadastrarCategoria";
-            this.btn_cadastrarCategoria.Size = new System.Drawing.Size(96, 42);
-            this.btn_cadastrarCategoria.TabIndex = 1;
-            this.btn_cadastrarCategoria.Text = "Categoria";
-            this.btn_cadastrarCategoria.UseVisualStyleBackColor = false;
-            this.btn_cadastrarCategoria.Click += new System.EventHandler(this.btn_cadastrarCategoria_Click);
             // 
             // btn_cadastrarCliente
             // 
@@ -95,10 +79,10 @@
             // panelConteudo
             // 
             this.panelConteudo.BackColor = System.Drawing.SystemColors.Control;
-            this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelConteudo.Location = new System.Drawing.Point(0, 0);
+            this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelConteudo.Location = new System.Drawing.Point(0, 38);
             this.panelConteudo.Name = "panelConteudo";
-            this.panelConteudo.Size = new System.Drawing.Size(905, 539);
+            this.panelConteudo.Size = new System.Drawing.Size(834, 443);
             this.panelConteudo.TabIndex = 1;
             // 
             // formCadastro
@@ -106,7 +90,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlDark;
-            this.ClientSize = new System.Drawing.Size(905, 539);
+            this.ClientSize = new System.Drawing.Size(834, 481);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panelConteudo);
             this.Name = "formCadastro";
@@ -121,7 +105,6 @@
 
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button btn_cadastarProduto;
-        private System.Windows.Forms.Button btn_cadastrarCategoria;
         private System.Windows.Forms.Button btn_cadastrarCliente;
         private System.Windows.Forms.Panel panelConteudo;
     }

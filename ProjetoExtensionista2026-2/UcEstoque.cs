@@ -1,48 +1,109 @@
 ﻿using Npgsql;
+using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProjetoExtensionista2026_2
 {
     public partial class UcEstoque : UserControl
     {
-        // Evento atualizado para 5 parâmetros: ID, Nome, Preço, Quantidade e Foto
         public event Action<int, string, decimal, int, string, int> AoAdicionarAoCarrinho;
 
         private bool _podeVerOcultos = true;
         private string _filtroAtual = "";
+        private CancellationTokenSource _ctsBusca;
 
         public UcEstoque()
         {
             InitializeComponent();
             ConfigurarPainelFlutuante();
+            ConfigurarEventosBusca();
         }
 
-        private void UcEstoque_Load(object sender, EventArgs e)
+        private async void UcEstoque_Load(object sender, EventArgs e)
         {
-            BuscarProdutosNoSupabase("");
+            await BuscarProdutosNoSupabaseAsync("");
         }
 
-        /// <summary>
-        /// Define as permissões de acesso com base no perfil.
-        /// Se for vendedor/caixa, oculta os preços de custo, o painel de ferramentas e desativa a edição.
-        /// </summary>
+        public void FocarCampoBusca()
+        {
+            if (searchTxtBox != null)
+            {
+                searchTxtBox.Focus();
+                searchTxtBox.SelectAll();
+            }
+        }
+
+        private void ConfigurarEventosBusca()
+        {
+            if (searchTxtBox != null)
+            {
+                searchTxtBox.TextChanged += searchTxtBox_TextChanged;
+                searchTxtBox.KeyDown += searchTxtBox_KeyDown;
+            }
+
+            if (searchBtn != null)
+            {
+                searchBtn.Click += (s, e) =>
+                {
+                    _ctsBusca?.Cancel();
+                    _ = BuscarProdutosNoSupabaseAsync(searchTxtBox?.Text ?? "");
+                };
+            }
+        }
+
+        private async void searchTxtBox_TextChanged(object sender, EventArgs e)
+        {
+            _ctsBusca?.Cancel();
+            _ctsBusca?.Dispose();
+            _ctsBusca = new CancellationTokenSource();
+            var token = _ctsBusca.Token;
+
+            string termo = searchTxtBox.Text.Trim();
+
+            try
+            {
+                await Task.Delay(250, token);
+
+                if (!token.IsCancellationRequested)
+                {
+                    await BuscarProdutosNoSupabaseAsync(termo, token);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // Cancelamento esperado enquanto o operador digita
+            }
+        }
+
+        private async void searchTxtBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+
+                _ctsBusca?.Cancel();
+                await BuscarProdutosNoSupabaseAsync(searchTxtBox.Text.Trim());
+            }
+        }
+
         public void ConfigurarPerfilVendedor(bool ehVendedor)
         {
             _podeVerOcultos = !ehVendedor;
 
             if (panel2 != null)
-            {
                 panel2.Visible = !ehVendedor;
-            }
 
             if (this.Controls.ContainsKey("btnOculto"))
-            {
                 this.Controls["btnOculto"].Visible = _podeVerOcultos;
-            }
 
             foreach (Control controle in flowLayoutPanelProdutos.Controls)
             {
@@ -53,51 +114,11 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        /// <summary>
-        /// Aplica as travas de custo e cursor de edição a cada card individualmente.
-        /// </summary>
         private void AplicarPermissoesAoCard(UcCardProduto card)
         {
             card.ConfigurarPermissoes(podeVerCusto: _podeVerOcultos, podeEditar: _podeVerOcultos);
         }
 
-        /// <summary>
-        /// Ação de pesquisa acionada pelo clique do botão
-        /// </summary>
-        private void searchBtn_Click(object sender, EventArgs e)
-        {
-            ExecutarPesquisa();
-        }
-
-        /// <summary>
-        /// Ação de pesquisa acionada ao pressionar Enter na caixa de texto
-        /// </summary>
-        private void searchTxtBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                ExecutarPesquisa();
-            }
-        }
-
-        private void ExecutarPesquisa()
-        {
-            string termo = searchTxtBox != null ? searchTxtBox.Text : "";
-            BuscarProdutosNoSupabase(termo);
-        }
-
-        /// <summary>
-        /// Ação do botão cadastrar produto
-        /// </summary>
-        private void btnCadastrar_Click(object sender, EventArgs e)
-        {
-            AbrirModalProduto();
-        }
-
-        /// <summary>
-        /// Ativa o DoubleBuffered via reflexão para eliminar cintilações visuais no redimensionamento.
-        /// </summary>
         private void ConfigurarPainelFlutuante()
         {
             if (flowLayoutPanelProdutos != null)
@@ -112,104 +133,109 @@ namespace ProjetoExtensionista2026_2
         }
 
         /// <summary>
-        /// Consulta a base de dados PostgreSQL/Supabase e preenche o FlowLayoutPanel com os cards.
+        /// Sobrecarga síncrona mantida para compatibilidade com chamadas externas (ex: formVenda).
         /// </summary>
         public void BuscarProdutosNoSupabase(string filtroTexto)
         {
-            _filtroAtual = filtroTexto?.Trim() ?? "";
-            flowLayoutPanelProdutos.Controls.Clear();
+            _ctsBusca?.Cancel();
+            _ = BuscarProdutosNoSupabaseAsync(filtroTexto);
+        }
 
-            string query = @"
-                SELECT 
-                    p.id_product,
-                    p.name AS name_product,
-                    p.description AS description_product,
-                    p.purchase_price AS price_buy,
-                    p.sale_price AS price_sell,
-                    p.location AS location_product,
-                    p.stock_quantity,
-                    p.min_stock AS min_stock_quantity,
-                    p.unit AS unit_measure,
-                    c.name_category AS category_product,
-                    s.name AS supplier_product,
-                    p.is_active AS active,
-                    p.image_url AS picture_url
-                FROM public.product p
-                LEFT JOIN public.category c ON c.id_category = p.id_category
-                LEFT JOIN public.supplier s ON s.id_supplier = p.id_supplier
-                WHERE p.is_active = TRUE
-                  AND (
-                      @filtro = '' 
-                      OR p.name ILIKE @filtro_like 
-                      OR p.description ILIKE @filtro_like
-                  )
-                ORDER BY p.id_product ASC
-                LIMIT 40;";
+        /// <summary>
+        /// Busca assíncrona otimizada para alto volume de dados, com ordenação por relevância e limite estrito.
+        /// </summary>
+        public async Task BuscarProdutosNoSupabaseAsync(string filtroTexto, CancellationToken token = default)
+        {
+            _filtroAtual = filtroTexto?.Trim() ?? "";
 
             try
             {
-                using (var db = new Connection())
+                var listaProdutos = await Task.Run(async () =>
                 {
-                    db.IniciarConexao();
+                    var produtos = new List<ProdutoDTO>();
 
-                    using (var cmd = new NpgsqlCommand(query, db.Conexao))
+                    using (var db = new Connection())
                     {
-                        cmd.Parameters.AddWithValue("@filtro", _filtroAtual);
-                        cmd.Parameters.AddWithValue("@filtro_like", $"%{_filtroAtual}%");
+                        db.IniciarConexao();
 
-                        using (var reader = cmd.ExecuteReader())
+                        const string sql = @"
+                            SELECT 
+                                p.id_product,
+                                p.name AS name_product,
+                                p.description AS description_product,
+                                p.purchase_price AS price_buy,
+                                p.sale_price AS price_sell,
+                                p.location AS location_product,
+                                p.stock_quantity,
+                                p.min_stock AS min_stock_quantity,
+                                p.unit AS unit_measure,
+                                c.name_category AS category_product,
+                                s.name AS supplier_product,
+                                p.is_active AS active,
+                                p.image_url AS picture_url
+                            FROM public.product p
+                            LEFT JOIN public.category c ON c.id_category = p.id_category
+                            LEFT JOIN public.supplier s ON s.id_supplier = p.id_supplier
+                            WHERE p.is_active = TRUE
+                              AND (
+                                  @filtro = '' 
+                                  OR p.id_product::TEXT = @filtro
+                                  OR p.name ILIKE @filtro_like 
+                                  OR p.description ILIKE @filtro_like
+                                  OR p.location ILIKE @filtro_like
+                                  OR c.name_category ILIKE @filtro_like
+                              )
+                            ORDER BY 
+                                CASE 
+                                    WHEN p.id_product::TEXT = @filtro THEN 1
+                                    WHEN p.name ILIKE @filtro_prefix THEN 2
+                                    WHEN c.name_category ILIKE @filtro_prefix THEN 3
+                                    ELSE 4
+                                END,
+                                p.name ASC
+                            LIMIT 40;";
+
+                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         {
-                            flowLayoutPanelProdutos.SuspendLayout();
+                            cmd.Parameters.AddWithValue("@filtro", _filtroAtual);
+                            cmd.Parameters.AddWithValue("@filtro_prefix", _filtroAtual + "%");
+                            cmd.Parameters.AddWithValue("@filtro_like", "%" + _filtroAtual + "%");
 
-                            while (reader.Read())
+                            using (var reader = await cmd.ExecuteReaderAsync(token))
                             {
-                                var prod = new ProdutoDTO
+                                while (await reader.ReadAsync(token))
                                 {
-                                    Id = Convert.ToInt32(reader["id_product"]),
-                                    Nome = reader.IsDBNull(reader.GetOrdinal("name_product")) ? "" : reader.GetString(reader.GetOrdinal("name_product")),
-                                    Descricao = reader.IsDBNull(reader.GetOrdinal("description_product")) ? "" : reader.GetString(reader.GetOrdinal("description_product")),
-                                    PrecoCompra = reader.IsDBNull(reader.GetOrdinal("price_buy")) ? 0m : reader.GetDecimal(reader.GetOrdinal("price_buy")),
-                                    PrecoVenda = reader.IsDBNull(reader.GetOrdinal("price_sell")) ? 0m : reader.GetDecimal(reader.GetOrdinal("price_sell")),
-                                    Localizacao = reader.IsDBNull(reader.GetOrdinal("location_product")) ? "" : reader.GetString(reader.GetOrdinal("location_product")),
-                                    Estoque = reader.IsDBNull(reader.GetOrdinal("stock_quantity")) ? 0 : Convert.ToInt32(reader.GetDecimal(reader.GetOrdinal("stock_quantity"))),
-                                    EstoqueMinimo = reader.IsDBNull(reader.GetOrdinal("min_stock_quantity")) ? 0 : reader.GetInt32(reader.GetOrdinal("min_stock_quantity")),
-                                    Unidade = reader.IsDBNull(reader.GetOrdinal("unit_measure")) ? "" : reader.GetString(reader.GetOrdinal("unit_measure")),
-                                    Categoria = reader.IsDBNull(reader.GetOrdinal("category_product")) ? "" : reader.GetString(reader.GetOrdinal("category_product")),
-                                    Fornecedor = reader.IsDBNull(reader.GetOrdinal("supplier_product")) ? "" : reader.GetString(reader.GetOrdinal("supplier_product")),
-                                    Ativo = reader.GetBoolean(reader.GetOrdinal("active")),
-                                    FotoUrl = reader.IsDBNull(reader.GetOrdinal("picture_url")) ? null : reader.GetString(reader.GetOrdinal("picture_url"))
-                                };
-
-                                var card = new UcCardProduto();
-                                card.Margin = new Padding(8);
-                                card.CarregarDados(prod);
-                                GerenciadorTema.AplicarTema(card);
-
-                                // Ajusta visibilidade do custo e cursor
-                                AplicarPermissoesAoCard(card);
-
-                                // Clique de Edição (Apenas para Administrador / Estoquista)
-                                card.AoClicarParaEditar += (produtoClicado) =>
-                                {
-                                    if (_podeVerOcultos)
+                                    produtos.Add(new ProdutoDTO
                                     {
-                                        AbrirModalProduto(produtoClicado);
-                                    }
-                                };
-
-                                card.AoAdicionarProduto += (prodId, preco, qtd) =>
-                                {
-                                    AoAdicionarAoCarrinho?.Invoke(prod.Id, prod.Nome, prod.PrecoVenda, qtd, prod.FotoUrl, prod.Estoque);
-                                };
-
-                                flowLayoutPanelProdutos.Controls.Add(card);
+                                        Id = Convert.ToInt32(reader["id_product"]),
+                                        Nome = reader.IsDBNull(reader.GetOrdinal("name_product")) ? "" : reader.GetString(reader.GetOrdinal("name_product")),
+                                        Descricao = reader.IsDBNull(reader.GetOrdinal("description_product")) ? "" : reader.GetString(reader.GetOrdinal("description_product")),
+                                        PrecoCompra = reader.IsDBNull(reader.GetOrdinal("price_buy")) ? 0m : reader.GetDecimal(reader.GetOrdinal("price_buy")),
+                                        PrecoVenda = reader.IsDBNull(reader.GetOrdinal("price_sell")) ? 0m : reader.GetDecimal(reader.GetOrdinal("price_sell")),
+                                        Localizacao = reader.IsDBNull(reader.GetOrdinal("location_product")) ? "" : reader.GetString(reader.GetOrdinal("location_product")),
+                                        Estoque = reader.IsDBNull(reader.GetOrdinal("stock_quantity")) ? 0 : Convert.ToInt32(reader.GetDecimal(reader.GetOrdinal("stock_quantity"))),
+                                        EstoqueMinimo = reader.IsDBNull(reader.GetOrdinal("min_stock_quantity")) ? 0 : reader.GetInt32(reader.GetOrdinal("min_stock_quantity")),
+                                        Unidade = reader.IsDBNull(reader.GetOrdinal("unit_measure")) ? "" : reader.GetString(reader.GetOrdinal("unit_measure")),
+                                        Categoria = reader.IsDBNull(reader.GetOrdinal("category_product")) ? "" : reader.GetString(reader.GetOrdinal("category_product")),
+                                        Fornecedor = reader.IsDBNull(reader.GetOrdinal("supplier_product")) ? "" : reader.GetString(reader.GetOrdinal("supplier_product")),
+                                        Ativo = reader.GetBoolean(reader.GetOrdinal("active")),
+                                        FotoUrl = reader.IsDBNull(reader.GetOrdinal("picture_url")) ? null : reader.GetString(reader.GetOrdinal("picture_url"))
+                                    });
+                                }
                             }
-
-                            flowLayoutPanelProdutos.ResumeLayout();
-                            CentralizarCards();
                         }
                     }
-                }
+
+                    return produtos;
+                }, token);
+
+                if (token.IsCancellationRequested || flowLayoutPanelProdutos == null) return;
+
+                RenderizarCards(listaProdutos);
+            }
+            catch (OperationCanceledException)
+            {
+                // Operação cancelada por nova digitação
             }
             catch (Exception ex)
             {
@@ -218,8 +244,52 @@ namespace ProjetoExtensionista2026_2
         }
 
         /// <summary>
-        /// Abre o UcCadastroProduto dentro de uma janela modal tanto para Inserção quanto para Edição.
+        /// Descarta os controles antigos da memória e monta os novos cards em lote.
         /// </summary>
+        private void RenderizarCards(List<ProdutoDTO> produtos)
+        {
+            flowLayoutPanelProdutos.SuspendLayout();
+            try
+            {
+                while (flowLayoutPanelProdutos.Controls.Count > 0)
+                {
+                    Control controleAntigo = flowLayoutPanelProdutos.Controls[0];
+                    flowLayoutPanelProdutos.Controls.RemoveAt(0);
+                    controleAntigo.Dispose();
+                }
+
+                foreach (var prod in produtos)
+                {
+                    var card = new UcCardProduto
+                    {
+                        Margin = new Padding(8)
+                    };
+
+                    card.CarregarDados(prod);
+                    GerenciadorTema.AplicarTema(card);
+                    AplicarPermissoesAoCard(card);
+
+                    card.AoClicarParaEditar += (produtoClicado) =>
+                    {
+                        if (_podeVerOcultos)
+                            AbrirModalProduto(produtoClicado);
+                    };
+
+                    card.AoAdicionarProduto += (prodId, preco, qtd) =>
+                    {
+                        AoAdicionarAoCarrinho?.Invoke(prod.Id, prod.Nome, prod.PrecoVenda, qtd, prod.FotoUrl, prod.Estoque);
+                    };
+
+                    flowLayoutPanelProdutos.Controls.Add(card);
+                }
+            }
+            finally
+            {
+                flowLayoutPanelProdutos.ResumeLayout();
+                CentralizarCards();
+            }
+        }
+
         public void AbrirModalProduto(ProdutoDTO produto = null)
         {
             if (!_podeVerOcultos) return;
@@ -261,9 +331,11 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        /// <summary>
-        /// Distribui os cards uniformemente (space-between) respeitando o padding lateral do painel.
-        /// </summary>
+        private void btnCadastrar_Click(object sender, EventArgs e)
+        {
+            AbrirModalProduto();
+        }
+
         private void CentralizarCards()
         {
             if (flowLayoutPanelProdutos == null || flowLayoutPanelProdutos.Controls.Count == 0)

@@ -1,31 +1,25 @@
-using Npgsql;
 using ProjetoExtensionista2026_2.DTOs;
-using ProjetoExtensionista2026_2.SQL;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProjetoExtensionista2026_2
 {
-    public partial class formVenda : Form, IMessageFilter
+    public partial class formVenda : Form
     {
         private UcEstoque _ucEstoque;
+
+        // Controle numérico dos descontos
         private long _descontoCentavos = 0;
         private int _descontoPorcentagem = 0;
         private bool _atualizandoDesconto = false;
         private decimal DescontoAtual => _descontoCentavos / 100m;
 
+        // Cliente ativo na venda
         private ClienteDTO _clienteSelecionado;
-        private List<ClienteDTO> _clientesPesquisados = new List<ClienteDTO>();
-        private CancellationTokenSource _ctsBuscaCliente;
-        private bool _bloquearBuscaCliente = false;
-
         public long IdClienteSelecionado => _clienteSelecionado?.Id ?? 1;
 
         public formVenda()
@@ -44,14 +38,11 @@ namespace ProjetoExtensionista2026_2
 
         private void formVenda_Load(object sender, EventArgs e)
         {
-            Application.AddMessageFilter(this);
-
             _ucEstoque = new UcEstoque
             {
                 Dock = DockStyle.Fill
             };
 
-            dgwPesquisa.AutoGenerateColumns = false;
             _ucEstoque.ConfigurarPerfilVendedor(true);
             _ucEstoque.AoAdicionarAoCarrinho += AdicionarOuIncrementarCarrinho;
 
@@ -65,15 +56,67 @@ namespace ProjetoExtensionista2026_2
                 panelCarrinho.AutoScroll = true;
 
             ConfigurarCamposDesconto();
-            ConfigurarPesquisaCliente();
             DefinirClientePadrao();
             AtualizarTotaisCarrinho();
         }
 
-        protected override void OnFormClosed(FormClosedEventArgs e)
+        private void formVenda_KeyDown(object sender, KeyEventArgs e)
         {
-            Application.RemoveMessageFilter(this);
-            base.OnFormClosed(e);
+            switch (e.KeyCode)
+            {
+                case Keys.F2:
+                    e.Handled = true;
+                    btnConsultarCliente.PerformClick();
+                    break;
+
+                case Keys.F3:
+                    e.Handled = true;
+                    _ucEstoque?.FocarCampoBusca();
+                    break;
+
+                case Keys.F4:
+                    e.Handled = true;
+                    btnLimparCarrinho.PerformClick();
+                    break;
+
+                case Keys.F12:
+                    e.Handled = true;
+                    btnAvancarPagamento.PerformClick();
+                    break;
+            }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Delete && !(ActiveControl is TextBox))
+            {
+                var ultimoCard = panelCarrinho.Controls.OfType<UcCardVenda>().FirstOrDefault();
+                if (ultimoCard != null)
+                {
+                    panelCarrinho.Controls.Remove(ultimoCard);
+                    ultimoCard.Dispose();
+                    AtualizarTotaisCarrinho();
+                    return true;
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void btnConsultarCliente_Click(object sender, EventArgs e)
+        {
+            using (var formConsulta = new formConsultaCliente())
+            {
+                if (formConsulta.ShowDialog(this) == DialogResult.OK && formConsulta.ClienteSelecionado != null)
+                {
+                    SelecionarCliente(formConsulta.ClienteSelecionado);
+                }
+            }
+        }
+
+        private void btnLimparCliente_Click(object sender, EventArgs e)
+        {
+            DefinirClientePadrao();
         }
 
         private void DefinirClientePadrao()
@@ -82,7 +125,7 @@ namespace ProjetoExtensionista2026_2
             {
                 Id = 1,
                 Nome = "Cliente não informado",
-                Apelido = "Cliente não informado",
+                Apelido = "Cliente",
                 CpfCnpj = string.Empty,
                 Telefone = string.Empty,
                 LimiteCredito = 0m,
@@ -96,28 +139,14 @@ namespace ProjetoExtensionista2026_2
 
             _clienteSelecionado = cliente;
             AtualizarExibicaoCliente();
-
-            if (dgwPesquisa != null)
-                dgwPesquisa.Visible = false;
-
-            _bloquearBuscaCliente = true;
-            try
-            {
-                if (txtBuscarCliente != null)
-                {
-                    txtBuscarCliente.Text = _clienteSelecionado.Nome;
-                    txtBuscarCliente.SelectionStart = txtBuscarCliente.Text.Length;
-                }
-            }
-            finally
-            {
-                _bloquearBuscaCliente = false;
-            }
         }
 
         private void AtualizarExibicaoCliente()
         {
             if (_clienteSelecionado == null) return;
+
+            if (lblNomeCliente != null)
+                lblNomeCliente.Text = _clienteSelecionado.Nome;
 
             if (lblDocumentoCliente != null)
                 lblDocumentoCliente.Text = FormatarCpfCnpj(_clienteSelecionado.CpfCnpj);
@@ -131,302 +160,18 @@ namespace ProjetoExtensionista2026_2
             if (lblStatusCliente != null)
             {
                 lblStatusCliente.Text = _clienteSelecionado.Ativo ? "Status: Ativo 🟢" : "Status: Inativo 🔴";
-                lblStatusCliente.ForeColor = _clienteSelecionado.Ativo ? Color.FromArgb(40, 167, 69) : Color.FromArgb(220, 53, 69);
+                lblStatusCliente.ForeColor = _clienteSelecionado.Ativo
+                    ? Color.FromArgb(40, 167, 69)
+                    : Color.FromArgb(220, 53, 69);
             }
 
             if (lblLimiteCliente != null)
                 lblLimiteCliente.Text = $"Limite de Crédito: {_clienteSelecionado.LimiteCredito:C2}";
         }
 
-        private async void txtBuscarCliente_TextChanged(object sender, EventArgs e)
-        {
-            if (_bloquearBuscaCliente) return;
-
-            _ctsBuscaCliente?.Cancel();
-            _ctsBuscaCliente?.Dispose();
-            _ctsBuscaCliente = new CancellationTokenSource();
-            var token = _ctsBuscaCliente.Token;
-
-            string termo = txtBuscarCliente.Text.Trim();
-
-            if (string.IsNullOrWhiteSpace(termo))
-            {
-                if (dgwPesquisa != null)
-                    dgwPesquisa.Visible = false;
-                return;
-            }
-
-            try
-            {
-                await Task.Delay(250, token);
-                if (!token.IsCancellationRequested)
-                {
-                    await ExecutarBuscaClientesAsync(termo, token);
-                }
-            }
-            catch (TaskCanceledException)
-            {
-                // Ignorado intencionalmente quando o usuário digita rápido
-            }
-        }
-
-        private async Task ExecutarBuscaClientesAsync(string termo, CancellationToken token)
-        {
-            try
-            {
-                var resultados = await ObterClientesDoBancoAsync(termo, token);
-                if (token.IsCancellationRequested || dgwPesquisa == null) return;
-
-                _clientesPesquisados = resultados ?? new List<ClienteDTO>();
-
-                if (_clientesPesquisados.Count > 0)
-                {
-                    dgwPesquisa.DataSource = _clientesPesquisados.Select(c => new
-                    {
-                        c.Id,
-                        c.Nome,
-                        Documento = FormatarCpfCnpj(c.CpfCnpj),
-                        Telefone = FormatarTelefone(c.Telefone)
-                    }).ToList();
-
-                    dgwPesquisa.Visible = true;
-                    dgwPesquisa.BringToFront();
-                }
-                else
-                {
-                    dgwPesquisa.Visible = false;
-                }
-            }
-            catch
-            {
-                if (dgwPesquisa != null)
-                    dgwPesquisa.Visible = false;
-            }
-        }
-
-        private async Task<List<ClienteDTO>> ObterClientesDoBancoAsync(string termo, CancellationToken token)
-        {
-            var listaClientes = new List<ClienteDTO>();
-
-            try
-            {
-                using (var conexaoDb = new Connection())
-                {
-                    conexaoDb.IniciarConexao();
-
-                    const string sql = @"
-                        SELECT 
-                            id_customer, 
-                            name, 
-                            nickname, 
-                            cpf_cnpj, 
-                            rg_ie, 
-                            phone, 
-                            email, 
-                            cep, 
-                            street, 
-                            number_address, 
-                            neighborhood, 
-                            complement, 
-                            city, 
-                            uf, 
-                            credit_limit, 
-                            is_active, 
-                            notes
-                        FROM public.customer
-                        WHERE is_active = TRUE
-                          AND (name ILIKE @termo OR cpf_cnpj ILIKE @termo OR nickname ILIKE @termo)
-                        ORDER BY name ASC
-                        LIMIT 10;";
-
-                    using (var comando = new NpgsqlCommand(sql, conexaoDb.Conexao))
-                    {
-                        comando.Parameters.AddWithValue("@termo", $"%{termo}%");
-
-                        using (var reader = await comando.ExecuteReaderAsync(token))
-                        {
-                            while (await reader.ReadAsync(token))
-                            {
-                                listaClientes.Add(new ClienteDTO
-                                {
-                                    Id = reader["id_customer"] != DBNull.Value ? Convert.ToInt64(reader["id_customer"]) : 1,
-                                    Nome = reader["name"]?.ToString() ?? string.Empty,
-                                    Apelido = reader["nickname"]?.ToString() ?? string.Empty,
-                                    CpfCnpj = reader["cpf_cnpj"]?.ToString() ?? string.Empty,
-                                    RgIe = reader["rg_ie"]?.ToString() ?? string.Empty,
-                                    Telefone = reader["phone"]?.ToString() ?? string.Empty,
-                                    Email = reader["email"]?.ToString() ?? string.Empty,
-                                    Cep = reader["cep"]?.ToString() ?? string.Empty,
-                                    Rua = reader["street"]?.ToString() ?? string.Empty,
-                                    Numero = reader["number_address"]?.ToString() ?? string.Empty,
-                                    Bairro = reader["neighborhood"]?.ToString() ?? string.Empty,
-                                    Complemento = reader["complement"]?.ToString() ?? string.Empty,
-                                    Cidade = reader["city"]?.ToString() ?? string.Empty,
-                                    Uf = reader["uf"]?.ToString() ?? string.Empty,
-                                    LimiteCredito = reader["credit_limit"] != DBNull.Value ? Convert.ToDecimal(reader["credit_limit"]) : 0m,
-                                    Ativo = reader["is_active"] != DBNull.Value && Convert.ToBoolean(reader["is_active"]),
-                                    Observacoes = reader["notes"]?.ToString() ?? string.Empty
-                                });
-                            }
-                        }
-                    }
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                // Pesquisa cancelada por nova digitação
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(
-                    $"Erro ao buscar clientes no banco: {ex.Message}",
-                    "Erro de Conexão",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error
-                );
-            }
-
-            return listaClientes;
-        }
-
-        private void ConfirmarSelecaoCliente(int indiceLinha)
-        {
-            if (indiceLinha < 0 || indiceLinha >= _clientesPesquisados.Count) return;
-
-            ClienteDTO clienteEscolhido = _clientesPesquisados[indiceLinha];
-            SelecionarCliente(clienteEscolhido);
-        }
-
-        private void txtBuscarCliente_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Down && dgwPesquisa != null && dgwPesquisa.Visible && dgwPesquisa.Rows.Count > 0)
-            {
-                e.Handled = true;
-                dgwPesquisa.Focus();
-                dgwPesquisa.Rows[0].Selected = true;
-            }
-            else if (e.KeyCode == Keys.Escape && dgwPesquisa != null)
-            {
-                dgwPesquisa.Visible = false;
-            }
-        }
-
-        private void dgwPesquisa_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (e.RowIndex >= 0)
-                ConfirmarSelecaoCliente(e.RowIndex);
-        }
-
-        private void dgwPesquisa_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-
-                if (dgwPesquisa.CurrentRow != null && dgwPesquisa.CurrentRow.Index >= 0)
-                    ConfirmarSelecaoCliente(dgwPesquisa.CurrentRow.Index);
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                dgwPesquisa.Visible = false;
-                txtBuscarCliente?.Focus();
-            }
-        }
-
-        private void ControlePesquisa_Leave(object sender, EventArgs e)
-        {
-            BeginInvoke((Action)(() =>
-            {
-                if (dgwPesquisa != null && txtBuscarCliente != null && !dgwPesquisa.Focused && !txtBuscarCliente.Focused)
-                {
-                    dgwPesquisa.Visible = false;
-
-                    // Se o operador apagou o campo de busca e saiu dele, volta para o Consumidor Final (ID 1)
-                    if (string.IsNullOrWhiteSpace(txtBuscarCliente.Text))
-                    {
-                        DefinirClientePadrao();
-                    }
-                    else
-                    {
-                        // Garante que o texto reflita o cliente atualmente selecionado
-                        _bloquearBuscaCliente = true;
-                        txtBuscarCliente.Text = _clienteSelecionado?.Nome ?? "Cliente não informado";
-                        _bloquearBuscaCliente = false;
-                    }
-                }
-            }));
-        }
-
-        public bool PreFilterMessage(ref Message m)
-        {
-            const int WM_MOUSEWHEEL = 0x020A;
-
-            if (m.Msg == WM_MOUSEWHEEL && dgwPesquisa != null && dgwPesquisa.Visible)
-            {
-                Point posicaoMouse = Cursor.Position;
-                Rectangle areaGrid = dgwPesquisa.RectangleToScreen(dgwPesquisa.ClientRectangle);
-                Rectangle areaTexto = txtBuscarCliente != null
-                    ? txtBuscarCliente.RectangleToScreen(txtBuscarCliente.ClientRectangle)
-                    : Rectangle.Empty;
-
-                if (areaGrid.Contains(posicaoMouse) || areaTexto.Contains(posicaoMouse))
-                {
-                    int delta = (short)((long)m.WParam >> 16);
-                    RolarGridPesquisa(delta);
-                    return true; // Intercepta para não causar efeitos colaterais
-                }
-            }
-
-            return false;
-        }
-
-        private void RolarGridPesquisa(int delta)
-        {
-            if (dgwPesquisa == null || !dgwPesquisa.Visible || dgwPesquisa.Rows.Count == 0) return;
-
-            int passo = delta > 0 ? -1 : 1;
-
-            int indiceAtual = dgwPesquisa.FirstDisplayedScrollingRowIndex;
-            if (indiceAtual < 0) indiceAtual = 0;
-
-            int novoIndice = Math.Max(0, Math.Min(dgwPesquisa.Rows.Count - 1, indiceAtual + passo));
-
-            try
-            {
-                dgwPesquisa.FirstDisplayedScrollingRowIndex = novoIndice;
-            }
-            catch
-            {
-                // Ignora se todas as linhas já estiverem visíveis na tela
-            }
-        }
-
-        private void ConfigurarPesquisaCliente()
-        {
-            if (dgwPesquisa != null)
-            {
-                dgwPesquisa.BringToFront();
-                dgwPesquisa.CellClick += dgwPesquisa_CellClick;
-                dgwPesquisa.KeyDown += dgwPesquisa_KeyDown;
-                dgwPesquisa.Leave += ControlePesquisa_Leave;
-            }
-
-            if (txtBuscarCliente != null)
-            {
-                txtBuscarCliente.Click += (s, ev) => txtBuscarCliente.SelectAll();
-                txtBuscarCliente.Enter += (s, ev) => txtBuscarCliente.SelectAll();
-                txtBuscarCliente.TextChanged += txtBuscarCliente_TextChanged;
-                txtBuscarCliente.KeyDown += txtBuscarCliente_KeyDown;
-                txtBuscarCliente.Leave += ControlePesquisa_Leave;
-            }
-        }
-        /// <summary>
-        /// Formata no padrão: "Rua das Flores, 123, Apto 45, Centro, Frutal - MG, CEP: 38200-000"
-        /// </summary>
         private static string FormatarEndereco(ClienteDTO c)
         {
-            if (c == null) return "Endereco: Não informado";
+            if (c == null) return "Endereço: Não informado";
 
             var partes = new List<string>();
 
@@ -455,7 +200,7 @@ namespace ProjetoExtensionista2026_2
             if (!string.IsNullOrWhiteSpace(c.Cep))
                 partes.Add($"CEP: {FormatarCep(c.Cep)}");
 
-            return partes.Count > 0 ? string.Join(", ", partes) : "Endereco: Não informado";
+            return partes.Count > 0 ? string.Join(", ", partes) : "Endereço: Não informado";
         }
 
         private static string FormatarCep(string cep)
@@ -495,13 +240,6 @@ namespace ProjetoExtensionista2026_2
         private static string ExtrairDigitos(string texto)
         {
             return string.IsNullOrEmpty(texto) ? string.Empty : Regex.Replace(texto, @"\D", string.Empty);
-        }
-
-        private void btnLimparCliente_Click(object sender, EventArgs e)
-        {
-            _ctsBuscaCliente?.Cancel();
-            _clientesPesquisados.Clear();
-            DefinirClientePadrao();
         }
 
         private void AdicionarOuIncrementarCarrinho(int idProduto, string nomeProduto, decimal precoVenda, int quantidade, string fotoUrl, int estoqueDisponivel)

@@ -113,7 +113,6 @@
             this.searchBtn.TabIndex = 2;
             this.searchBtn.Text = "🔎";
             this.searchBtn.UseVisualStyleBackColor = true;
-            this.searchBtn.Click += new System.EventHandler(this.searchBtn_Click);
             // 
             // searchTxtBox
             // 

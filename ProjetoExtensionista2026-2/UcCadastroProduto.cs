@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Npgsql;
+using NpgsqlTypes;
+using ProjetoExtensionista2026_2.DTOs;
+using ProjetoExtensionista2026_2.SQL;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,9 +10,6 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Npgsql;
-using NpgsqlTypes;
-using ProjetoExtensionista2026_2.SQL;
 
 namespace ProjetoExtensionista2026_2
 {
@@ -418,9 +419,6 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        // ==========================================
-        // BOTÃO SALVAR (INSERT / UPDATE NO BANCO)
-        // ==========================================
         private async void btnSalvar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtNome.Text))
@@ -576,9 +574,6 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        // ==========================================
-        // BOTÃO LIMPAR (RESETA TODOS OS CAMPOS)
-        // ==========================================
         private async void btnLimpar_Click(object sender, EventArgs e)
         {
             await LimparCamposAsync();
@@ -622,9 +617,6 @@ namespace ProjetoExtensionista2026_2
             await GerarProximoCodigoAsync();
         }
 
-        // ==========================================
-        // BOTÃO CANCELAR (FECHA O MODAL OU NOTIFICA)
-        // ==========================================
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             Form formPai = this.FindForm();

@@ -25,11 +25,9 @@ namespace ProjetoExtensionista2026_2
         {
             btn_cadastarProduto.BackColor = CorPadrao;
             btn_cadastrarCliente.BackColor = CorPadrao;
-            btn_cadastrarCategoria.BackColor = CorPadrao;
 
             btn_cadastarProduto.ForeColor = CorTexto;
             btn_cadastrarCliente.ForeColor = CorTexto;
-            btn_cadastrarCategoria.ForeColor = CorTexto;
         }
 
         private void AtivarAba(Button botaoClicado, UserControl telaConteudo)
@@ -60,11 +58,6 @@ namespace ProjetoExtensionista2026_2
         private void btn_cadastrarCliente_Click(object sender, EventArgs e)
         {
             AtivarAba(btn_cadastrarCliente, new UcCadastroCliente());
-        }
-
-        private void btn_cadastrarCategoria_Click(object sender, EventArgs e)
-        {
-            AtivarAba(btn_cadastrarCategoria, new UcCadastroCategoria());
         }
     }
 }
