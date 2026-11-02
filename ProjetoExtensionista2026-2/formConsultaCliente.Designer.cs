@@ -43,7 +43,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(834, 40);
+            this.panel1.Size = new System.Drawing.Size(884, 40);
             this.panel1.TabIndex = 1;
             // 
             // btnCadastrarCliente
@@ -81,17 +81,18 @@
             this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panelConteudo.Location = new System.Drawing.Point(0, 39);
             this.panelConteudo.Name = "panelConteudo";
-            this.panelConteudo.Size = new System.Drawing.Size(834, 442);
+            this.panelConteudo.Size = new System.Drawing.Size(884, 472);
             this.panelConteudo.TabIndex = 2;
             // 
             // formConsultaCliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(834, 481);
+            this.ClientSize = new System.Drawing.Size(884, 511);
             this.Controls.Add(this.panelConteudo);
             this.Controls.Add(this.panel1);
             this.Name = "formConsultaCliente";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "formConsultaCliente";
             this.Load += new System.EventHandler(this.formConsultaCliente_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.formConsultaCliente_KeyDown);

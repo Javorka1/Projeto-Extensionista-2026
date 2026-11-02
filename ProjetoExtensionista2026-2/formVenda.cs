@@ -566,5 +566,54 @@ namespace ProjetoExtensionista2026_2
                 AtualizarTotaisCarrinho();
             }
         }
+
+        private void btnAvancarPagamento_Click(object sender, EventArgs e)
+        {
+            // Validação de segurança: impede avançar com carrinho vazio
+            var (subtotal, totalItens) = CalcularMetricasCarrinho();
+            if (totalItens <= 0 || subtotal <= 0m)
+            {
+                MessageBox.Show(
+                    "Adicione ao menos um produto ao carrinho antes de avançar para o pagamento.",
+                    "Carrinho Vazio",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
+            decimal desconto = DescontoAtual;
+            int descontoPct = _descontoPorcentagem;
+            decimal totalFinal = Math.Max(0m, subtotal - desconto);
+
+            using (var formPagto = new formPagamento(subtotal, desconto, descontoPct, totalFinal))
+            {
+                if (formPagto.ShowDialog(this) == DialogResult.OK)
+                {
+                    panelCarrinho.SuspendLayout();
+                    try
+                    {
+                        while (panelCarrinho.Controls.Count > 0)
+                        {
+                            Control c = panelCarrinho.Controls[0];
+                            panelCarrinho.Controls.Remove(c);
+                            c.Dispose();
+                        }
+                    }
+                    finally
+                    {
+                        panelCarrinho.ResumeLayout();
+                    }
+
+                    _descontoCentavos = 0;
+                    _descontoPorcentagem = 0;
+                    SincronizarCamposDesconto(0m, originadoPorValor: true);
+                    DefinirClientePadrao();
+                    AtualizarTotaisCarrinho();
+
+                    _ucEstoque?.FocarCampoBusca();
+                }
+            }
+        }
     }
 }

@@ -110,7 +110,7 @@
             this.cboCategoria.FormattingEnabled = true;
             this.cboCategoria.Location = new System.Drawing.Point(542, 144);
             this.cboCategoria.Name = "cboCategoria";
-            this.cboCategoria.Size = new System.Drawing.Size(289, 24);
+            this.cboCategoria.Size = new System.Drawing.Size(308, 24);
             this.cboCategoria.TabIndex = 3;
             // 
             // txtDescricao
@@ -241,7 +241,7 @@
             this.groupBox1.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(542, 220);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(289, 136);
+            this.groupBox1.Size = new System.Drawing.Size(339, 136);
             this.groupBox1.TabIndex = 22;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Status";
@@ -274,11 +274,11 @@
             this.textBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox9.Font = new System.Drawing.Font("Arial", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox9.ForeColor = System.Drawing.Color.Red;
-            this.textBox9.Location = new System.Drawing.Point(4, 91);
+            this.textBox9.Location = new System.Drawing.Point(6, 91);
             this.textBox9.Multiline = true;
             this.textBox9.Name = "textBox9";
             this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(256, 31);
+            this.textBox9.Size = new System.Drawing.Size(327, 31);
             this.textBox9.TabIndex = 22;
             this.textBox9.Text = "\"Atenção: Esta ação não excluirá nada do sistema, apenas bloqueará sua venda.\"";
             // 
@@ -294,7 +294,7 @@
             // btnCancelar
             // 
             this.btnCancelar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Location = new System.Drawing.Point(6, 347);
+            this.btnCancelar.Location = new System.Drawing.Point(6, 382);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(149, 78);
             this.btnCancelar.TabIndex = 23;
@@ -305,7 +305,7 @@
             // btnLimpar
             // 
             this.btnLimpar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimpar.Location = new System.Drawing.Point(185, 347);
+            this.btnLimpar.Location = new System.Drawing.Point(187, 382);
             this.btnLimpar.Name = "btnLimpar";
             this.btnLimpar.Size = new System.Drawing.Size(149, 78);
             this.btnLimpar.TabIndex = 24;
@@ -316,7 +316,7 @@
             // btnSalvar
             // 
             this.btnSalvar.Font = new System.Drawing.Font("Arial", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSalvar.Location = new System.Drawing.Point(364, 347);
+            this.btnSalvar.Location = new System.Drawing.Point(365, 382);
             this.btnSalvar.Name = "btnSalvar";
             this.btnSalvar.Size = new System.Drawing.Size(149, 78);
             this.btnSalvar.TabIndex = 25;
@@ -358,25 +358,25 @@
             this.picFotoPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picFotoPreview.Location = new System.Drawing.Point(543, 29);
             this.picFotoPreview.Name = "picFotoPreview";
-            this.picFotoPreview.Size = new System.Drawing.Size(130, 90);
+            this.picFotoPreview.Size = new System.Drawing.Size(120, 90);
             this.picFotoPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picFotoPreview.TabIndex = 30;
             this.picFotoPreview.TabStop = false;
             // 
             // btnEscolherArquivo
             // 
-            this.btnEscolherArquivo.Location = new System.Drawing.Point(679, 30);
+            this.btnEscolherArquivo.Location = new System.Drawing.Point(669, 30);
             this.btnEscolherArquivo.Name = "btnEscolherArquivo";
-            this.btnEscolherArquivo.Size = new System.Drawing.Size(152, 23);
+            this.btnEscolherArquivo.Size = new System.Drawing.Size(212, 23);
             this.btnEscolherArquivo.TabIndex = 31;
             this.btnEscolherArquivo.Text = "Selecionar do computador";
             this.btnEscolherArquivo.UseVisualStyleBackColor = true;
             // 
             // btnRemoverFoto
             // 
-            this.btnRemoverFoto.Location = new System.Drawing.Point(747, 95);
+            this.btnRemoverFoto.Location = new System.Drawing.Point(802, 95);
             this.btnRemoverFoto.Name = "btnRemoverFoto";
-            this.btnRemoverFoto.Size = new System.Drawing.Size(84, 23);
+            this.btnRemoverFoto.Size = new System.Drawing.Size(79, 23);
             this.btnRemoverFoto.TabIndex = 32;
             this.btnRemoverFoto.Text = "❌ Excluir";
             this.btnRemoverFoto.UseVisualStyleBackColor = true;
@@ -384,16 +384,16 @@
             // txtFotoUrl
             // 
             this.txtFotoUrl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtFotoUrl.Location = new System.Drawing.Point(679, 60);
+            this.txtFotoUrl.Location = new System.Drawing.Point(669, 60);
             this.txtFotoUrl.Name = "txtFotoUrl";
-            this.txtFotoUrl.Size = new System.Drawing.Size(152, 20);
+            this.txtFotoUrl.Size = new System.Drawing.Size(212, 20);
             this.txtFotoUrl.TabIndex = 33;
             // 
             // btnCarregarFoto
             // 
-            this.btnCarregarFoto.Location = new System.Drawing.Point(679, 95);
+            this.btnCarregarFoto.Location = new System.Drawing.Point(669, 95);
             this.btnCarregarFoto.Name = "btnCarregarFoto";
-            this.btnCarregarFoto.Size = new System.Drawing.Size(62, 23);
+            this.btnCarregarFoto.Size = new System.Drawing.Size(127, 23);
             this.btnCarregarFoto.TabIndex = 34;
             this.btnCarregarFoto.Text = "Carregar";
             this.btnCarregarFoto.UseVisualStyleBackColor = true;
@@ -453,12 +453,12 @@
             this.cboFornecedor.FormattingEnabled = true;
             this.cboFornecedor.Location = new System.Drawing.Point(542, 190);
             this.cboFornecedor.Name = "cboFornecedor";
-            this.cboFornecedor.Size = new System.Drawing.Size(289, 24);
+            this.cboFornecedor.Size = new System.Drawing.Size(308, 24);
             this.cboFornecedor.TabIndex = 39;
             // 
             // btnAdicionarCategoria
             // 
-            this.btnAdicionarCategoria.Location = new System.Drawing.Point(848, 166);
+            this.btnAdicionarCategoria.Location = new System.Drawing.Point(856, 144);
             this.btnAdicionarCategoria.Name = "btnAdicionarCategoria";
             this.btnAdicionarCategoria.Size = new System.Drawing.Size(25, 25);
             this.btnAdicionarCategoria.TabIndex = 40;
@@ -467,7 +467,7 @@
             // 
             // btnAdicionarFornecedor
             // 
-            this.btnAdicionarFornecedor.Location = new System.Drawing.Point(848, 213);
+            this.btnAdicionarFornecedor.Location = new System.Drawing.Point(856, 188);
             this.btnAdicionarFornecedor.Name = "btnAdicionarFornecedor";
             this.btnAdicionarFornecedor.Size = new System.Drawing.Size(25, 25);
             this.btnAdicionarFornecedor.TabIndex = 41;
@@ -515,7 +515,7 @@
             this.Controls.Add(this.txtNome);
             this.Controls.Add(this.label1);
             this.Name = "UcCadastroProduto";
-            this.Size = new System.Drawing.Size(834, 443);
+            this.Size = new System.Drawing.Size(884, 472);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFotoPreview)).EndInit();

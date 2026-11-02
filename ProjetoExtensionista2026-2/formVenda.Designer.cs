@@ -281,6 +281,7 @@
             this.btnAvancarPagamento.TabIndex = 2;
             this.btnAvancarPagamento.Text = "Avançar para Pagamento [F12]";
             this.btnAvancarPagamento.UseVisualStyleBackColor = false;
+            this.btnAvancarPagamento.Click += new System.EventHandler(this.btnAvancarPagamento_Click);
             // 
             // label2
             // 
