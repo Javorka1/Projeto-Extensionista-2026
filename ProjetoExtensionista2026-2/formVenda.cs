@@ -32,6 +32,8 @@ namespace ProjetoExtensionista2026_2
                      ControlStyles.AllPaintingInWmPaint, true);
             UpdateStyles();
 
+            KeyPreview = true;
+
             FormBorderStyle = FormBorderStyle.Sizable;
             WindowState = FormWindowState.Maximized;
         }
@@ -69,51 +71,46 @@ namespace ProjetoExtensionista2026_2
 
         private void AjustarLarguraCarrinho()
         {
-            if (splitContainer_catalogo != null && splitContainer_catalogo.Width > 500)
+            if (splitContainer_catalogo != null && splitContainer_catalogo.Width > 650)
             {
-                const int larguraDesejada = 400;
+                const int larguraDesejada = 455;
                 splitContainer_catalogo.SplitterDistance = Math.Max(250, splitContainer_catalogo.Width - larguraDesejada);
-            }
-        }
-
-        private void formVenda_KeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.KeyCode)
-            {
-                case Keys.F2:
-                    e.Handled = true;
-                    btnConsultarCliente.PerformClick();
-                    break;
-
-                case Keys.F3:
-                    e.Handled = true;
-                    _ucEstoque?.FocarCampoBusca();
-                    break;
-
-                case Keys.F4:
-                    e.Handled = true;
-                    btnLimparCarrinho.PerformClick();
-                    break;
-
-                case Keys.F12:
-                    e.Handled = true;
-                    btnAvancarPagamento.PerformClick();
-                    break;
             }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Delete && !(ActiveControl is TextBox))
+            switch (keyData)
             {
-                var ultimoCard = panelCarrinho.Controls.OfType<UcCardVenda>().FirstOrDefault();
-                if (ultimoCard != null)
-                {
-                    panelCarrinho.Controls.Remove(ultimoCard);
-                    ultimoCard.Dispose();
-                    AtualizarTotaisCarrinho();
+                case Keys.F2:
+                    btnConsultarCliente.PerformClick();
                     return true;
-                }
+
+                case Keys.F3:
+                    _ucEstoque?.FocarCampoBusca();
+                    return true;
+
+                case Keys.F4:
+                    btnLimparCarrinho.PerformClick();
+                    return true;
+
+                case Keys.F12:
+                    btnAvancarPagamento.PerformClick();
+                    return true;
+
+                case Keys.Delete:
+                    if (!(ActiveControl is TextBox))
+                    {
+                        var ultimoCard = panelCarrinho.Controls.OfType<UcCardVenda>().FirstOrDefault();
+                        if (ultimoCard != null)
+                        {
+                            panelCarrinho.Controls.Remove(ultimoCard);
+                            ultimoCard.Dispose();
+                            AtualizarTotaisCarrinho();
+                            return true;
+                        }
+                    }
+                    break;
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
@@ -532,10 +529,10 @@ namespace ProjetoExtensionista2026_2
 
         private void splitContainer_catalogo_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            if (splitContainer_catalogo == null || splitContainer_catalogo.Width <= 500) return;
+            if (splitContainer_catalogo == null || splitContainer_catalogo.Width <= 650) return;
             int dist = splitContainer_catalogo.SplitterDistance;
-            int minDistance = splitContainer_catalogo.Width - 520;
-            int maxDistance = splitContainer_catalogo.Width - 320;
+            int minDistance = splitContainer_catalogo.Width - 600;
+            int maxDistance = splitContainer_catalogo.Width - 455;
             if (dist < minDistance) splitContainer_catalogo.SplitterDistance = minDistance;
             else if (dist > maxDistance) splitContainer_catalogo.SplitterDistance = maxDistance;
         }
@@ -590,7 +587,6 @@ namespace ProjetoExtensionista2026_2
 
         private void btnAvancarPagamento_Click(object sender, EventArgs e)
         {
-            // Validação de segurança: impede avançar com carrinho vazio
             var (subtotal, totalItens) = CalcularMetricasCarrinho();
             if (totalItens <= 0 || subtotal <= 0m)
             {

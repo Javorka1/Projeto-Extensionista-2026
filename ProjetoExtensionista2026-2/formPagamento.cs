@@ -17,10 +17,15 @@ namespace ProjetoExtensionista2026_2
         private int _descontoPorcentagem;
         private decimal _totalFinal;
 
+        private UcPagamento _ucPagamento;
+        private UcObservacoes _ucObservacoes;
+
         public formPagamento()
         {
             InitializeComponent();
             GerenciadorTema.AplicarTema(this);
+
+            this.Load += formPagamento_Load;
         }
 
         public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal) : this()
@@ -31,6 +36,84 @@ namespace ProjetoExtensionista2026_2
             _totalFinal = totalFinal;
 
             PreencherTotais();
+        }
+
+        private void formPagamento_Load(object sender, EventArgs e)
+        {
+            InicializarUserControls();
+
+            ExibirControle(_ucPagamento);
+            AtualizarEstiloBotoes(btnPagamento);
+        }
+
+        private void InicializarUserControls()
+        {
+            if (panelConteudo == null) return;
+
+            _ucPagamento = new UcPagamento
+            {
+                Dock = DockStyle.Fill
+            };
+            GerenciadorTema.AplicarTema(_ucPagamento);
+
+            _ucObservacoes = new UcObservacoes
+            {
+                Dock = DockStyle.Fill
+            };
+            GerenciadorTema.AplicarTema(_ucObservacoes);
+
+            panelConteudo.SuspendLayout();
+            panelConteudo.Controls.Add(_ucPagamento);
+            panelConteudo.Controls.Add(_ucObservacoes);
+            panelConteudo.ResumeLayout();
+        }
+
+        private void ExibirControle(UserControl uc)
+        {
+            if (panelConteudo == null || uc == null) return;
+
+            panelConteudo.SuspendLayout();
+            try
+            {
+                if (!panelConteudo.Controls.Contains(uc))
+                    panelConteudo.Controls.Add(uc);
+
+                uc.BringToFront();
+                uc.Focus();
+            }
+            finally
+            {
+                panelConteudo.ResumeLayout();
+            }
+        }
+
+        private void AtualizarEstiloBotoes(Button botaoAtivo)
+        {
+            if (btnPagamento != null)
+            {
+                bool ativo = (btnPagamento == botaoAtivo);
+                btnPagamento.BackColor = ativo ? SystemColors.Control : SystemColors.ControlDark;
+                btnPagamento.ForeColor = ativo ? Color.Black : Color.White;
+            }
+
+            if (btnObservacoes != null)
+            {
+                bool ativo = (btnObservacoes == botaoAtivo);
+                btnObservacoes.BackColor = ativo ? SystemColors.Control : SystemColors.ControlDark;
+                btnObservacoes.ForeColor = ativo ? Color.Black : Color.White;
+            }
+        }
+
+        private void btnPagamento_Click(object sender, EventArgs e)
+        {
+            ExibirControle(_ucPagamento);
+            AtualizarEstiloBotoes(btnPagamento);
+        }
+
+        private void btnObservacoes_Click(object sender, EventArgs e)
+        {
+            ExibirControle(_ucObservacoes);
+            AtualizarEstiloBotoes(btnObservacoes);
         }
 
         private void PreencherTotais()

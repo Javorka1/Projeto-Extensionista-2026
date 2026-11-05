@@ -14,7 +14,7 @@ namespace ProjetoExtensionista2026_2
         private UcCadastroCliente _ucCadastro;
 
         private readonly Color _corAtivo = SystemColors.Control;
-        private readonly Color _corInativo = Color.FromArgb(224, 224, 224); // Cinza suave
+        private readonly Color _corInativo = Color.LightGray;
 
         public formConsultaCliente()
         {
