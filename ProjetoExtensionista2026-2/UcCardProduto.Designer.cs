@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class UcCardProduto
     {
@@ -74,7 +74,7 @@
             this.btnAdicionar.Name = "btnAdicionar";
             this.btnAdicionar.Size = new System.Drawing.Size(190, 29);
             this.btnAdicionar.TabIndex = 3;
-            this.btnAdicionar.Text = "Adicionar ➕";
+            this.btnAdicionar.Text = "Adicionar";
             this.btnAdicionar.UseVisualStyleBackColor = false;
             this.btnAdicionar.Click += new System.EventHandler(this.btnAdicionar_Click);
             // 
@@ -151,7 +151,7 @@
             this.lblOculto.Name = "lblOculto";
             this.lblOculto.Size = new System.Drawing.Size(148, 20);
             this.lblOculto.TabIndex = 9;
-            this.lblOculto.Text = "👁️‍🗨 Mostrar ocultos...";
+            this.lblOculto.Text = "Mostrar ocultados...";
             this.lblOculto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblOculto.Click += new System.EventHandler(this.btnOculto_Click);
             // 

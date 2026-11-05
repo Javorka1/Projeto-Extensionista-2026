@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class formVenda
     {
@@ -339,7 +339,7 @@
             this.btnConsultarCliente.Name = "btnConsultarCliente";
             this.btnConsultarCliente.Size = new System.Drawing.Size(130, 27);
             this.btnConsultarCliente.TabIndex = 14;
-            this.btnConsultarCliente.Text = "Selecionar [F2] ✍🏼";
+            this.btnConsultarCliente.Text = "Selecionar [F2]";
             this.btnConsultarCliente.UseVisualStyleBackColor = true;
             this.btnConsultarCliente.Click += new System.EventHandler(this.btnConsultarCliente_Click);
             // 
@@ -364,7 +364,7 @@
             this.btnCadastrarCliente.Name = "btnCadastrarCliente";
             this.btnCadastrarCliente.Size = new System.Drawing.Size(106, 27);
             this.btnCadastrarCliente.TabIndex = 12;
-            this.btnCadastrarCliente.Text = "Adicionar ➕";
+            this.btnCadastrarCliente.Text = "Adicionar";
             this.btnCadastrarCliente.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnCadastrarCliente.UseVisualStyleBackColor = true;
             // 
@@ -398,7 +398,7 @@
             this.lblStatusCliente.Name = "lblStatusCliente";
             this.lblStatusCliente.Size = new System.Drawing.Size(101, 17);
             this.lblStatusCliente.TabIndex = 9;
-            this.lblStatusCliente.Text = "Status: Ativo 🟢";
+            this.lblStatusCliente.Text = "Status: Ativo";
             this.lblStatusCliente.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblDocumentoCliente
@@ -437,7 +437,7 @@
             this.btnLimparCliente.Name = "btnLimparCliente";
             this.btnLimparCliente.Size = new System.Drawing.Size(106, 27);
             this.btnLimparCliente.TabIndex = 6;
-            this.btnLimparCliente.Text = "Limpar 🗑️";
+            this.btnLimparCliente.Text = "Limpar";
             this.btnLimparCliente.UseVisualStyleBackColor = true;
             this.btnLimparCliente.Click += new System.EventHandler(this.btnLimparCliente_Click);
             // 

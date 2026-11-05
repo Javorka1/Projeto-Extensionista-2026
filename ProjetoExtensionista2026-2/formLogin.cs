@@ -1,14 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using ProjetoExtensionista2026_2.SQL;
 using ProjetoExtensionista2026_2.SQL.SQL_functions;
 
 namespace ProjetoExtensionista2026_2
@@ -19,24 +11,66 @@ namespace ProjetoExtensionista2026_2
         {
             InitializeComponent();
             ConfigurarPlaceholder();
-            lockIcon.Image = Properties.Resources.cadeado;
+            try
+            {
+                lockIcon.Image = Properties.Resources.cadeado;
+            }
+            catch { }
         }
 
-        
+        private void formLogin_Load(object sender, EventArgs e)
+        {
+            CentralizarCard();
+            GerenciadorTema.AplicarTema(this);
+        }
+
+        private void formLogin_Resize(object sender, EventArgs e)
+        {
+            CentralizarCard();
+        }
+
+        private void CentralizarCard()
+        {
+            if (pnlCardLogin != null && panel1 != null)
+            {
+                int x = Math.Max(10, (panel1.ClientSize.Width - pnlCardLogin.Width) / 2);
+                int y = Math.Max(10, (panel1.ClientSize.Height - pnlCardLogin.Height) / 2);
+                pnlCardLogin.Location = new Point(x, y);
+            }
+        }
 
         private void AlternarCadeado(object sender, EventArgs e)
         {
+            string username = userTxtBox.Text.Trim();
+            string password = pwdTxtBox.Text;
+
+            if (username == "Insira seu nome de usuário" || string.IsNullOrWhiteSpace(username))
+            {
+                MessageBox.Show("Por favor, insira o nome de usuário.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                userTxtBox.Focus();
+                return;
+            }
+
+            if (password == "Insira sua senha" || string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Por favor, insira a senha.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                pwdTxtBox.Focus();
+                return;
+            }
+
             using (LoginSQL loginSQL = new LoginSQL())
             {
-                string username = userTxtBox.Text;
-                string password = pwdTxtBox.Text;
                 string hash = loginSQL.HashificarSenha(password, out _);
                 int count = loginSQL.VerificarUsuario(username, hash);
                 bool ver = count == 1;
 
                 if (ver)
                 {
-                    lockIcon.Image = Properties.Resources.cadeado_aberto;
+                    try
+                    {
+                        lockIcon.Image = Properties.Resources.cadeado_aberto;
+                    }
+                    catch { }
 
                     LoginSQL.SessaoUsuario.Nome = username;
                     LoginSQL.SessaoUsuario.Hash = hash;
@@ -49,8 +83,12 @@ namespace ProjetoExtensionista2026_2
                 }
                 else
                 {
-                    lockIcon.Image = Properties.Resources.cadeado;// Altere para o ícone de cadeado fechado
-                    MessageBox.Show("Nome de usuário ou senha inválidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    try
+                    {
+                        lockIcon.Image = Properties.Resources.cadeado;
+                    }
+                    catch { }
+                    MessageBox.Show("Nome de usuário ou senha inválidos.", "Erro de Autenticação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
@@ -69,12 +107,12 @@ namespace ProjetoExtensionista2026_2
             if (sender == userTxtBox && userTxtBox.Text == "Insira seu nome de usuário")
             {
                 userTxtBox.Text = "";
-                userTxtBox.ForeColor = Color.Black;
+                userTxtBox.ForeColor = GerenciadorTema.ModoEscuro ? GerenciadorTema.TextoEscuro : GerenciadorTema.TextoClaro;
             }
             else if (sender == pwdTxtBox && pwdTxtBox.Text == "Insira sua senha")
             {
                 pwdTxtBox.Text = "";
-                pwdTxtBox.ForeColor = Color.Black;
+                pwdTxtBox.ForeColor = GerenciadorTema.ModoEscuro ? GerenciadorTema.TextoEscuro : GerenciadorTema.TextoClaro;
                 pwdTxtBox.UseSystemPasswordChar = true;
             }
         }
@@ -98,8 +136,9 @@ namespace ProjetoExtensionista2026_2
         {
             Form signInForm = new miniFormSignIn();
             signInForm.FormBorderStyle = FormBorderStyle.FixedSingle;
-            signInForm.MaximizeBox = false;
-            signInForm.ShowDialog();
+            signInForm.StartPosition = FormStartPosition.CenterParent;
+            GerenciadorTema.AplicarTema(signInForm);
+            signInForm.ShowDialog(this);
         }
     }
 }

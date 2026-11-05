@@ -159,7 +159,7 @@ namespace ProjetoExtensionista2026_2
 
             if (lblStatusCliente != null)
             {
-                lblStatusCliente.Text = _clienteSelecionado.Ativo ? "Status: Ativo 🟢" : "Status: Inativo 🔴";
+                lblStatusCliente.Text = _clienteSelecionado.Ativo ? "Status: Ativo" : "Status: Inativo";
                 lblStatusCliente.ForeColor = _clienteSelecionado.Ativo
                     ? Color.FromArgb(40, 167, 69)
                     : Color.FromArgb(220, 53, 69);

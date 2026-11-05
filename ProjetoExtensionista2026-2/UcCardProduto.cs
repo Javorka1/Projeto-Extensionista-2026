@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Concurrent;
 using System.Drawing;
 using System.IO;
@@ -106,7 +106,7 @@ namespace ProjetoExtensionista2026_2
             lblPrecoVenda.Text = p.PrecoVenda.ToString("C2");
 
             _custoVisivel = false;
-            lblOculto.Text = "👁️‍🗨️ Mostrar Ocultados ...";
+            lblOculto.Text = "Mostrar Ocultados...";
             lblOculto.ForeColor = SystemColors.ControlDarkDark;
 
             lblOculto.Visible = PodeVerCusto;
@@ -166,7 +166,7 @@ namespace ProjetoExtensionista2026_2
             }
             else
             {
-                lblOculto.Text = "👁️‍🗨️ Mostrar Ocultados ...";
+                lblOculto.Text = "Mostrar Ocultados...";
                 lblOculto.ForeColor = SystemColors.ControlDarkDark;
             }
         }

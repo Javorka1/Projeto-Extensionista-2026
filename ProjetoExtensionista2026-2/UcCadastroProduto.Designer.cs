@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class UcCadastroProduto
     {
@@ -378,7 +378,7 @@
             this.btnRemoverFoto.Name = "btnRemoverFoto";
             this.btnRemoverFoto.Size = new System.Drawing.Size(79, 23);
             this.btnRemoverFoto.TabIndex = 32;
-            this.btnRemoverFoto.Text = "❌ Excluir";
+            this.btnRemoverFoto.Text = "Excluir";
             this.btnRemoverFoto.UseVisualStyleBackColor = true;
             // 
             // txtFotoUrl
@@ -462,7 +462,7 @@
             this.btnAdicionarCategoria.Name = "btnAdicionarCategoria";
             this.btnAdicionarCategoria.Size = new System.Drawing.Size(25, 25);
             this.btnAdicionarCategoria.TabIndex = 40;
-            this.btnAdicionarCategoria.Text = "➕";
+            this.btnAdicionarCategoria.Text = "+";
             this.btnAdicionarCategoria.UseVisualStyleBackColor = true;
             // 
             // btnAdicionarFornecedor
@@ -471,7 +471,7 @@
             this.btnAdicionarFornecedor.Name = "btnAdicionarFornecedor";
             this.btnAdicionarFornecedor.Size = new System.Drawing.Size(25, 25);
             this.btnAdicionarFornecedor.TabIndex = 41;
-            this.btnAdicionarFornecedor.Text = "➕";
+            this.btnAdicionarFornecedor.Text = "+";
             this.btnAdicionarFornecedor.UseVisualStyleBackColor = true;
             // 
             // UcCadastroProduto

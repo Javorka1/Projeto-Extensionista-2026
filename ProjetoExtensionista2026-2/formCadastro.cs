@@ -6,28 +6,15 @@ namespace ProjetoExtensionista2026_2
 {
     public partial class formCadastro : Form
     {
-        private readonly Color CorPadrao = SystemColors.ControlDark;
-        private readonly Color CorAcesa = SystemColors.Control;
-        private readonly Color CorTexto = SystemColors.ActiveCaptionText;
-
         private Button botaoAtivo;
 
         public formCadastro()
         {
             InitializeComponent();
-            ConfigurarEstiloBotoes();
+            GerenciadorTema.AplicarTema(this);
 
             // Inicia exibindo o cadastro de Produto como padrão
             AtivarAba(btn_cadastarProduto, new UcCadastroProduto());
-        }
-
-        private void ConfigurarEstiloBotoes()
-        {
-            btn_cadastarProduto.BackColor = CorPadrao;
-            btn_cadastrarCliente.BackColor = CorPadrao;
-
-            btn_cadastarProduto.ForeColor = CorTexto;
-            btn_cadastrarCliente.ForeColor = CorTexto;
         }
 
         private void AtivarAba(Button botaoClicado, UserControl telaConteudo)
@@ -38,10 +25,14 @@ namespace ProjetoExtensionista2026_2
                 botaoAtivo.Tag = null;
             }
 
-            // 2. Acende o botão clicado com a cor de destaque Indigo
+            // 2. Acende o botão clicado com a tag de aba ativa
             botaoAtivo = botaoClicado;
-            botaoAtivo.Tag = "aba_ativa";
-            GerenciadorTema.AplicarTema(this);
+            if (botaoAtivo != null)
+            {
+                botaoAtivo.Tag = "aba_ativa";
+            }
+
+            GerenciadorTema.AplicarTema(pnlAbasTopo);
 
             // 3. Substitui o conteúdo do panel inferior
             panelConteudo.Controls.Clear();

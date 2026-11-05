@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class UcCardVenda
     {
@@ -70,7 +70,7 @@
             this.btnDiminuir.Name = "btnDiminuir";
             this.btnDiminuir.Size = new System.Drawing.Size(26, 20);
             this.btnDiminuir.TabIndex = 9;
-            this.btnDiminuir.Text = "➖";
+            this.btnDiminuir.Text = "-";
             this.btnDiminuir.UseVisualStyleBackColor = true;
             this.btnDiminuir.Click += new System.EventHandler(this.btnDiminuir_Click);
             // 
@@ -81,7 +81,7 @@
             this.btnAumentar.Name = "btnAumentar";
             this.btnAumentar.Size = new System.Drawing.Size(26, 20);
             this.btnAumentar.TabIndex = 8;
-            this.btnAumentar.Text = "➕";
+            this.btnAumentar.Text = "+";
             this.btnAumentar.UseVisualStyleBackColor = true;
             this.btnAumentar.Click += new System.EventHandler(this.btnAumentar_Click);
             // 
@@ -90,12 +90,12 @@
             this.btnExcluir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExcluir.FlatAppearance.BorderSize = 0;
             this.btnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExcluir.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExcluir.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExcluir.Location = new System.Drawing.Point(524, 3);
             this.btnExcluir.Name = "btnExcluir";
-            this.btnExcluir.Size = new System.Drawing.Size(20, 25);
+            this.btnExcluir.Size = new System.Drawing.Size(24, 25);
             this.btnExcluir.TabIndex = 4;
-            this.btnExcluir.Text = "🗑️";
+            this.btnExcluir.Text = "X";
             this.btnExcluir.UseVisualStyleBackColor = true;
             this.btnExcluir.Click += new System.EventHandler(this.btnExcluir_Click);
             // 

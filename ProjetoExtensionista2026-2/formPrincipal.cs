@@ -1,34 +1,51 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using ProjetoExtensionista2026_2.SQL.SQL_functions;
 
 namespace ProjetoExtensionista2026_2
 {
     public partial class formPrincipal : Form
     {
+        private Button _botaoNavAtivo;
+
         public formPrincipal()
         {
             InitializeComponent();
-            
-
             GerenciadorTema.AplicarTema(this);
         }
+
         private void formPrincipal_Load(object sender, EventArgs e)
         {
-            using (var sql = new SQL.SQL_functions.LoginSQL())
+            using (var sql = new LoginSQL())
             {
-                string role = sql.RolePicker(SQL.SQL_functions.LoginSQL.SessaoUsuario.Nome);
+                string nomeUsuario = LoginSQL.SessaoUsuario.Nome;
+                string role = sql.RolePicker(nomeUsuario);
+
                 if (!string.IsNullOrEmpty(role))
                 {
-                    SQL.SQL_functions.LoginSQL.SessaoUsuario.Role = role;
+                    LoginSQL.SessaoUsuario.Role = role;
+                    
+                    // Configura o Card de Usuário
+                    ConfigurarCardUsuario(nomeUsuario, role);
+
+                    // Configura os botões da sidebar de acordo com a permissão
                     var rolesManager = new rolesClass();
-                    rolesManager.RoleSidebar(this, role, SQL.SQL_functions.LoginSQL.SessaoUsuario.Nome, SQL.SQL_functions.LoginSQL.SessaoUsuario.Hash);
+                    rolesManager.RoleSidebar(this, role, nomeUsuario, LoginSQL.SessaoUsuario.Hash);
+
+                    // Abre a tela padrão inicial (Vendas se tiver permissão, senão Principal/Financeiro)
+                    if (btnNavVendas.Visible)
+                    {
+                        AtivarNavegacao(btnNavVendas, new formVenda());
+                    }
+                    else if (btnNavFinanceiro.Visible)
+                    {
+                        AtivarNavegacao(btnNavFinanceiro, new FormFinanceiro());
+                    }
+                    else if (btnNavEstoque.Visible)
+                    {
+                        AtivarNavegacao(btnNavEstoque, new formEstoque());
+                    }
                 }
                 else
                 {
@@ -37,59 +54,168 @@ namespace ProjetoExtensionista2026_2
                 }
             }
         }
-        private void AbrirFormNoWorkspace(object formFilho)
+
+        private void ConfigurarCardUsuario(string nome, string role)
         {
-            // Fecha qualquer formulário que já esteja aberto no workspace
-            if (this.panelWorkspace.Controls.Count > 0)
-                this.panelWorkspace.Controls.RemoveAt(0);
+            if (string.IsNullOrWhiteSpace(nome)) nome = "Usuario";
 
-            // Configura o novo formulário para rodar dentro do painel
-            Form fh = formFilho as Form;
-            fh.TopLevel = false;            // IMPORTANTE: Diz que ele não é uma janela independente
-            fh.FormBorderStyle = FormBorderStyle.None; // Remove a barra de fechar/minimizar do form filho
-            fh.Dock = DockStyle.Fill;       // Faz o form filho ocupar todo o espaço do painel workspace
+            lblNomeUsuario.Text = nome;
 
-            GerenciadorTema.AplicarTema(fh); // aplicar tema ativo
+            // Iniciais no avatar
+            string iniciais = nome.Length >= 2 ? nome.Substring(0, 2).ToUpper() : nome.ToUpper();
+            lblAvatar.Text = iniciais;
 
-            // Adiciona o form ao painel e o exibe
-            this.panelWorkspace.Controls.Add(fh);
-            this.panelWorkspace.Tag = fh;
-            fh.Show();
-        }
-
-        private void IdentificarSidebarListBox(object sender, EventArgs e)
-        {
-            if (listBoxSidebar.SelectedItem == null)
-                return;
-            string opcaoSelecionada = listBoxSidebar.SelectedItem.ToString();
-            switch (opcaoSelecionada)
+            // Formatação do cargo
+            switch (role.ToLower())
             {
-                case "Cadastro":
-                    AbrirFormNoWorkspace(new formCadastro());
+                case "admin":
+                    lblCargoUsuario.Text = "Administrador";
+                    lblCargoUsuario.ForeColor = Color.ForestGreen;
                     break;
-
-                case "Vendas":
-                    // Exemplo de outro form
-                    AbrirFormNoWorkspace(new formVenda());
+                case "seller":
+                    lblCargoUsuario.Text = "Vendedor";
+                    lblCargoUsuario.ForeColor = Color.RoyalBlue;
                     break;
-                case "Estoque":
-                    AbrirFormNoWorkspace(new formEstoque());
+                case "stocker":
+                    lblCargoUsuario.Text = "Estoquista";
+                    lblCargoUsuario.ForeColor = Color.DarkOrange;
                     break;
-
-                case "Financeiro":
-                    AbrirFormNoWorkspace(new FormFinanceiro());
+                case "monetary":
+                    lblCargoUsuario.Text = "Financeiro";
+                    lblCargoUsuario.ForeColor = Color.MediumPurple;
                     break;
-
-                case "Configurações":
-                    AbrirFormNoWorkspace(new FormConfig());
-                    break;
-
-                case "Sair":
-                    Application.Exit();
+                default:
+                    lblCargoUsuario.Text = role;
+                    lblCargoUsuario.ForeColor = Color.Gray;
                     break;
             }
         }
 
-        
+        public void AtivarNavegacao(Button botaoClicado, Form formFilho)
+        {
+            // Reseta botão anterior
+            if (_botaoNavAtivo != null)
+            {
+                _botaoNavAtivo.Tag = "nav_item";
+            }
+
+            // Ativa o novo botão
+            _botaoNavAtivo = botaoClicado;
+            if (_botaoNavAtivo != null)
+            {
+                _botaoNavAtivo.Tag = "nav_ativa";
+            }
+
+            GerenciadorTema.AplicarTema(pnlNav);
+
+            // Carrega formulário no workspace
+            AbrirFormNoWorkspace(formFilho);
+        }
+
+        public void AbrirFormNoWorkspace(object formFilho)
+        {
+            if (this.panelWorkspace.Controls.Count > 0)
+            {
+                Control antigo = this.panelWorkspace.Controls[0];
+                this.panelWorkspace.Controls.Remove(antigo);
+                antigo.Dispose();
+            }
+
+            if (formFilho is Form fh)
+            {
+                fh.TopLevel = false;
+                fh.FormBorderStyle = FormBorderStyle.None;
+                fh.Dock = DockStyle.Fill;
+                GerenciadorTema.AplicarTema(fh);
+                this.panelWorkspace.Controls.Add(fh);
+                this.panelWorkspace.Tag = fh;
+                fh.Show();
+            }
+        }
+
+        private void btnNavPrincipal_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavPrincipal, new FormFinanceiro());
+        }
+
+        private void btnNavVendas_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavVendas, new formVenda());
+        }
+
+        private void btnNavEstoque_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavEstoque, new formEstoque());
+        }
+
+        private void btnNavFinanceiro_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavFinanceiro, new FormFinanceiro());
+        }
+
+        private void btnNavCadastro_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavCadastro, new formCadastro());
+        }
+
+        private void btnNavConfig_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavConfig, new FormConfig());
+        }
+
+        private void btnToggleTema_Click(object sender, EventArgs e)
+        {
+            GerenciadorTema.AlternarTema(this);
+
+            if (this.panelWorkspace.Controls.Count > 0 && this.panelWorkspace.Controls[0] is Form formAtual)
+            {
+                GerenciadorTema.AplicarTema(formAtual);
+            }
+        }
+
+        private void btnSair_Click(object sender, EventArgs e)
+        {
+            var confirmacao = MessageBox.Show(
+                "Deseja realmente encerrar a sessão e sair do sistema?",
+                "Encerrar Sessão",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (confirmacao == DialogResult.Yes)
+            {
+                Application.Exit();
+            }
+        }
+
+        private void IdentificarSidebarListBox(object sender, EventArgs e)
+        {
+            if (listBoxSidebar.SelectedItem == null) return;
+            string opcao = listBoxSidebar.SelectedItem.ToString();
+            switch (opcao)
+            {
+                case "Principal":
+                    btnNavPrincipal.PerformClick();
+                    break;
+                case "Cadastro":
+                    btnNavCadastro.PerformClick();
+                    break;
+                case "Vendas":
+                    btnNavVendas.PerformClick();
+                    break;
+                case "Estoque":
+                    btnNavEstoque.PerformClick();
+                    break;
+                case "Financeiro":
+                    btnNavFinanceiro.PerformClick();
+                    break;
+                case "Configurações":
+                    btnNavConfig.PerformClick();
+                    break;
+                case "Sair":
+                    btnSair.PerformClick();
+                    break;
+            }
+        }
     }
 }

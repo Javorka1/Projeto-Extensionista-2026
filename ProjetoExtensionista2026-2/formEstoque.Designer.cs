@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class formEstoque
     {
@@ -66,18 +66,19 @@
             this.filterBtn.Name = "filterBtn";
             this.filterBtn.Size = new System.Drawing.Size(66, 49);
             this.filterBtn.TabIndex = 1;
-            this.filterBtn.Text = "⫶☰";
+            this.filterBtn.Text = "Filtros";
+            this.filterBtn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.filterBtn.UseVisualStyleBackColor = true;
             // 
             // searchBtn
             // 
             this.searchBtn.Dock = System.Windows.Forms.DockStyle.Right;
-            this.searchBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchBtn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchBtn.Location = new System.Drawing.Point(1439, 0);
             this.searchBtn.Name = "searchBtn";
             this.searchBtn.Size = new System.Drawing.Size(68, 49);
             this.searchBtn.TabIndex = 2;
-            this.searchBtn.Text = "🔎";
+            this.searchBtn.Text = "Buscar";
             this.searchBtn.UseVisualStyleBackColor = true;
             this.searchBtn.Click += new System.EventHandler(this.searchBtn_Click);
             // 

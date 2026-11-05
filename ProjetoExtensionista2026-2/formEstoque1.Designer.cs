@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class formEstoque1
     {
@@ -180,7 +180,7 @@
             this.btnPesquisar.Name = "btnPesquisar";
             this.btnPesquisar.Size = new System.Drawing.Size(155, 30);
             this.btnPesquisar.TabIndex = 3;
-            this.btnPesquisar.Text = "🔍 Pesquisar [Enter]";
+            this.btnPesquisar.Text = "Pesquisar [Enter]";
             this.btnPesquisar.UseVisualStyleBackColor = true;
             // 
             // button2
@@ -193,7 +193,7 @@
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(155, 30);
             this.button2.TabIndex = 7;
-            this.button2.Text = "❌ Limpar [Esc]";
+            this.button2.Text = "Limpar [Esc]";
             this.button2.UseVisualStyleBackColor = true;
             // 
             // groupBox1

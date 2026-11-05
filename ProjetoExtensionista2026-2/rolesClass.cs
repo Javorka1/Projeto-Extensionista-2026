@@ -1,16 +1,28 @@
 using System;
-using ProjetoExtensionista2026_2;
 
 namespace ProjetoExtensionista2026_2
 {
     internal class rolesClass
     {
-        public void RoleSidebar(formPrincipal formPrincipal, String role, String username, String passwordHash)
+        public void RoleSidebar(formPrincipal formPrincipal, string role, string username, string passwordHash)
         {
             formPrincipal.listBoxSidebar.Items.Clear();
-            if (role == "admin")
+
+            string r = (role ?? "").ToLowerInvariant();
+
+            // Configuração dos botões modernos da sidebar
+            formPrincipal.btnNavPrincipal.Visible = true;
+            formPrincipal.btnNavConfig.Visible = true;
+            formPrincipal.btnSair.Visible = true;
+
+            if (r == "admin")
             {
-                // Admin tem acesso a todas as opções
+                // Administrador tem acesso completo
+                formPrincipal.btnNavVendas.Visible = true;
+                formPrincipal.btnNavEstoque.Visible = true;
+                formPrincipal.btnNavFinanceiro.Visible = true;
+                formPrincipal.btnNavCadastro.Visible = true;
+
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Cadastro");
                 formPrincipal.listBoxSidebar.Items.Add("Vendas");
@@ -19,25 +31,40 @@ namespace ProjetoExtensionista2026_2
                 formPrincipal.listBoxSidebar.Items.Add("Configurações");
                 formPrincipal.listBoxSidebar.Items.Add("Sair");
             }
-            else if (role == "seller")
+            else if (r == "seller")
             {
-                // Vendedor tem acesso limitado
+                // Vendedor acessa Vendas e Principal
+                formPrincipal.btnNavVendas.Visible = true;
+                formPrincipal.btnNavEstoque.Visible = false;
+                formPrincipal.btnNavFinanceiro.Visible = false;
+                formPrincipal.btnNavCadastro.Visible = false;
+
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Vendas");
                 formPrincipal.listBoxSidebar.Items.Add("Configurações");
                 formPrincipal.listBoxSidebar.Items.Add("Sair");
             }
-            else if (role == "stocker")
+            else if (r == "stocker")
             {
-                // Estoque tem acesso limitado
+                // Estoquista acessa Estoque e Principal
+                formPrincipal.btnNavVendas.Visible = false;
+                formPrincipal.btnNavEstoque.Visible = true;
+                formPrincipal.btnNavFinanceiro.Visible = false;
+                formPrincipal.btnNavCadastro.Visible = false;
+
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Estoque");
                 formPrincipal.listBoxSidebar.Items.Add("Configurações");
                 formPrincipal.listBoxSidebar.Items.Add("Sair");
             }
-            else if (role == "monetary")
+            else if (r == "monetary")
             {
-                // Financeiro tem acesso limitado
+                // Financeiro acessa Financeiro e Principal
+                formPrincipal.btnNavVendas.Visible = false;
+                formPrincipal.btnNavEstoque.Visible = false;
+                formPrincipal.btnNavFinanceiro.Visible = true;
+                formPrincipal.btnNavCadastro.Visible = false;
+
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Financeiro");
                 formPrincipal.listBoxSidebar.Items.Add("Configurações");
@@ -45,7 +72,11 @@ namespace ProjetoExtensionista2026_2
             }
             else
             {
-                // Caso o papel não seja reconhecido, exibir apenas a opção de sair
+                // Acesso restrito
+                formPrincipal.btnNavVendas.Visible = false;
+                formPrincipal.btnNavEstoque.Visible = false;
+                formPrincipal.btnNavFinanceiro.Visible = false;
+                formPrincipal.btnNavCadastro.Visible = false;
                 formPrincipal.listBoxSidebar.Items.Add("Sair");
             }
         }
