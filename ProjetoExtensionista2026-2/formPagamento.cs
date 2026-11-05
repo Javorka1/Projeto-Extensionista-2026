@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -20,6 +20,7 @@ namespace ProjetoExtensionista2026_2
         public formPagamento()
         {
             InitializeComponent();
+            GerenciadorTema.AplicarTema(this);
         }
 
         public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal) : this()

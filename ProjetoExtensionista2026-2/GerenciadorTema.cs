@@ -197,6 +197,7 @@ namespace ProjetoExtensionista2026_2
                 if (lbl.Tag?.ToString() == "subtitulo")
                 {
                     lbl.ForeColor = ModoEscuro ? TextoSecundarioEscuro : TextoSecundarioClaro;
+                    lbl.BackColor = Color.Transparent;
                     return;
                 }
 
@@ -214,12 +215,15 @@ namespace ProjetoExtensionista2026_2
                     return;
                 }
 
-                if (EhCorDeDestaqueSemantica(lbl.ForeColor))
+                if (!EhCorDeDestaqueSemantica(lbl.ForeColor))
                 {
-                    return;
+                    lbl.ForeColor = corTexto;
                 }
 
-                lbl.ForeColor = corTexto;
+                if (lbl.BackColor == SystemColors.Window || lbl.BackColor == SystemColors.Control || lbl.BackColor == Color.White)
+                {
+                    lbl.BackColor = Color.Transparent;
+                }
             }
             else if (ctrl is TextBox txt)
             {

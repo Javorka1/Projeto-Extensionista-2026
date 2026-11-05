@@ -46,7 +46,7 @@ namespace ProjetoExtensionista2026_2
             // lblTitulo
             // 
             this.lblTitulo.AutoEllipsis = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Arial", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.Location = new System.Drawing.Point(122, 27);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Padding = new System.Windows.Forms.Padding(2);
@@ -57,7 +57,7 @@ namespace ProjetoExtensionista2026_2
             // lblDescricao
             // 
             this.lblDescricao.AutoEllipsis = true;
-            this.lblDescricao.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescricao.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescricao.Location = new System.Drawing.Point(3, 150);
             this.lblDescricao.Name = "lblDescricao";
             this.lblDescricao.Padding = new System.Windows.Forms.Padding(2);
@@ -69,7 +69,7 @@ namespace ProjetoExtensionista2026_2
             // 
             this.btnAdicionar.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnAdicionar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdicionar.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdicionar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdicionar.Location = new System.Drawing.Point(84, 212);
             this.btnAdicionar.Name = "btnAdicionar";
             this.btnAdicionar.Size = new System.Drawing.Size(190, 29);
@@ -81,7 +81,7 @@ namespace ProjetoExtensionista2026_2
             // UpDownProduto
             // 
             this.UpDownProduto.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.UpDownProduto.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpDownProduto.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpDownProduto.Location = new System.Drawing.Point(6, 212);
             this.UpDownProduto.Name = "UpDownProduto";
             this.UpDownProduto.Size = new System.Drawing.Size(72, 29);
@@ -90,7 +90,7 @@ namespace ProjetoExtensionista2026_2
             // 
             // lblPrecoVenda
             // 
-            this.lblPrecoVenda.Font = new System.Drawing.Font("Arial", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPrecoVenda.Font = new System.Drawing.Font("Segoe UI", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPrecoVenda.ForeColor = System.Drawing.Color.LimeGreen;
             this.lblPrecoVenda.Location = new System.Drawing.Point(129, 105);
             this.lblPrecoVenda.Name = "lblPrecoVenda";
@@ -112,7 +112,7 @@ namespace ProjetoExtensionista2026_2
             // lblEstoque
             // 
             this.lblEstoque.BackColor = System.Drawing.Color.PaleGreen;
-            this.lblEstoque.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEstoque.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEstoque.Location = new System.Drawing.Point(168, 0);
             this.lblEstoque.Name = "lblEstoque";
             this.lblEstoque.Size = new System.Drawing.Size(113, 24);
@@ -134,7 +134,7 @@ namespace ProjetoExtensionista2026_2
             // lblCodigo
             // 
             this.lblCodigo.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.lblCodigo.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCodigo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCodigo.Location = new System.Drawing.Point(-1, 0);
             this.lblCodigo.Name = "lblCodigo";
             this.lblCodigo.Size = new System.Drawing.Size(169, 24);
@@ -145,7 +145,7 @@ namespace ProjetoExtensionista2026_2
             // lblOculto
             // 
             this.lblOculto.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblOculto.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOculto.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOculto.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
             this.lblOculto.Location = new System.Drawing.Point(129, 127);
             this.lblOculto.Name = "lblOculto";

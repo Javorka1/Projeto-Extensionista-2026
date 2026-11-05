@@ -37,9 +37,9 @@ namespace ProjetoExtensionista2026_2
             btnAbaCategorias.Tag = (indice == 1) ? "aba_ativa" : null;
             btnAbaFornecedores.Tag = (indice == 2) ? "aba_ativa" : null;
 
-            btnAbaProdutos.Font = new Font("Arial", 9.5F, (indice == 0) ? FontStyle.Bold : FontStyle.Regular);
-            btnAbaCategorias.Font = new Font("Arial", 9.5F, (indice == 1) ? FontStyle.Bold : FontStyle.Regular);
-            btnAbaFornecedores.Font = new Font("Arial", 9.5F, (indice == 2) ? FontStyle.Bold : FontStyle.Regular);
+            btnAbaProdutos.Font = new Font("Segoe UI", 9.5F, (indice == 0) ? FontStyle.Bold : FontStyle.Regular);
+            btnAbaCategorias.Font = new Font("Segoe UI", 9.5F, (indice == 1) ? FontStyle.Bold : FontStyle.Regular);
+            btnAbaFornecedores.Font = new Font("Segoe UI", 9.5F, (indice == 2) ? FontStyle.Bold : FontStyle.Regular);
 
             GerenciadorTema.AplicarTema(pnlAbas);
         }
@@ -81,6 +81,10 @@ namespace ProjetoExtensionista2026_2
                 dgvProdutosFinanceiro.DataSource = _dtProdutosCache;
                 dgvResumoCategoria.DataSource = resultado.TabelaPorCategoria;
                 dgvResumoFornecedor.DataSource = resultado.TabelaPorFornecedor;
+
+                dgvProdutosFinanceiro.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgvResumoCategoria.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                dgvResumoFornecedor.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
                 AplicarFiltroLocal();
             }

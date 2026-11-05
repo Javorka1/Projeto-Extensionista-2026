@@ -45,11 +45,12 @@ namespace ProjetoExtensionista2026_2
             // 
             // flowLayoutPanelProdutos
             // 
+            this.flowLayoutPanelProdutos.AutoScroll = true;
             this.flowLayoutPanelProdutos.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flowLayoutPanelProdutos.Location = new System.Drawing.Point(3, 111);
+            this.flowLayoutPanelProdutos.Location = new System.Drawing.Point(3, 78);
             this.flowLayoutPanelProdutos.Name = "flowLayoutPanelProdutos";
             this.flowLayoutPanelProdutos.Padding = new System.Windows.Forms.Padding(25, 0, 25, 0);
-            this.flowLayoutPanelProdutos.Size = new System.Drawing.Size(1914, 858);
+            this.flowLayoutPanelProdutos.Size = new System.Drawing.Size(1914, 934);
             this.flowLayoutPanelProdutos.TabIndex = 0;
             // 
             // tableLayoutPanel2
@@ -63,9 +64,9 @@ namespace ProjetoExtensionista2026_2
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 3;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 80F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
             this.tableLayoutPanel2.Size = new System.Drawing.Size(1920, 1080);
             this.tableLayoutPanel2.TabIndex = 1;
             // 
@@ -75,8 +76,8 @@ namespace ProjetoExtensionista2026_2
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Padding = new System.Windows.Forms.Padding(25, 20, 25, 20);
-            this.panel1.Size = new System.Drawing.Size(1914, 102);
+            this.panel1.Padding = new System.Windows.Forms.Padding(25, 12, 25, 12);
+            this.panel1.Size = new System.Drawing.Size(1914, 69);
             this.panel1.TabIndex = 1;
             // 
             // searchBarPanel
@@ -86,19 +87,18 @@ namespace ProjetoExtensionista2026_2
             this.searchBarPanel.Controls.Add(this.searchBtn);
             this.searchBarPanel.Controls.Add(this.searchTxtBox);
             this.searchBarPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            this.searchBarPanel.Location = new System.Drawing.Point(25, 20);
+            this.searchBarPanel.Location = new System.Drawing.Point(25, 12);
             this.searchBarPanel.Name = "searchBarPanel";
-            this.searchBarPanel.Size = new System.Drawing.Size(1864, 51);
+            this.searchBarPanel.Size = new System.Drawing.Size(1864, 46);
             this.searchBarPanel.TabIndex = 4;
             // 
             // filterBtn
             // 
             this.filterBtn.Dock = System.Windows.Forms.DockStyle.Right;
             this.filterBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.filterBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.filterBtn.Location = new System.Drawing.Point(1728, 0);
             this.filterBtn.Name = "filterBtn";
-            this.filterBtn.Size = new System.Drawing.Size(66, 49);
+            this.filterBtn.Size = new System.Drawing.Size(66, 44);
             this.filterBtn.TabIndex = 1;
             this.filterBtn.Text = "Filtros";
             this.filterBtn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -110,7 +110,7 @@ namespace ProjetoExtensionista2026_2
             this.searchBtn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchBtn.Location = new System.Drawing.Point(1794, 0);
             this.searchBtn.Name = "searchBtn";
-            this.searchBtn.Size = new System.Drawing.Size(68, 49);
+            this.searchBtn.Size = new System.Drawing.Size(68, 44);
             this.searchBtn.TabIndex = 2;
             this.searchBtn.Text = "Buscar";
             this.searchBtn.UseVisualStyleBackColor = true;
@@ -119,11 +119,11 @@ namespace ProjetoExtensionista2026_2
             // 
             this.searchTxtBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchTxtBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchTxtBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchTxtBox.Location = new System.Drawing.Point(0, 0);
             this.searchTxtBox.Multiline = true;
             this.searchTxtBox.Name = "searchTxtBox";
-            this.searchTxtBox.Size = new System.Drawing.Size(1722, 49);
+            this.searchTxtBox.Size = new System.Drawing.Size(1722, 44);
             this.searchTxtBox.TabIndex = 0;
             this.searchTxtBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTxtBox_KeyDown);
             // 
@@ -131,17 +131,18 @@ namespace ProjetoExtensionista2026_2
             // 
             this.panel2.Controls.Add(this.btnCadastrar);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 975);
+            this.panel2.Location = new System.Drawing.Point(3, 1018);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1914, 102);
+            this.panel2.Size = new System.Drawing.Size(1914, 59);
             this.panel2.TabIndex = 2;
             // 
             // btnCadastrar
             // 
-            this.btnCadastrar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrar.Location = new System.Drawing.Point(1738, 13);
+            this.btnCadastrar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCadastrar.Location = new System.Drawing.Point(1738, 8);
             this.btnCadastrar.Name = "btnCadastrar";
-            this.btnCadastrar.Size = new System.Drawing.Size(150, 75);
+            this.btnCadastrar.Size = new System.Drawing.Size(150, 44);
             this.btnCadastrar.TabIndex = 0;
             this.btnCadastrar.Text = "Cadastrar";
             this.btnCadastrar.UseVisualStyleBackColor = true;
@@ -154,6 +155,7 @@ namespace ProjetoExtensionista2026_2
             this.Controls.Add(this.tableLayoutPanel2);
             this.Name = "UcEstoque";
             this.Size = new System.Drawing.Size(1920, 1080);
+            this.Load += new System.EventHandler(this.UcEstoque_Load);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.searchBarPanel.ResumeLayout(false);

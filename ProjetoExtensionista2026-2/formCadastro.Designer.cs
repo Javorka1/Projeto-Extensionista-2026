@@ -55,7 +55,7 @@ namespace ProjetoExtensionista2026_2
             this.btn_cadastrarCliente.Name = "btn_cadastrarCliente";
             this.btn_cadastrarCliente.Size = new System.Drawing.Size(140, 36);
             this.btn_cadastrarCliente.TabIndex = 1;
-            this.btn_cadastrarCliente.Text = "Cadastro de Clientes";
+            this.btn_cadastrarCliente.Text = "Clientes";
             this.btn_cadastrarCliente.UseVisualStyleBackColor = true;
             this.btn_cadastrarCliente.Click += new System.EventHandler(this.btn_cadastrarCliente_Click);
             // 
@@ -69,12 +69,13 @@ namespace ProjetoExtensionista2026_2
             this.btn_cadastarProduto.Size = new System.Drawing.Size(140, 36);
             this.btn_cadastarProduto.TabIndex = 0;
             this.btn_cadastarProduto.Tag = "aba_ativa";
-            this.btn_cadastarProduto.Text = "Cadastro de Produtos";
+            this.btn_cadastarProduto.Text = "Produtos";
             this.btn_cadastarProduto.UseVisualStyleBackColor = true;
             this.btn_cadastarProduto.Click += new System.EventHandler(this.btn_cadastarProduto_Click);
             // 
             // panelConteudo
             // 
+            this.panelConteudo.AutoScroll = true;
             this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelConteudo.Location = new System.Drawing.Point(0, 52);
             this.panelConteudo.Name = "panelConteudo";

@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class formPagamento
     {
@@ -67,7 +67,7 @@
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.SystemColors.Window;
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;

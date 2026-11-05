@@ -41,6 +41,7 @@ namespace ProjetoExtensionista2026_2
             this.grpMargemMedia = new System.Windows.Forms.GroupBox();
             this.lblValorMargemMedia = new System.Windows.Forms.Label();
             this.lblDescMargemMedia = new System.Windows.Forms.Label();
+            this.tblKpi = new System.Windows.Forms.TableLayoutPanel();
 
             this.pnlFiltros = new System.Windows.Forms.Panel();
             this.lblFiltroCategoria = new System.Windows.Forms.Label();
@@ -62,6 +63,7 @@ namespace ProjetoExtensionista2026_2
 
             this.pnlTopo.SuspendLayout();
             this.pnlIndicadores.SuspendLayout();
+            this.tblKpi.SuspendLayout();
             this.grpCustoEstoque.SuspendLayout();
             this.grpReceitaPotencial.SuspendLayout();
             this.grpLucroEstimado.SuspendLayout();
@@ -90,7 +92,7 @@ namespace ProjetoExtensionista2026_2
             // lblTituloPrincipal
             // 
             this.lblTituloPrincipal.AutoSize = true;
-            this.lblTituloPrincipal.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTituloPrincipal.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloPrincipal.Location = new System.Drawing.Point(20, 18);
             this.lblTituloPrincipal.Name = "lblTituloPrincipal";
             this.lblTituloPrincipal.Size = new System.Drawing.Size(340, 26);
@@ -101,7 +103,7 @@ namespace ProjetoExtensionista2026_2
             // btnAtualizar
             // 
             this.btnAtualizar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAtualizar.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAtualizar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAtualizar.Location = new System.Drawing.Point(640, 14);
             this.btnAtualizar.Name = "btnAtualizar";
             this.btnAtualizar.Size = new System.Drawing.Size(145, 34);
@@ -114,7 +116,7 @@ namespace ProjetoExtensionista2026_2
             // btnExportarCsv
             // 
             this.btnExportarCsv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExportarCsv.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExportarCsv.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportarCsv.Location = new System.Drawing.Point(795, 14);
             this.btnExportarCsv.Name = "btnExportarCsv";
             this.btnExportarCsv.Size = new System.Drawing.Size(145, 34);
@@ -126,153 +128,166 @@ namespace ProjetoExtensionista2026_2
             // 
             // pnlIndicadores
             // 
-            this.pnlIndicadores.Controls.Add(this.grpCustoEstoque);
-            this.pnlIndicadores.Controls.Add(this.grpReceitaPotencial);
-            this.pnlIndicadores.Controls.Add(this.grpLucroEstimado);
-            this.pnlIndicadores.Controls.Add(this.grpMargemMedia);
+            this.pnlIndicadores.Controls.Add(this.tblKpi);
             this.pnlIndicadores.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlIndicadores.Location = new System.Drawing.Point(0, 60);
             this.pnlIndicadores.Name = "pnlIndicadores";
+            this.pnlIndicadores.Padding = new System.Windows.Forms.Padding(16, 4, 16, 4);
             this.pnlIndicadores.Size = new System.Drawing.Size(960, 115);
             this.pnlIndicadores.TabIndex = 1;
-
+            // 
+            // tblKpi
+            // 
+            this.tblKpi.ColumnCount = 4;
+            this.tblKpi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblKpi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblKpi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblKpi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tblKpi.Controls.Add(this.grpCustoEstoque, 0, 0);
+            this.tblKpi.Controls.Add(this.grpReceitaPotencial, 1, 0);
+            this.tblKpi.Controls.Add(this.grpLucroEstimado, 2, 0);
+            this.tblKpi.Controls.Add(this.grpMargemMedia, 3, 0);
+            this.tblKpi.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tblKpi.Location = new System.Drawing.Point(16, 4);
+            this.tblKpi.Name = "tblKpi";
+            this.tblKpi.RowCount = 1;
+            this.tblKpi.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblKpi.Size = new System.Drawing.Size(928, 107);
+            this.tblKpi.TabIndex = 0;
             // 
             // grpCustoEstoque
             // 
             this.grpCustoEstoque.Controls.Add(this.lblValorCustoEstoque);
             this.grpCustoEstoque.Controls.Add(this.lblDescCustoEstoque);
-            this.grpCustoEstoque.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpCustoEstoque.Location = new System.Drawing.Point(20, 5);
+            this.grpCustoEstoque.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpCustoEstoque.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpCustoEstoque.Location = new System.Drawing.Point(4, 4);
+            this.grpCustoEstoque.Margin = new System.Windows.Forms.Padding(4);
             this.grpCustoEstoque.Name = "grpCustoEstoque";
-            this.grpCustoEstoque.Size = new System.Drawing.Size(220, 100);
+            this.grpCustoEstoque.Size = new System.Drawing.Size(224, 99);
             this.grpCustoEstoque.TabIndex = 0;
             this.grpCustoEstoque.TabStop = false;
             this.grpCustoEstoque.Text = "Custo em Estoque";
-
             // 
             // lblValorCustoEstoque
             // 
             this.lblValorCustoEstoque.AutoSize = true;
-            this.lblValorCustoEstoque.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValorCustoEstoque.Location = new System.Drawing.Point(15, 32);
+            this.lblValorCustoEstoque.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblValorCustoEstoque.Location = new System.Drawing.Point(15, 30);
             this.lblValorCustoEstoque.Name = "lblValorCustoEstoque";
-            this.lblValorCustoEstoque.Size = new System.Drawing.Size(110, 22);
+            this.lblValorCustoEstoque.Size = new System.Drawing.Size(78, 25);
             this.lblValorCustoEstoque.TabIndex = 0;
             this.lblValorCustoEstoque.Text = "R$ 0,00";
-
             // 
             // lblDescCustoEstoque
             // 
             this.lblDescCustoEstoque.AutoSize = true;
-            this.lblDescCustoEstoque.Font = new System.Drawing.Font("Arial", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescCustoEstoque.Location = new System.Drawing.Point(15, 65);
+            this.lblDescCustoEstoque.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescCustoEstoque.Location = new System.Drawing.Point(15, 62);
             this.lblDescCustoEstoque.Name = "lblDescCustoEstoque";
-            this.lblDescCustoEstoque.Size = new System.Drawing.Size(165, 15);
+            this.lblDescCustoEstoque.Size = new System.Drawing.Size(167, 15);
             this.lblDescCustoEstoque.TabIndex = 1;
             this.lblDescCustoEstoque.Text = "Total investido em mercadorias";
-
             // 
             // grpReceitaPotencial
             // 
             this.grpReceitaPotencial.Controls.Add(this.lblValorReceitaPotencial);
             this.grpReceitaPotencial.Controls.Add(this.lblDescReceitaPotencial);
-            this.grpReceitaPotencial.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpReceitaPotencial.Location = new System.Drawing.Point(253, 5);
+            this.grpReceitaPotencial.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpReceitaPotencial.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpReceitaPotencial.Location = new System.Drawing.Point(236, 4);
+            this.grpReceitaPotencial.Margin = new System.Windows.Forms.Padding(4);
             this.grpReceitaPotencial.Name = "grpReceitaPotencial";
-            this.grpReceitaPotencial.Size = new System.Drawing.Size(220, 100);
+            this.grpReceitaPotencial.Size = new System.Drawing.Size(224, 99);
             this.grpReceitaPotencial.TabIndex = 1;
             this.grpReceitaPotencial.TabStop = false;
             this.grpReceitaPotencial.Text = "Receita Potencial";
-
             // 
             // lblValorReceitaPotencial
             // 
             this.lblValorReceitaPotencial.AutoSize = true;
-            this.lblValorReceitaPotencial.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValorReceitaPotencial.Location = new System.Drawing.Point(15, 32);
+            this.lblValorReceitaPotencial.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblValorReceitaPotencial.Location = new System.Drawing.Point(15, 30);
             this.lblValorReceitaPotencial.Name = "lblValorReceitaPotencial";
-            this.lblValorReceitaPotencial.Size = new System.Drawing.Size(110, 22);
+            this.lblValorReceitaPotencial.Size = new System.Drawing.Size(78, 25);
             this.lblValorReceitaPotencial.TabIndex = 0;
             this.lblValorReceitaPotencial.Text = "R$ 0,00";
-
             // 
             // lblDescReceitaPotencial
             // 
             this.lblDescReceitaPotencial.AutoSize = true;
-            this.lblDescReceitaPotencial.Font = new System.Drawing.Font("Arial", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescReceitaPotencial.Location = new System.Drawing.Point(15, 65);
+            this.lblDescReceitaPotencial.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescReceitaPotencial.Location = new System.Drawing.Point(15, 62);
             this.lblDescReceitaPotencial.Name = "lblDescReceitaPotencial";
-            this.lblDescReceitaPotencial.Size = new System.Drawing.Size(165, 15);
+            this.lblDescReceitaPotencial.Size = new System.Drawing.Size(142, 15);
             this.lblDescReceitaPotencial.TabIndex = 1;
             this.lblDescReceitaPotencial.Text = "Valor bruto de venda total";
-
             // 
             // grpLucroEstimado
             // 
             this.grpLucroEstimado.Controls.Add(this.lblValorLucroEstimado);
             this.grpLucroEstimado.Controls.Add(this.lblDescLucroEstimado);
-            this.grpLucroEstimado.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpLucroEstimado.Location = new System.Drawing.Point(486, 5);
+            this.grpLucroEstimado.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpLucroEstimado.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpLucroEstimado.Location = new System.Drawing.Point(468, 4);
+            this.grpLucroEstimado.Margin = new System.Windows.Forms.Padding(4);
             this.grpLucroEstimado.Name = "grpLucroEstimado";
-            this.grpLucroEstimado.Size = new System.Drawing.Size(220, 100);
+            this.grpLucroEstimado.Size = new System.Drawing.Size(224, 99);
             this.grpLucroEstimado.TabIndex = 2;
             this.grpLucroEstimado.TabStop = false;
             this.grpLucroEstimado.Text = "Lucro Projetado";
-
             // 
             // lblValorLucroEstimado
             // 
             this.lblValorLucroEstimado.AutoSize = true;
-            this.lblValorLucroEstimado.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValorLucroEstimado.Location = new System.Drawing.Point(15, 32);
+            this.lblValorLucroEstimado.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblValorLucroEstimado.Location = new System.Drawing.Point(15, 30);
             this.lblValorLucroEstimado.Name = "lblValorLucroEstimado";
-            this.lblValorLucroEstimado.Size = new System.Drawing.Size(110, 22);
+            this.lblValorLucroEstimado.Size = new System.Drawing.Size(78, 25);
             this.lblValorLucroEstimado.TabIndex = 0;
             this.lblValorLucroEstimado.Text = "R$ 0,00";
-
             // 
             // lblDescLucroEstimado
             // 
             this.lblDescLucroEstimado.AutoSize = true;
-            this.lblDescLucroEstimado.Font = new System.Drawing.Font("Arial", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescLucroEstimado.Location = new System.Drawing.Point(15, 65);
+            this.lblDescLucroEstimado.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescLucroEstimado.Location = new System.Drawing.Point(15, 62);
             this.lblDescLucroEstimado.Name = "lblDescLucroEstimado";
-            this.lblDescLucroEstimado.Size = new System.Drawing.Size(165, 15);
+            this.lblDescLucroEstimado.Size = new System.Drawing.Size(166, 15);
             this.lblDescLucroEstimado.TabIndex = 1;
             this.lblDescLucroEstimado.Text = "Receita potencial menos custo";
-
             // 
             // grpMargemMedia
             // 
             this.grpMargemMedia.Controls.Add(this.lblValorMargemMedia);
             this.grpMargemMedia.Controls.Add(this.lblDescMargemMedia);
-            this.grpMargemMedia.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grpMargemMedia.Location = new System.Drawing.Point(720, 5);
+            this.grpMargemMedia.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.grpMargemMedia.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.grpMargemMedia.Location = new System.Drawing.Point(700, 4);
+            this.grpMargemMedia.Margin = new System.Windows.Forms.Padding(4);
             this.grpMargemMedia.Name = "grpMargemMedia";
-            this.grpMargemMedia.Size = new System.Drawing.Size(220, 100);
+            this.grpMargemMedia.Size = new System.Drawing.Size(224, 99);
             this.grpMargemMedia.TabIndex = 3;
             this.grpMargemMedia.TabStop = false;
             this.grpMargemMedia.Text = "Margem Média";
-
             // 
             // lblValorMargemMedia
             // 
             this.lblValorMargemMedia.AutoSize = true;
-            this.lblValorMargemMedia.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblValorMargemMedia.Location = new System.Drawing.Point(15, 32);
+            this.lblValorMargemMedia.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblValorMargemMedia.Location = new System.Drawing.Point(15, 30);
             this.lblValorMargemMedia.Name = "lblValorMargemMedia";
-            this.lblValorMargemMedia.Size = new System.Drawing.Size(70, 22);
+            this.lblValorMargemMedia.Size = new System.Drawing.Size(59, 25);
             this.lblValorMargemMedia.TabIndex = 0;
             this.lblValorMargemMedia.Text = "0,0%";
-
             // 
             // lblDescMargemMedia
             // 
             this.lblDescMargemMedia.AutoSize = true;
-            this.lblDescMargemMedia.Font = new System.Drawing.Font("Arial", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescMargemMedia.Location = new System.Drawing.Point(15, 65);
+            this.lblDescMargemMedia.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescMargemMedia.Location = new System.Drawing.Point(15, 62);
             this.lblDescMargemMedia.Name = "lblDescMargemMedia";
-            this.lblDescMargemMedia.Size = new System.Drawing.Size(165, 15);
+            this.lblDescMargemMedia.Size = new System.Drawing.Size(175, 15);
             this.lblDescMargemMedia.TabIndex = 1;
             this.lblDescMargemMedia.Text = "Rentabilidade média sobre custo";
 
@@ -295,7 +310,7 @@ namespace ProjetoExtensionista2026_2
             // lblFiltroCategoria
             // 
             this.lblFiltroCategoria.AutoSize = true;
-            this.lblFiltroCategoria.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFiltroCategoria.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFiltroCategoria.Location = new System.Drawing.Point(20, 16);
             this.lblFiltroCategoria.Name = "lblFiltroCategoria";
             this.lblFiltroCategoria.Size = new System.Drawing.Size(68, 16);
@@ -306,7 +321,7 @@ namespace ProjetoExtensionista2026_2
             // cmbCategoria
             // 
             this.cmbCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbCategoria.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbCategoria.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbCategoria.FormattingEnabled = true;
             this.cmbCategoria.Location = new System.Drawing.Point(95, 12);
             this.cmbCategoria.Name = "cmbCategoria";
@@ -317,7 +332,7 @@ namespace ProjetoExtensionista2026_2
             // lblBusca
             // 
             this.lblBusca.AutoSize = true;
-            this.lblBusca.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblBusca.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBusca.Location = new System.Drawing.Point(295, 16);
             this.lblBusca.Name = "lblBusca";
             this.lblBusca.Size = new System.Drawing.Size(55, 16);
@@ -327,7 +342,7 @@ namespace ProjetoExtensionista2026_2
             // 
             // txtBuscaProduto
             // 
-            this.txtBuscaProduto.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBuscaProduto.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBuscaProduto.Location = new System.Drawing.Point(355, 13);
             this.txtBuscaProduto.Name = "txtBuscaProduto";
             this.txtBuscaProduto.Size = new System.Drawing.Size(230, 22);
@@ -336,7 +351,7 @@ namespace ProjetoExtensionista2026_2
             // 
             // btnFiltrar
             // 
-            this.btnFiltrar.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFiltrar.Location = new System.Drawing.Point(600, 9);
             this.btnFiltrar.Name = "btnFiltrar";
             this.btnFiltrar.Size = new System.Drawing.Size(110, 30);
@@ -348,7 +363,7 @@ namespace ProjetoExtensionista2026_2
             // 
             // btnLimparFiltros
             // 
-            this.btnLimparFiltros.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLimparFiltros.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLimparFiltros.Location = new System.Drawing.Point(720, 9);
             this.btnLimparFiltros.Name = "btnLimparFiltros";
             this.btnLimparFiltros.Size = new System.Drawing.Size(110, 30);
@@ -372,37 +387,37 @@ namespace ProjetoExtensionista2026_2
             // 
             // btnAbaProdutos
             // 
-            this.btnAbaProdutos.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAbaProdutos.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAbaProdutos.Location = new System.Drawing.Point(20, 4);
             this.btnAbaProdutos.Name = "btnAbaProdutos";
-            this.btnAbaProdutos.Size = new System.Drawing.Size(210, 34);
+            this.btnAbaProdutos.Size = new System.Drawing.Size(160, 34);
             this.btnAbaProdutos.TabIndex = 0;
             this.btnAbaProdutos.Tag = "aba_ativa";
-            this.btnAbaProdutos.Text = "Rentabilidade por Produto";
+            this.btnAbaProdutos.Text = "Por Produto";
             this.btnAbaProdutos.UseVisualStyleBackColor = true;
             this.btnAbaProdutos.Click += new System.EventHandler(this.btnAbaProdutos_Click);
 
             // 
             // btnAbaCategorias
             // 
-            this.btnAbaCategorias.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAbaCategorias.Location = new System.Drawing.Point(236, 4);
+            this.btnAbaCategorias.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAbaCategorias.Location = new System.Drawing.Point(186, 4);
             this.btnAbaCategorias.Name = "btnAbaCategorias";
-            this.btnAbaCategorias.Size = new System.Drawing.Size(200, 34);
+            this.btnAbaCategorias.Size = new System.Drawing.Size(160, 34);
             this.btnAbaCategorias.TabIndex = 1;
-            this.btnAbaCategorias.Text = "Agregado por Categoria";
+            this.btnAbaCategorias.Text = "Por Categoria";
             this.btnAbaCategorias.UseVisualStyleBackColor = true;
             this.btnAbaCategorias.Click += new System.EventHandler(this.btnAbaCategorias_Click);
 
             // 
             // btnAbaFornecedores
             // 
-            this.btnAbaFornecedores.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAbaFornecedores.Location = new System.Drawing.Point(442, 4);
+            this.btnAbaFornecedores.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAbaFornecedores.Location = new System.Drawing.Point(352, 4);
             this.btnAbaFornecedores.Name = "btnAbaFornecedores";
-            this.btnAbaFornecedores.Size = new System.Drawing.Size(200, 34);
+            this.btnAbaFornecedores.Size = new System.Drawing.Size(160, 34);
             this.btnAbaFornecedores.TabIndex = 2;
-            this.btnAbaFornecedores.Text = "Agregado por Fornecedor";
+            this.btnAbaFornecedores.Text = "Por Fornecedor";
             this.btnAbaFornecedores.UseVisualStyleBackColor = true;
             this.btnAbaFornecedores.Click += new System.EventHandler(this.btnAbaFornecedores_Click);
 
@@ -497,6 +512,7 @@ namespace ProjetoExtensionista2026_2
             this.grpMargemMedia.PerformLayout();
             this.pnlFiltros.ResumeLayout(false);
             this.pnlFiltros.PerformLayout();
+            this.tblKpi.ResumeLayout(false);
             this.pnlAbas.ResumeLayout(false);
             this.pnlConteudoTabelas.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProdutosFinanceiro)).EndInit();
@@ -513,6 +529,7 @@ namespace ProjetoExtensionista2026_2
         private System.Windows.Forms.Button btnExportarCsv;
 
         private System.Windows.Forms.Panel pnlIndicadores;
+        private System.Windows.Forms.TableLayoutPanel tblKpi;
         private System.Windows.Forms.GroupBox grpCustoEstoque;
         private System.Windows.Forms.Label lblValorCustoEstoque;
         private System.Windows.Forms.Label lblDescCustoEstoque;

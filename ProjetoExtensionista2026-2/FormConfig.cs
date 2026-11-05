@@ -84,7 +84,7 @@ namespace ProjetoExtensionista2026_2
             {
                 System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                 {
-                    FileName = "https://github.com/javorka1/ProjetoExtensionista2026-2",
+                    FileName = "https://github.com/Javorka1/Projeto-Extensionista-2026",
                     UseShellExecute = true
                 });
             }

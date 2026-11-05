@@ -7,14 +7,32 @@ namespace ProjetoExtensionista2026_2
     public partial class formCadastro : Form
     {
         private Button botaoAtivo;
+        private UserControl _telaAtiva;
 
         public formCadastro()
         {
             InitializeComponent();
+            panelConteudo.Resize += (s, e) => CentralizarTelaAtiva();
             GerenciadorTema.AplicarTema(this);
 
             // Inicia exibindo o cadastro de Produto como padrão
             AtivarAba(btn_cadastarProduto, new UcCadastroProduto());
+        }
+
+        private void CentralizarTelaAtiva()
+        {
+            if (_telaAtiva != null && panelConteudo != null)
+            {
+                int x = Math.Max(20, (panelConteudo.ClientSize.Width - _telaAtiva.Width) / 2);
+                int y = Math.Max(15, (panelConteudo.ClientSize.Height - _telaAtiva.Height) / 4);
+                _telaAtiva.Location = new Point(x, y);
+            }
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            CentralizarTelaAtiva();
         }
 
         private void AtivarAba(Button botaoClicado, UserControl telaConteudo)
@@ -36,9 +54,12 @@ namespace ProjetoExtensionista2026_2
 
             // 3. Substitui o conteúdo do panel inferior
             panelConteudo.Controls.Clear();
-            telaConteudo.Dock = DockStyle.Fill;
+            _telaAtiva = telaConteudo;
+            telaConteudo.Dock = DockStyle.None;
+            telaConteudo.Anchor = AnchorStyles.None;
             GerenciadorTema.AplicarTema(telaConteudo);
             panelConteudo.Controls.Add(telaConteudo);
+            CentralizarTelaAtiva();
         }
 
         private void btn_cadastarProduto_Click(object sender, EventArgs e)

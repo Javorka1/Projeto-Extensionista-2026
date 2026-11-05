@@ -55,9 +55,25 @@ namespace ProjetoExtensionista2026_2
             if (panelCarrinho != null)
                 panelCarrinho.AutoScroll = true;
 
+            AjustarLarguraCarrinho();
             ConfigurarCamposDesconto();
             DefinirClientePadrao();
             AtualizarTotaisCarrinho();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            AjustarLarguraCarrinho();
+        }
+
+        private void AjustarLarguraCarrinho()
+        {
+            if (splitContainer_catalogo != null && splitContainer_catalogo.Width > 500)
+            {
+                const int larguraDesejada = 400;
+                splitContainer_catalogo.SplitterDistance = Math.Max(250, splitContainer_catalogo.Width - larguraDesejada);
+            }
         }
 
         private void formVenda_KeyDown(object sender, KeyEventArgs e)
@@ -380,7 +396,7 @@ namespace ProjetoExtensionista2026_2
                 lblTotal.Text = totalFinal.ToString("C2");
 
             if (lblQtdItens != null)
-                lblQtdItens.Text = $"{totalItens} item(ns)";
+                lblQtdItens.Text = $"Itens do Pedido: {totalItens} item(ns)";
         }
 
         private void ConfigurarCamposDesconto()
@@ -516,7 +532,12 @@ namespace ProjetoExtensionista2026_2
 
         private void splitContainer_catalogo_SplitterMoved(object sender, SplitterEventArgs e)
         {
-            LimitarSplitter(splitContainer_catalogo, 0.58, 0.67);
+            if (splitContainer_catalogo == null || splitContainer_catalogo.Width <= 500) return;
+            int dist = splitContainer_catalogo.SplitterDistance;
+            int minDistance = splitContainer_catalogo.Width - 520;
+            int maxDistance = splitContainer_catalogo.Width - 320;
+            if (dist < minDistance) splitContainer_catalogo.SplitterDistance = minDistance;
+            else if (dist > maxDistance) splitContainer_catalogo.SplitterDistance = maxDistance;
         }
 
         private static void LimitarSplitter(SplitContainer split, double percMin, double percMax)
