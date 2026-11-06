@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProjetoExtensionista2026_2
@@ -13,9 +8,13 @@ namespace ProjetoExtensionista2026_2
     public partial class formPagamento : Form
     {
         private decimal _subtotal;
-        private decimal _desconto;
-        private int _descontoPorcentagem;
         private decimal _totalFinal;
+        private decimal _totalPago = 0m;
+
+        private long _descontoCentavos = 0;
+        private int _descontoPorcentagem = 0;
+        private bool _atualizandoDesconto = false;
+        private decimal DescontoAtual => _descontoCentavos / 100m;
 
         private UcPagamento _ucPagamento;
         private UcObservacoes _ucObservacoes;
@@ -24,71 +23,72 @@ namespace ProjetoExtensionista2026_2
         {
             InitializeComponent();
             GerenciadorTema.AplicarTema(this);
-
+            KeyPreview = true;
             this.Load += formPagamento_Load;
         }
 
         public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal) : this()
         {
             _subtotal = subtotal;
-            _desconto = desconto;
+            _descontoCentavos = (long)Math.Round(desconto * 100m);
             _descontoPorcentagem = descontoPorcentagem;
             _totalFinal = totalFinal;
-
-            PreencherTotais();
         }
 
         private void formPagamento_Load(object sender, EventArgs e)
         {
-            InicializarUserControls();
+            ConfigurarEventosDesconto();
+            InicializarAbas();
+            RecalcularTotais(preservarTextoDesconto: false);
 
-            ExibirControle(_ucPagamento);
-            AtualizarEstiloBotoes(btnPagamento);
+            dgvPagamentos.CellClick -= dgvPagamentos_CellClick;
+            dgvPagamentos.CellClick += dgvPagamentos_CellClick;
+
+            ConfigurarEventosDesconto();
+            InicializarAbas();
+            RecalcularTotais(preservarTextoDesconto: false);
         }
 
-        private void InicializarUserControls()
+        private void dgvPagamentos_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            bool ehColunaBotao = dgvPagamentos.Columns[e.ColumnIndex] is DataGridViewButtonColumn ||
+                                 dgvPagamentos.Columns[e.ColumnIndex].Name == "colRemover";
+
+            if (ehColunaBotao)
+            {
+                dgvPagamentos.Rows.RemoveAt(e.RowIndex);
+                RecalcularTotais(preservarTextoDesconto: false);
+            }
+        }
+
+        private void InicializarAbas()
         {
             if (panelConteudo == null) return;
 
-            _ucPagamento = new UcPagamento
-            {
-                Dock = DockStyle.Fill
-            };
-            GerenciadorTema.AplicarTema(_ucPagamento);
+            _ucPagamento = new UcPagamento { Dock = DockStyle.Fill };
+            _ucObservacoes = new UcObservacoes { Dock = DockStyle.Fill };
 
-            _ucObservacoes = new UcObservacoes
-            {
-                Dock = DockStyle.Fill
-            };
+            GerenciadorTema.AplicarTema(_ucPagamento);
             GerenciadorTema.AplicarTema(_ucObservacoes);
 
-            panelConteudo.SuspendLayout();
-            panelConteudo.Controls.Add(_ucPagamento);
-            panelConteudo.Controls.Add(_ucObservacoes);
-            panelConteudo.ResumeLayout();
+            _ucPagamento.AoAdicionarPagamento += (tipo, valor, parcelas) =>
+            {
+                int idx = dgvPagamentos.Rows.Add(tipo, valor.ToString("C2"), $"{parcelas}x");
+                dgvPagamentos.Rows[idx].Tag = valor;
+                RecalcularTotais(preservarTextoDesconto: false);
+            };
+
+            panelConteudo.Controls.AddRange(new Control[] { _ucPagamento, _ucObservacoes });
+            AlternarAba(_ucPagamento, btnPagamento);
         }
 
-        private void ExibirControle(UserControl uc)
+        private void AlternarAba(UserControl uc, Button botaoAtivo)
         {
-            if (panelConteudo == null || uc == null) return;
+            uc.BringToFront();
+            uc.Focus();
 
-            panelConteudo.SuspendLayout();
-            try
-            {
-                if (!panelConteudo.Controls.Contains(uc))
-                    panelConteudo.Controls.Add(uc);
-
-                uc.BringToFront();
-                uc.Focus();
-            }
-            finally
-            {
-                panelConteudo.ResumeLayout();
-            }
-        }
-
-        private void AtualizarEstiloBotoes(Button botaoAtivo)
-        {
             if (btnPagamento != null)
             {
                 bool ativo = (btnPagamento == botaoAtivo);
@@ -104,34 +104,187 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        private void btnPagamento_Click(object sender, EventArgs e)
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            ExibirControle(_ucPagamento);
-            AtualizarEstiloBotoes(btnPagamento);
+            if (keyData == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+                Close();
+                return true;
+            }
+
+            if (keyData == Keys.F12)
+            {
+                FinalizarVenda();
+                return true;
+            }
+
+            if (keyData == Keys.Delete && dgvPagamentos.Focused && dgvPagamentos.CurrentRow != null)
+            {
+                dgvPagamentos.Rows.Remove(dgvPagamentos.CurrentRow);
+                RecalcularTotais(preservarTextoDesconto: false);
+                return true;
+            }
+
+            if (keyData == Keys.Enter && ActiveControl != btnCancelar && ActiveControl != btnFinalizar && ActiveControl != btnPagamento && ActiveControl != btnObservacoes)
+            {
+                _ucPagamento?.ConfirmarLancamentoPagamento();
+                return true;
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void btnObservacoes_Click(object sender, EventArgs e)
-        {
-            ExibirControle(_ucObservacoes);
-            AtualizarEstiloBotoes(btnObservacoes);
-        }
+        #region Descontos Sincronizados
 
-        private void PreencherTotais()
+        private void ConfigurarEventosDesconto()
         {
-            if (lblSubtotal != null)
-                lblSubtotal.Text = _subtotal.ToString("C2");
-
             if (txtDesconto != null)
-                txtDesconto.Text = $"- {_desconto:C2}";
+            {
+                txtDesconto.KeyPress += (s, e) =>
+                {
+                    e.Handled = true;
+                    if (!char.IsDigit(e.KeyChar)) return;
+
+                    long proximo = (_descontoCentavos * 10) + (e.KeyChar - '0');
+                    _descontoCentavos = Math.Min(proximo, (long)Math.Round(_subtotal * 100m));
+                    SincronizarDesconto(origemValor: true);
+                };
+
+                txtDesconto.KeyDown += (s, e) =>
+                {
+                    if (e.KeyCode == Keys.Back) { e.SuppressKeyPress = true; _descontoCentavos /= 10; }
+                    else if (e.KeyCode == Keys.Delete) { e.SuppressKeyPress = true; _descontoCentavos = 0; }
+                    else return;
+                    SincronizarDesconto(origemValor: true);
+                };
+            }
 
             if (txtDescontoPorcentagem != null)
-                txtDescontoPorcentagem.Text = $"{_descontoPorcentagem} %";
+            {
+                txtDescontoPorcentagem.KeyPress += (s, e) =>
+                {
+                    e.Handled = true;
+                    if (!char.IsDigit(e.KeyChar)) return;
 
-            if (lblTotal != null)
-                lblTotal.Text = _totalFinal.ToString("C2");
+                    _descontoPorcentagem = Math.Min(100, (_descontoPorcentagem * 10) + (e.KeyChar - '0'));
+                    SincronizarDesconto(origemValor: false);
+                };
+
+                txtDescontoPorcentagem.KeyDown += (s, e) =>
+                {
+                    if (e.KeyCode == Keys.Back) { e.SuppressKeyPress = true; _descontoPorcentagem /= 10; }
+                    else if (e.KeyCode == Keys.Delete) { e.SuppressKeyPress = true; _descontoPorcentagem = 0; }
+                    else return;
+                    SincronizarDesconto(origemValor: false);
+                };
+            }
+        }
+
+        private void SincronizarDesconto(bool origemValor)
+        {
+            if (_atualizandoDesconto) return;
+            _atualizandoDesconto = true;
+
+            try
+            {
+                if (origemValor)
+                {
+                    int pct = _subtotal > 0m ? (int)Math.Round((DescontoAtual / _subtotal) * 100m) : 0;
+                    _descontoPorcentagem = Math.Min(100, Math.Max(0, pct));
+                }
+                else
+                {
+                    decimal valor = Math.Round(_subtotal * (_descontoPorcentagem / 100m), 2);
+                    _descontoCentavos = (long)Math.Round(valor * 100m);
+                }
+
+                if (txtDesconto != null)
+                {
+                    txtDesconto.Text = $"- {DescontoAtual:C2}";
+                    txtDesconto.SelectionStart = txtDesconto.Text.Length;
+                }
+
+                if (txtDescontoPorcentagem != null)
+                {
+                    txtDescontoPorcentagem.Text = $"{_descontoPorcentagem} %";
+                    txtDescontoPorcentagem.SelectionStart = txtDescontoPorcentagem.Text.Length;
+                }
+
+                RecalcularTotais(preservarTextoDesconto: true);
+            }
+            finally
+            {
+                _atualizandoDesconto = false;
+            }
+        }
+
+        #endregion
+
+        private void RecalcularTotais(bool preservarTextoDesconto)
+        {
+            _totalFinal = Math.Max(0m, _subtotal - DescontoAtual);
+
+            _totalPago = dgvPagamentos.Rows.Cast<DataGridViewRow>()
+                .Where(r => !r.IsNewRow && r.Tag is decimal)
+                .Sum(r => (decimal)r.Tag);
+
+            if (lblSubtotal != null) lblSubtotal.Text = _subtotal.ToString("C2");
+            if (lblTotal != null) lblTotal.Text = _totalFinal.ToString("C2");
+
+            if (!preservarTextoDesconto)
+            {
+                if (txtDesconto != null) txtDesconto.Text = $"- {DescontoAtual:C2}";
+                if (txtDescontoPorcentagem != null) txtDescontoPorcentagem.Text = $"{_descontoPorcentagem} %";
+            }
+
+            bool temTroco = _totalPago > _totalFinal;
+            decimal diferenca = temTroco ? (_totalPago - _totalFinal) : (_totalFinal - _totalPago);
+
+            if (lblExcedente != null)
+            {
+                lblExcedente.Text = temTroco ? "Troco:" : "Restante:";
+                lblExcedente.ForeColor = temTroco ? Color.FromArgb(40, 167, 69) : SystemColors.ControlText;
+            }
 
             if (lblRestante != null)
-                lblRestante.Text = _totalFinal.ToString("C2");
+            {
+                lblRestante.Text = diferenca.ToString("C2");
+                lblRestante.ForeColor = temTroco ? Color.FromArgb(40, 167, 69) : SystemColors.ControlText;
+            }
+
+            _ucPagamento?.DefinirSaldoRestante(temTroco ? 0m : diferenca);
+
+            if (btnFinalizar != null)
+            {
+                bool podeFinalizar = _totalPago >= _totalFinal && _totalFinal > 0m;
+                btnFinalizar.BackColor = podeFinalizar ? Color.FromArgb(40, 167, 69) : SystemColors.Control;
+                btnFinalizar.ForeColor = podeFinalizar ? Color.White : SystemColors.ControlText;
+            }
+        }
+
+        private void FinalizarVenda()
+        {
+            if (_totalPago < _totalFinal)
+            {
+                MessageBox.Show($"Ainda resta um saldo de {(_totalFinal - _totalPago):C2} a ser pago.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        private void btnPagamento_Click(object sender, EventArgs e) => AlternarAba(_ucPagamento, btnPagamento);
+        private void btnObservacoes_Click(object sender, EventArgs e) => AlternarAba(_ucObservacoes, btnObservacoes);
+        private void btnFinalizar_Click(object sender, EventArgs e) => FinalizarVenda();
+        private void btnCancelar_Click(object sender, EventArgs e) { DialogResult = DialogResult.Cancel; Close(); }
+        private void dgvPagamentos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                dgvPagamentos.Rows.RemoveAt(e.RowIndex);
+                RecalcularTotais(preservarTextoDesconto: false);
+            }
         }
     }
 }
