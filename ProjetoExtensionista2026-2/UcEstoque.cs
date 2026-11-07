@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
@@ -101,6 +101,9 @@ namespace ProjetoExtensionista2026_2
 
             if (panel2 != null)
                 panel2.Visible = !ehVendedor;
+
+            if (tableLayoutPanel2 != null && tableLayoutPanel2.RowStyles.Count > 2)
+                tableLayoutPanel2.RowStyles[2].Height = ehVendedor ? 10F : 84F;
 
             if (this.Controls.ContainsKey("btnOculto"))
                 this.Controls["btnOculto"].Visible = _podeVerOcultos;

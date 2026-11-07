@@ -46,11 +46,11 @@ namespace ProjetoExtensionista2026_2
             // lblTitulo
             // 
             this.lblTitulo.AutoEllipsis = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.Location = new System.Drawing.Point(122, 28);
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.Location = new System.Drawing.Point(122, 27);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Padding = new System.Windows.Forms.Padding(2);
-            this.lblTitulo.Size = new System.Drawing.Size(152, 62);
+            this.lblTitulo.Size = new System.Drawing.Size(152, 60);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Produto ...";
             // 
@@ -93,9 +93,9 @@ namespace ProjetoExtensionista2026_2
             // 
             this.lblPrecoVenda.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPrecoVenda.ForeColor = System.Drawing.Color.LimeGreen;
-            this.lblPrecoVenda.Location = new System.Drawing.Point(122, 95);
+            this.lblPrecoVenda.Location = new System.Drawing.Point(122, 91);
             this.lblPrecoVenda.Name = "lblPrecoVenda";
-            this.lblPrecoVenda.Size = new System.Drawing.Size(152, 22);
+            this.lblPrecoVenda.Size = new System.Drawing.Size(152, 24);
             this.lblPrecoVenda.TabIndex = 5;
             this.lblPrecoVenda.Text = "R$ 00,00";
             this.lblPrecoVenda.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -149,7 +149,7 @@ namespace ProjetoExtensionista2026_2
             this.lblOculto.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblOculto.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOculto.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblOculto.Location = new System.Drawing.Point(122, 120);
+            this.lblOculto.Location = new System.Drawing.Point(122, 118);
             this.lblOculto.Name = "lblOculto";
             this.lblOculto.Size = new System.Drawing.Size(152, 20);
             this.lblOculto.TabIndex = 9;

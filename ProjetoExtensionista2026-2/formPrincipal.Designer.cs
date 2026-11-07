@@ -185,10 +185,10 @@ namespace ProjetoExtensionista2026_2
             this.pnlUserFooter.Controls.Add(this.btnToggleTema);
             this.pnlUserFooter.Controls.Add(this.pnlCardUsuario);
             this.pnlUserFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlUserFooter.Location = new System.Drawing.Point(0, 551);
+            this.pnlUserFooter.Location = new System.Drawing.Point(0, 531);
             this.pnlUserFooter.Name = "pnlUserFooter";
-            this.pnlUserFooter.Padding = new System.Windows.Forms.Padding(10, 6, 10, 8);
-            this.pnlUserFooter.Size = new System.Drawing.Size(240, 130);
+            this.pnlUserFooter.Padding = new System.Windows.Forms.Padding(10, 6, 10, 24);
+            this.pnlUserFooter.Size = new System.Drawing.Size(240, 150);
             this.pnlUserFooter.TabIndex = 2;
             // 
             // btnSair
