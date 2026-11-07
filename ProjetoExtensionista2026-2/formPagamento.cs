@@ -37,16 +37,13 @@ namespace ProjetoExtensionista2026_2
 
         private void formPagamento_Load(object sender, EventArgs e)
         {
-            ConfigurarEventosDesconto();
-            InicializarAbas();
-            RecalcularTotais(preservarTextoDesconto: false);
-
             dgvPagamentos.CellClick -= dgvPagamentos_CellClick;
             dgvPagamentos.CellClick += dgvPagamentos_CellClick;
 
             ConfigurarEventosDesconto();
             InicializarAbas();
             RecalcularTotais(preservarTextoDesconto: false);
+            GerenciadorTema.AplicarTema(this);
         }
 
         private void dgvPagamentos_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -66,6 +63,7 @@ namespace ProjetoExtensionista2026_2
         private void InicializarAbas()
         {
             if (panelConteudo == null) return;
+            panelConteudo.Controls.Clear();
 
             _ucPagamento = new UcPagamento { Dock = DockStyle.Fill };
             _ucObservacoes = new UcObservacoes { Dock = DockStyle.Fill };
@@ -91,16 +89,17 @@ namespace ProjetoExtensionista2026_2
 
             if (btnPagamento != null)
             {
-                bool ativo = (btnPagamento == botaoAtivo);
-                btnPagamento.BackColor = ativo ? SystemColors.Control : SystemColors.ControlDark;
-                btnPagamento.ForeColor = ativo ? Color.Black : Color.White;
+                btnPagamento.Tag = (btnPagamento == botaoAtivo) ? "aba_ativa" : null;
             }
 
             if (btnObservacoes != null)
             {
-                bool ativo = (btnObservacoes == botaoAtivo);
-                btnObservacoes.BackColor = ativo ? SystemColors.Control : SystemColors.ControlDark;
-                btnObservacoes.ForeColor = ativo ? Color.Black : Color.White;
+                btnObservacoes.Tag = (btnObservacoes == botaoAtivo) ? "aba_ativa" : null;
+            }
+
+            if (panel9 != null)
+            {
+                GerenciadorTema.AplicarTema(panel9);
             }
         }
 
@@ -239,27 +238,31 @@ namespace ProjetoExtensionista2026_2
             }
 
             bool temTroco = _totalPago > _totalFinal;
+            bool quitado = _totalPago >= _totalFinal && _totalFinal > 0m;
             decimal diferenca = temTroco ? (_totalPago - _totalFinal) : (_totalFinal - _totalPago);
+            Color corTextoPadrao = GerenciadorTema.ModoEscuro ? GerenciadorTema.TextoEscuro : GerenciadorTema.TextoClaro;
 
             if (lblExcedente != null)
             {
                 lblExcedente.Text = temTroco ? "Troco:" : "Restante:";
-                lblExcedente.ForeColor = temTroco ? Color.FromArgb(40, 167, 69) : SystemColors.ControlText;
+                lblExcedente.ForeColor = quitado ? GerenciadorTema.CorSucesso : corTextoPadrao;
             }
 
             if (lblRestante != null)
             {
                 lblRestante.Text = diferenca.ToString("C2");
-                lblRestante.ForeColor = temTroco ? Color.FromArgb(40, 167, 69) : SystemColors.ControlText;
+                lblRestante.ForeColor = quitado ? GerenciadorTema.CorSucesso : corTextoPadrao;
             }
 
             _ucPagamento?.DefinirSaldoRestante(temTroco ? 0m : diferenca);
 
             if (btnFinalizar != null)
             {
-                bool podeFinalizar = _totalPago >= _totalFinal && _totalFinal > 0m;
-                btnFinalizar.BackColor = podeFinalizar ? Color.FromArgb(40, 167, 69) : SystemColors.Control;
-                btnFinalizar.ForeColor = podeFinalizar ? Color.White : SystemColors.ControlText;
+                btnFinalizar.Tag = quitado ? "sucesso" : null;
+                btnFinalizar.BackColor = quitado
+                    ? GerenciadorTema.CorSucesso
+                    : (GerenciadorTema.ModoEscuro ? GerenciadorTema.FundoControleEscuro : GerenciadorTema.FundoControleClaro);
+                btnFinalizar.ForeColor = quitado ? Color.White : corTextoPadrao;
             }
         }
 

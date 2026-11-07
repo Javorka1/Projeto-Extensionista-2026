@@ -450,14 +450,14 @@ namespace ProjetoExtensionista2026_2
             // ColRemover
             // 
             dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Red;
             this.ColRemover.DefaultCellStyle = dataGridViewCellStyle5;
-            this.ColRemover.FillWeight = 10.96447F;
-            this.ColRemover.HeaderText = "";
+            this.ColRemover.FillWeight = 14F;
+            this.ColRemover.HeaderText = "Ação";
             this.ColRemover.Name = "ColRemover";
             this.ColRemover.ReadOnly = true;
-            this.ColRemover.Text = "🗑️";
+            this.ColRemover.Text = "X";
             this.ColRemover.UseColumnTextForButtonValue = true;
             // 
             // formPagamento
@@ -471,7 +471,7 @@ namespace ProjetoExtensionista2026_2
             this.Controls.Add(this.panel1);
             this.Name = "formPagamento";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "formPagamento";
+            this.Text = "Finalizar Venda - Checkout";
             this.panel1.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel4.ResumeLayout(false);

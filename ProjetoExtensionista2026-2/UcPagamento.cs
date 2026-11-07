@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -76,15 +76,14 @@ namespace ProjetoExtensionista2026_2
             foreach (var b in todos.Where(x => x != null))
             {
                 bool selecionado = (b == botao);
-                b.BackColor = selecionado ? Color.FromArgb(0, 122, 204) : SystemColors.Control;
-                b.ForeColor = selecionado ? Color.White : SystemColors.ControlText;
+                b.Tag = selecionado ? "pagamento_ativo" : "pagamento_item";
             }
 
             if (gpbLancamentoValores != null)
             {
                 gpbLancamentoValores.Enabled = true;
-                gpbLancamentoValores.ForeColor = SystemColors.ControlText;
                 gpbLancamentoValores.Text = "Lançamento de Valores";
+                gpbLancamentoValores.Invalidate();
             }
 
             if (cmbParcelas != null)
@@ -96,10 +95,11 @@ namespace ProjetoExtensionista2026_2
 
             if (lblParcelas != null)
             {
-                lblParcelas.ForeColor = permiteParcelamento ? SystemColors.ControlText : Color.Gray;
-                lblParcelas.Text = permiteParcelamento ? "Parcelas:" : "🔒 Parcelas:";
+                lblParcelas.Tag = permiteParcelamento ? null : "subtitulo";
+                lblParcelas.Text = permiteParcelamento ? "Parcelas:" : "Parcelas (À vista):";
             }
 
+            GerenciadorTema.AplicarTema(this);
             DefinirValorExato();
             txtPagamento?.Focus();
         }
@@ -124,8 +124,8 @@ namespace ProjetoExtensionista2026_2
             if (gpbLancamentoValores != null)
             {
                 gpbLancamentoValores.Enabled = false;
-                gpbLancamentoValores.ForeColor = Color.Gray;
-                gpbLancamentoValores.Text = "🔒 Lançamento de Valores";
+                gpbLancamentoValores.Text = "Lançamento de Valores (Selecione a forma)";
+                gpbLancamentoValores.Invalidate();
             }
 
             if (cmbParcelas != null)
@@ -136,17 +136,17 @@ namespace ProjetoExtensionista2026_2
 
             if (lblParcelas != null)
             {
-                lblParcelas.ForeColor = Color.Gray;
-                lblParcelas.Text = "🔒 Parcelas:";
+                lblParcelas.Tag = "subtitulo";
+                lblParcelas.Text = "Parcelas:";
             }
 
             Button[] todos = { btnDinheiro, btnDebito, btnCredito, btnPix, btnCarne };
             foreach (var b in todos.Where(x => x != null))
             {
-                b.BackColor = SystemColors.Control;
-                b.ForeColor = SystemColors.ControlText;
+                b.Tag = "pagamento_item";
             }
 
+            GerenciadorTema.AplicarTema(this);
             _valorCentavos = 0;
             AtualizarTexto();
         }

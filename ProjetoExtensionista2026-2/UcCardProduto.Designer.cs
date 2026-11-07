@@ -46,33 +46,34 @@ namespace ProjetoExtensionista2026_2
             // lblTitulo
             // 
             this.lblTitulo.AutoEllipsis = true;
-            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.Location = new System.Drawing.Point(122, 27);
+            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTitulo.Location = new System.Drawing.Point(122, 28);
             this.lblTitulo.Name = "lblTitulo";
             this.lblTitulo.Padding = new System.Windows.Forms.Padding(2);
-            this.lblTitulo.Size = new System.Drawing.Size(155, 78);
+            this.lblTitulo.Size = new System.Drawing.Size(152, 62);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Produto ...";
             // 
             // lblDescricao
             // 
             this.lblDescricao.AutoEllipsis = true;
-            this.lblDescricao.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDescricao.Location = new System.Drawing.Point(3, 150);
+            this.lblDescricao.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblDescricao.Location = new System.Drawing.Point(8, 148);
             this.lblDescricao.Name = "lblDescricao";
             this.lblDescricao.Padding = new System.Windows.Forms.Padding(2);
-            this.lblDescricao.Size = new System.Drawing.Size(274, 62);
+            this.lblDescricao.Size = new System.Drawing.Size(264, 56);
             this.lblDescricao.TabIndex = 2;
+            this.lblDescricao.Tag = "subtitulo";
             this.lblDescricao.Text = "Descricao ...";
             // 
             // btnAdicionar
             // 
             this.btnAdicionar.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnAdicionar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdicionar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdicionar.Location = new System.Drawing.Point(84, 212);
+            this.btnAdicionar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdicionar.Location = new System.Drawing.Point(84, 210);
             this.btnAdicionar.Name = "btnAdicionar";
-            this.btnAdicionar.Size = new System.Drawing.Size(190, 29);
+            this.btnAdicionar.Size = new System.Drawing.Size(186, 30);
             this.btnAdicionar.TabIndex = 3;
             this.btnAdicionar.Text = "Adicionar";
             this.btnAdicionar.UseVisualStyleBackColor = false;
@@ -81,20 +82,20 @@ namespace ProjetoExtensionista2026_2
             // UpDownProduto
             // 
             this.UpDownProduto.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.UpDownProduto.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UpDownProduto.Location = new System.Drawing.Point(6, 212);
+            this.UpDownProduto.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UpDownProduto.Location = new System.Drawing.Point(8, 210);
             this.UpDownProduto.Name = "UpDownProduto";
-            this.UpDownProduto.Size = new System.Drawing.Size(72, 29);
+            this.UpDownProduto.Size = new System.Drawing.Size(70, 30);
             this.UpDownProduto.TabIndex = 4;
             this.UpDownProduto.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // lblPrecoVenda
             // 
-            this.lblPrecoVenda.Font = new System.Drawing.Font("Segoe UI", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPrecoVenda.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPrecoVenda.ForeColor = System.Drawing.Color.LimeGreen;
-            this.lblPrecoVenda.Location = new System.Drawing.Point(129, 105);
+            this.lblPrecoVenda.Location = new System.Drawing.Point(122, 95);
             this.lblPrecoVenda.Name = "lblPrecoVenda";
-            this.lblPrecoVenda.Size = new System.Drawing.Size(148, 18);
+            this.lblPrecoVenda.Size = new System.Drawing.Size(152, 22);
             this.lblPrecoVenda.TabIndex = 5;
             this.lblPrecoVenda.Text = "R$ 00,00";
             this.lblPrecoVenda.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -102,9 +103,9 @@ namespace ProjetoExtensionista2026_2
             // picFoto
             // 
             this.picFoto.ErrorImage = null;
-            this.picFoto.Location = new System.Drawing.Point(6, 30);
+            this.picFoto.Location = new System.Drawing.Point(8, 30);
             this.picFoto.Name = "picFoto";
-            this.picFoto.Size = new System.Drawing.Size(110, 110);
+            this.picFoto.Size = new System.Drawing.Size(108, 108);
             this.picFoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFoto.TabIndex = 0;
             this.picFoto.TabStop = false;
@@ -112,10 +113,10 @@ namespace ProjetoExtensionista2026_2
             // lblEstoque
             // 
             this.lblEstoque.BackColor = System.Drawing.Color.PaleGreen;
-            this.lblEstoque.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEstoque.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEstoque.Location = new System.Drawing.Point(168, 0);
             this.lblEstoque.Name = "lblEstoque";
-            this.lblEstoque.Size = new System.Drawing.Size(113, 24);
+            this.lblEstoque.Size = new System.Drawing.Size(112, 24);
             this.lblEstoque.TabIndex = 7;
             this.lblEstoque.Text = "Estoque: ";
             this.lblEstoque.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -134,10 +135,11 @@ namespace ProjetoExtensionista2026_2
             // lblCodigo
             // 
             this.lblCodigo.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.lblCodigo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCodigo.Location = new System.Drawing.Point(-1, 0);
+            this.lblCodigo.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCodigo.Location = new System.Drawing.Point(0, 0);
             this.lblCodigo.Name = "lblCodigo";
-            this.lblCodigo.Size = new System.Drawing.Size(169, 24);
+            this.lblCodigo.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
+            this.lblCodigo.Size = new System.Drawing.Size(168, 24);
             this.lblCodigo.TabIndex = 8;
             this.lblCodigo.Text = "Código";
             this.lblCodigo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -147,9 +149,9 @@ namespace ProjetoExtensionista2026_2
             this.lblOculto.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblOculto.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOculto.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblOculto.Location = new System.Drawing.Point(129, 127);
+            this.lblOculto.Location = new System.Drawing.Point(122, 120);
             this.lblOculto.Name = "lblOculto";
-            this.lblOculto.Size = new System.Drawing.Size(148, 20);
+            this.lblOculto.Size = new System.Drawing.Size(152, 20);
             this.lblOculto.TabIndex = 9;
             this.lblOculto.Text = "Mostrar ocultados...";
             this.lblOculto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

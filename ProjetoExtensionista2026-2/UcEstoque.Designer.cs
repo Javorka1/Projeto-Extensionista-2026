@@ -82,23 +82,25 @@ namespace ProjetoExtensionista2026_2
             // 
             // searchBarPanel
             // 
-            this.searchBarPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.searchBarPanel.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.searchBarPanel.Controls.Add(this.filterBtn);
             this.searchBarPanel.Controls.Add(this.searchBtn);
             this.searchBarPanel.Controls.Add(this.searchTxtBox);
             this.searchBarPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.searchBarPanel.Location = new System.Drawing.Point(25, 12);
             this.searchBarPanel.Name = "searchBarPanel";
+            this.searchBarPanel.Padding = new System.Windows.Forms.Padding(12, 6, 6, 6);
             this.searchBarPanel.Size = new System.Drawing.Size(1864, 46);
             this.searchBarPanel.TabIndex = 4;
+            this.searchBarPanel.Tag = "card";
             // 
             // filterBtn
             // 
             this.filterBtn.Dock = System.Windows.Forms.DockStyle.Right;
-            this.filterBtn.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.filterBtn.Location = new System.Drawing.Point(1728, 0);
+            this.filterBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.filterBtn.Location = new System.Drawing.Point(1688, 6);
             this.filterBtn.Name = "filterBtn";
-            this.filterBtn.Size = new System.Drawing.Size(66, 44);
+            this.filterBtn.Size = new System.Drawing.Size(76, 34);
             this.filterBtn.TabIndex = 1;
             this.filterBtn.Text = "Filtros";
             this.filterBtn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -107,10 +109,10 @@ namespace ProjetoExtensionista2026_2
             // searchBtn
             // 
             this.searchBtn.Dock = System.Windows.Forms.DockStyle.Right;
-            this.searchBtn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchBtn.Location = new System.Drawing.Point(1794, 0);
+            this.searchBtn.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchBtn.Location = new System.Drawing.Point(1764, 6);
             this.searchBtn.Name = "searchBtn";
-            this.searchBtn.Size = new System.Drawing.Size(68, 44);
+            this.searchBtn.Size = new System.Drawing.Size(94, 34);
             this.searchBtn.TabIndex = 2;
             this.searchBtn.Text = "Buscar";
             this.searchBtn.UseVisualStyleBackColor = true;
@@ -119,11 +121,12 @@ namespace ProjetoExtensionista2026_2
             // 
             this.searchTxtBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchTxtBox.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchTxtBox.Location = new System.Drawing.Point(0, 0);
-            this.searchTxtBox.Multiline = true;
+            this.searchTxtBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.searchTxtBox.Font = new System.Drawing.Font("Segoe UI", 11.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchTxtBox.Location = new System.Drawing.Point(14, 12);
+            this.searchTxtBox.Multiline = false;
             this.searchTxtBox.Name = "searchTxtBox";
-            this.searchTxtBox.Size = new System.Drawing.Size(1722, 44);
+            this.searchTxtBox.Size = new System.Drawing.Size(1664, 24);
             this.searchTxtBox.TabIndex = 0;
             this.searchTxtBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchTxtBox_KeyDown);
             // 
@@ -139,12 +142,13 @@ namespace ProjetoExtensionista2026_2
             // btnCadastrar
             // 
             this.btnCadastrar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrar.Location = new System.Drawing.Point(1738, 8);
+            this.btnCadastrar.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCadastrar.Location = new System.Drawing.Point(1728, 8);
             this.btnCadastrar.Name = "btnCadastrar";
-            this.btnCadastrar.Size = new System.Drawing.Size(150, 44);
+            this.btnCadastrar.Size = new System.Drawing.Size(160, 42);
             this.btnCadastrar.TabIndex = 0;
-            this.btnCadastrar.Text = "Cadastrar";
+            this.btnCadastrar.Tag = "primary";
+            this.btnCadastrar.Text = "  Cadastrar";
             this.btnCadastrar.UseVisualStyleBackColor = true;
             this.btnCadastrar.Click += new System.EventHandler(this.btnCadastrar_Click);
             // 

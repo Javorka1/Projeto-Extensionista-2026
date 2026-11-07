@@ -40,6 +40,43 @@ namespace ProjetoExtensionista2026_2
             picFoto.SizeMode = PictureBoxSizeMode.Zoom;
 
             VincularCliquesDeEdicao(this);
+            VincularEfeitoHover(this);
+        }
+
+        private void VincularEfeitoHover(Control container)
+        {
+            EventHandler aoEntrar = (s, e) =>
+            {
+                if (this.Tag?.ToString() != "card_hover")
+                {
+                    this.Tag = "card_hover";
+                    this.BackColor = GerenciadorTema.ModoEscuro ? GerenciadorTema.FundoCardHoverEscuro : GerenciadorTema.FundoCardHoverClaro;
+                    this.Invalidate();
+                }
+            };
+
+            EventHandler aoSair = (s, e) =>
+            {
+                if (!this.ClientRectangle.Contains(this.PointToClient(Cursor.Position)))
+                {
+                    this.Tag = "card";
+                    this.BackColor = GerenciadorTema.ModoEscuro ? GerenciadorTema.FundoCardEscuro : GerenciadorTema.FundoCardClaro;
+                    this.Invalidate();
+                }
+            };
+
+            container.MouseEnter += aoEntrar;
+            container.MouseLeave += aoSair;
+
+            foreach (Control ctrl in container.Controls)
+            {
+                ctrl.MouseEnter += aoEntrar;
+                ctrl.MouseLeave += aoSair;
+                if (ctrl.HasChildren)
+                {
+                    VincularEfeitoHover(ctrl);
+                }
+            }
         }
 
         /// <summary>
@@ -107,7 +144,8 @@ namespace ProjetoExtensionista2026_2
 
             _custoVisivel = false;
             lblOculto.Text = "Mostrar Ocultados...";
-            lblOculto.ForeColor = SystemColors.ControlDarkDark;
+            lblOculto.Tag = "subtitulo";
+            lblOculto.ForeColor = GerenciadorTema.ModoEscuro ? GerenciadorTema.TextoSecundarioEscuro : GerenciadorTema.TextoSecundarioClaro;
 
             lblOculto.Visible = PodeVerCusto;
 
@@ -115,16 +153,18 @@ namespace ProjetoExtensionista2026_2
 
             if (p.Estoque <= 0)
             {
-                lblEstoque.BackColor = Color.LightCoral;
+                lblEstoque.Tag = "badge_err";
             }
             else if (p.Estoque <= p.EstoqueMinimo)
             {
-                lblEstoque.BackColor = Color.LightSalmon;
+                lblEstoque.Tag = "badge_warn";
             }
             else
             {
-                lblEstoque.BackColor = Color.PaleGreen;
+                lblEstoque.Tag = "badge_ok";
             }
+
+            GerenciadorTema.EstilizarBadgeEstoque(lblEstoque);
 
             UpDownProduto.Value = 1;
             _ = CarregarImagemAsync(p.FotoUrl);
@@ -162,12 +202,12 @@ namespace ProjetoExtensionista2026_2
             if (_custoVisivel)
             {
                 lblOculto.Text = $"Custo: {PrecoCompra:C2}";
-                lblOculto.ForeColor = Color.Red;
+                lblOculto.ForeColor = GerenciadorTema.CorPerigo;
             }
             else
             {
                 lblOculto.Text = "Mostrar Ocultados...";
-                lblOculto.ForeColor = SystemColors.ControlDarkDark;
+                lblOculto.ForeColor = GerenciadorTema.ModoEscuro ? GerenciadorTema.TextoSecundarioEscuro : GerenciadorTema.TextoSecundarioClaro;
             }
         }
 

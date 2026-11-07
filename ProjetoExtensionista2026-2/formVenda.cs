@@ -57,6 +57,12 @@ namespace ProjetoExtensionista2026_2
             if (panelCarrinho != null)
                 panelCarrinho.AutoScroll = true;
 
+            if (comboBox1 != null && comboBox1.Items.Count > 0)
+            {
+                comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBox1.SelectedIndex = 0;
+            }
+
             AjustarLarguraCarrinho();
             ConfigurarCamposDesconto();
             DefinirClientePadrao();

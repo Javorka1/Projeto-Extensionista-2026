@@ -140,7 +140,7 @@ namespace ProjetoExtensionista2026_2
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 135F));
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 148F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 175F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(396, 1041);
@@ -336,11 +336,12 @@ namespace ProjetoExtensionista2026_2
             // 
             this.btnConsultarCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnConsultarCliente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnConsultarCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConsultarCliente.Location = new System.Drawing.Point(182, 98);
+            this.btnConsultarCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConsultarCliente.Location = new System.Drawing.Point(180, 104);
             this.btnConsultarCliente.Name = "btnConsultarCliente";
-            this.btnConsultarCliente.Size = new System.Drawing.Size(100, 25);
+            this.btnConsultarCliente.Size = new System.Drawing.Size(102, 28);
             this.btnConsultarCliente.TabIndex = 14;
+            this.btnConsultarCliente.Tag = "primary";
             this.btnConsultarCliente.Text = "Alterar [F2]";
             this.btnConsultarCliente.UseVisualStyleBackColor = true;
             this.btnConsultarCliente.Click += new System.EventHandler(this.btnConsultarCliente_Click);
@@ -362,9 +363,9 @@ namespace ProjetoExtensionista2026_2
             this.btnCadastrarCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCadastrarCliente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCadastrarCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrarCliente.Location = new System.Drawing.Point(97, 98);
+            this.btnCadastrarCliente.Location = new System.Drawing.Point(94, 104);
             this.btnCadastrarCliente.Name = "btnCadastrarCliente";
-            this.btnCadastrarCliente.Size = new System.Drawing.Size(80, 25);
+            this.btnCadastrarCliente.Size = new System.Drawing.Size(80, 28);
             this.btnCadastrarCliente.TabIndex = 12;
             this.btnCadastrarCliente.Text = "Novo";
             this.btnCadastrarCliente.UseVisualStyleBackColor = true;
@@ -413,11 +414,12 @@ namespace ProjetoExtensionista2026_2
             this.lblEnderecoCliente.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblEnderecoCliente.AutoEllipsis = true;
-            this.lblEnderecoCliente.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblEnderecoCliente.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEnderecoCliente.Location = new System.Drawing.Point(15, 76);
             this.lblEnderecoCliente.Name = "lblEnderecoCliente";
             this.lblEnderecoCliente.Size = new System.Drawing.Size(362, 18);
             this.lblEnderecoCliente.TabIndex = 7;
+            this.lblEnderecoCliente.Tag = "subtitulo";
             this.lblEnderecoCliente.Text = "Endereço: Não informado";
             this.lblEnderecoCliente.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
@@ -426,9 +428,9 @@ namespace ProjetoExtensionista2026_2
             this.btnLimparCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLimparCliente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLimparCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimparCliente.Location = new System.Drawing.Point(287, 98);
+            this.btnLimparCliente.Location = new System.Drawing.Point(287, 104);
             this.btnLimparCliente.Name = "btnLimparCliente";
-            this.btnLimparCliente.Size = new System.Drawing.Size(90, 25);
+            this.btnLimparCliente.Size = new System.Drawing.Size(90, 28);
             this.btnLimparCliente.TabIndex = 6;
             this.btnLimparCliente.Text = "Limpar";
             this.btnLimparCliente.UseVisualStyleBackColor = true;

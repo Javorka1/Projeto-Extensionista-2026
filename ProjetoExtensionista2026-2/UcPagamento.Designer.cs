@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class UcPagamento
     {
@@ -48,57 +48,57 @@
             // 
             // btnDinheiro
             // 
-            this.btnDinheiro.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDinheiro.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDinheiro.Location = new System.Drawing.Point(0, 19);
             this.btnDinheiro.Name = "btnDinheiro";
             this.btnDinheiro.Size = new System.Drawing.Size(170, 60);
             this.btnDinheiro.TabIndex = 0;
-            this.btnDinheiro.Tag = "Dinheiro";
-            this.btnDinheiro.Text = "💸 Dinheiro";
+            this.btnDinheiro.Tag = "pagamento_item";
+            this.btnDinheiro.Text = "  Dinheiro";
             this.btnDinheiro.UseVisualStyleBackColor = true;
             // 
             // btnDebito
             // 
-            this.btnDebito.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDebito.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDebito.Location = new System.Drawing.Point(0, 85);
             this.btnDebito.Name = "btnDebito";
             this.btnDebito.Size = new System.Drawing.Size(170, 60);
             this.btnDebito.TabIndex = 1;
-            this.btnDebito.Tag = "Cartão de Débito";
-            this.btnDebito.Text = "💳 Débito";
+            this.btnDebito.Tag = "pagamento_item";
+            this.btnDebito.Text = "  Débito";
             this.btnDebito.UseVisualStyleBackColor = true;
             // 
             // btnCredito
             // 
-            this.btnCredito.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.btnCredito.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnCredito.Location = new System.Drawing.Point(0, 283);
             this.btnCredito.Name = "btnCredito";
             this.btnCredito.Size = new System.Drawing.Size(170, 60);
             this.btnCredito.TabIndex = 2;
-            this.btnCredito.Tag = "Cartão de Crédito";
-            this.btnCredito.Text = "💳 Crédito";
+            this.btnCredito.Tag = "pagamento_item";
+            this.btnCredito.Text = "  Crédito";
             this.btnCredito.UseVisualStyleBackColor = true;
             // 
             // btnPix
             // 
-            this.btnPix.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.btnPix.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnPix.Location = new System.Drawing.Point(0, 151);
             this.btnPix.Name = "btnPix";
             this.btnPix.Size = new System.Drawing.Size(170, 60);
             this.btnPix.TabIndex = 3;
-            this.btnPix.Tag = "Pix";
-            this.btnPix.Text = "❖ Pix";
+            this.btnPix.Tag = "pagamento_item";
+            this.btnPix.Text = "  Pix";
             this.btnPix.UseVisualStyleBackColor = true;
             // 
             // btnCarne
             // 
-            this.btnCarne.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.btnCarne.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnCarne.Location = new System.Drawing.Point(0, 217);
             this.btnCarne.Name = "btnCarne";
             this.btnCarne.Size = new System.Drawing.Size(170, 60);
             this.btnCarne.TabIndex = 4;
-            this.btnCarne.Tag = "Carnê";
-            this.btnCarne.Text = "📋 Carnê";
+            this.btnCarne.Tag = "pagamento_item";
+            this.btnCarne.Text = "  Carnê";
             this.btnCarne.UseVisualStyleBackColor = true;
             // 
             // gpbLancamentoValores

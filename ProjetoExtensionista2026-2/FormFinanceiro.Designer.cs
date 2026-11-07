@@ -311,7 +311,7 @@ namespace ProjetoExtensionista2026_2
             // 
             this.lblFiltroCategoria.AutoSize = true;
             this.lblFiltroCategoria.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFiltroCategoria.Location = new System.Drawing.Point(20, 16);
+            this.lblFiltroCategoria.Location = new System.Drawing.Point(20, 15);
             this.lblFiltroCategoria.Name = "lblFiltroCategoria";
             this.lblFiltroCategoria.Size = new System.Drawing.Size(68, 16);
             this.lblFiltroCategoria.TabIndex = 0;
@@ -323,7 +323,7 @@ namespace ProjetoExtensionista2026_2
             this.cmbCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategoria.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbCategoria.FormattingEnabled = true;
-            this.cmbCategoria.Location = new System.Drawing.Point(95, 12);
+            this.cmbCategoria.Location = new System.Drawing.Point(94, 12);
             this.cmbCategoria.Name = "cmbCategoria";
             this.cmbCategoria.Size = new System.Drawing.Size(180, 24);
             this.cmbCategoria.TabIndex = 1;
@@ -333,7 +333,7 @@ namespace ProjetoExtensionista2026_2
             // 
             this.lblBusca.AutoSize = true;
             this.lblBusca.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBusca.Location = new System.Drawing.Point(295, 16);
+            this.lblBusca.Location = new System.Drawing.Point(294, 15);
             this.lblBusca.Name = "lblBusca";
             this.lblBusca.Size = new System.Drawing.Size(55, 16);
             this.lblBusca.TabIndex = 2;
@@ -342,19 +342,19 @@ namespace ProjetoExtensionista2026_2
             // 
             // txtBuscaProduto
             // 
-            this.txtBuscaProduto.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBuscaProduto.Location = new System.Drawing.Point(355, 13);
+            this.txtBuscaProduto.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtBuscaProduto.Location = new System.Drawing.Point(356, 12);
             this.txtBuscaProduto.Name = "txtBuscaProduto";
-            this.txtBuscaProduto.Size = new System.Drawing.Size(230, 22);
+            this.txtBuscaProduto.Size = new System.Drawing.Size(230, 25);
             this.txtBuscaProduto.TabIndex = 3;
 
             // 
             // btnFiltrar
             // 
             this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFiltrar.Location = new System.Drawing.Point(600, 9);
+            this.btnFiltrar.Location = new System.Drawing.Point(600, 10);
             this.btnFiltrar.Name = "btnFiltrar";
-            this.btnFiltrar.Size = new System.Drawing.Size(110, 30);
+            this.btnFiltrar.Size = new System.Drawing.Size(105, 28);
             this.btnFiltrar.TabIndex = 4;
             this.btnFiltrar.Text = "Filtrar";
             this.btnFiltrar.UseVisualStyleBackColor = true;
@@ -364,9 +364,9 @@ namespace ProjetoExtensionista2026_2
             // btnLimparFiltros
             // 
             this.btnLimparFiltros.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimparFiltros.Location = new System.Drawing.Point(720, 9);
+            this.btnLimparFiltros.Location = new System.Drawing.Point(714, 10);
             this.btnLimparFiltros.Name = "btnLimparFiltros";
-            this.btnLimparFiltros.Size = new System.Drawing.Size(110, 30);
+            this.btnLimparFiltros.Size = new System.Drawing.Size(105, 28);
             this.btnLimparFiltros.TabIndex = 5;
             this.btnLimparFiltros.Text = "Limpar";
             this.btnLimparFiltros.UseVisualStyleBackColor = true;
