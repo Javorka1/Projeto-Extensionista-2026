@@ -17,7 +17,7 @@ namespace ProjetoExtensionista2026_2
 
         private void formPrincipal_Load(object sender, EventArgs e)
         {
-            using (var sql = new LoginSQL())
+            using (var sql = new LoginSQL()) 
             {
                 string nomeUsuario = LoginSQL.SessaoUsuario.Nome;
                 string role = sql.RolePicker(nomeUsuario);
