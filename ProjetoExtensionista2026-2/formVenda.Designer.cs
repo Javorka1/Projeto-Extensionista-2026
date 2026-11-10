@@ -59,10 +59,10 @@ namespace ProjetoExtensionista2026_2
             this.panel2 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cmbTipoVenda = new System.Windows.Forms.ComboBox();
             this.panelCarrinho = new System.Windows.Forms.Panel();
             this.lblQtdItens = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer_menu)).BeginInit();
             this.splitContainer_menu.Panel2.SuspendLayout();
             this.splitContainer_menu.SuspendLayout();
@@ -115,7 +115,7 @@ namespace ProjetoExtensionista2026_2
             this.splitContainer_catalogo.Panel2.BackColor = System.Drawing.SystemColors.Control;
             this.splitContainer_catalogo.Panel2.Controls.Add(this.tableLayoutPanel1);
             this.splitContainer_catalogo.Size = new System.Drawing.Size(1904, 1041);
-            this.splitContainer_catalogo.SplitterDistance = 1507;
+            this.splitContainer_catalogo.SplitterDistance = 1513;
             this.splitContainer_catalogo.SplitterWidth = 1;
             this.splitContainer_catalogo.TabIndex = 2;
             this.splitContainer_catalogo.SplitterMoved += new System.Windows.Forms.SplitterEventHandler(this.splitContainer_catalogo_SplitterMoved);
@@ -126,7 +126,7 @@ namespace ProjetoExtensionista2026_2
             this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelConteudo.Location = new System.Drawing.Point(0, 0);
             this.panelConteudo.Name = "panelConteudo";
-            this.panelConteudo.Size = new System.Drawing.Size(1507, 1041);
+            this.panelConteudo.Size = new System.Drawing.Size(1513, 1041);
             this.panelConteudo.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -143,7 +143,7 @@ namespace ProjetoExtensionista2026_2
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 148F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 175F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(396, 1041);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(390, 1041);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // panel3
@@ -152,7 +152,7 @@ namespace ProjetoExtensionista2026_2
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 869);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(390, 169);
+            this.panel3.Size = new System.Drawing.Size(384, 169);
             this.panel3.TabIndex = 1;
             // 
             // panel4
@@ -173,7 +173,7 @@ namespace ProjetoExtensionista2026_2
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
             this.panel4.Padding = new System.Windows.Forms.Padding(15, 0, 15, 10);
-            this.panel4.Size = new System.Drawing.Size(390, 169);
+            this.panel4.Size = new System.Drawing.Size(384, 169);
             this.panel4.TabIndex = 6;
             // 
             // btnLimparCarrinho
@@ -198,7 +198,7 @@ namespace ProjetoExtensionista2026_2
             this.panel6.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel6.Location = new System.Drawing.Point(15, 0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(360, 1);
+            this.panel6.Size = new System.Drawing.Size(354, 1);
             this.panel6.TabIndex = 4;
             // 
             // txtDesconto
@@ -207,12 +207,12 @@ namespace ProjetoExtensionista2026_2
             this.txtDesconto.BackColor = System.Drawing.SystemColors.Control;
             this.txtDesconto.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtDesconto.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDesconto.Location = new System.Drawing.Point(177, 32);
+            this.txtDesconto.Location = new System.Drawing.Point(171, 32);
             this.txtDesconto.Name = "txtDesconto";
             this.txtDesconto.ShortcutsEnabled = false;
             this.txtDesconto.Size = new System.Drawing.Size(115, 18);
             this.txtDesconto.TabIndex = 10;
-            this.txtDesconto.Text = "- R$ 00,00";
+            this.txtDesconto.Text = "- R$ 0,00";
             this.txtDesconto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // lblSubtotal
@@ -220,7 +220,7 @@ namespace ProjetoExtensionista2026_2
             this.lblSubtotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblSubtotal.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSubtotal.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblSubtotal.Location = new System.Drawing.Point(177, 8);
+            this.lblSubtotal.Location = new System.Drawing.Point(171, 8);
             this.lblSubtotal.Name = "lblSubtotal";
             this.lblSubtotal.Size = new System.Drawing.Size(198, 20);
             this.lblSubtotal.TabIndex = 9;
@@ -252,7 +252,7 @@ namespace ProjetoExtensionista2026_2
             this.lblTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblTotal.Location = new System.Drawing.Point(147, 68);
+            this.lblTotal.Location = new System.Drawing.Point(141, 68);
             this.lblTotal.Name = "lblTotal";
             this.lblTotal.Size = new System.Drawing.Size(228, 28);
             this.lblTotal.TabIndex = 4;
@@ -266,7 +266,7 @@ namespace ProjetoExtensionista2026_2
             this.panel5.BackColor = System.Drawing.Color.LightGray;
             this.panel5.Location = new System.Drawing.Point(15, 60);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(360, 1);
+            this.panel5.Size = new System.Drawing.Size(354, 1);
             this.panel5.TabIndex = 3;
             // 
             // btnAvancarPagamento
@@ -280,7 +280,7 @@ namespace ProjetoExtensionista2026_2
             this.btnAvancarPagamento.ForeColor = System.Drawing.Color.White;
             this.btnAvancarPagamento.Location = new System.Drawing.Point(122, 115);
             this.btnAvancarPagamento.Name = "btnAvancarPagamento";
-            this.btnAvancarPagamento.Size = new System.Drawing.Size(253, 44);
+            this.btnAvancarPagamento.Size = new System.Drawing.Size(247, 44);
             this.btnAvancarPagamento.TabIndex = 2;
             this.btnAvancarPagamento.Text = "Avançar para Pagamento [F12]";
             this.btnAvancarPagamento.UseVisualStyleBackColor = false;
@@ -303,12 +303,12 @@ namespace ProjetoExtensionista2026_2
             this.txtDescontoPorcentagem.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtDescontoPorcentagem.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDescontoPorcentagem.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.txtDescontoPorcentagem.Location = new System.Drawing.Point(299, 32);
+            this.txtDescontoPorcentagem.Location = new System.Drawing.Point(293, 32);
             this.txtDescontoPorcentagem.Name = "txtDescontoPorcentagem";
             this.txtDescontoPorcentagem.ShortcutsEnabled = false;
             this.txtDescontoPorcentagem.Size = new System.Drawing.Size(76, 18);
             this.txtDescontoPorcentagem.TabIndex = 11;
-            this.txtDescontoPorcentagem.Text = "0%";
+            this.txtDescontoPorcentagem.Text = "0 %";
             this.txtDescontoPorcentagem.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // panel7
@@ -329,7 +329,7 @@ namespace ProjetoExtensionista2026_2
             this.panel7.Location = new System.Drawing.Point(3, 3);
             this.panel7.Name = "panel7";
             this.panel7.Padding = new System.Windows.Forms.Padding(15, 0, 15, 0);
-            this.panel7.Size = new System.Drawing.Size(390, 129);
+            this.panel7.Size = new System.Drawing.Size(384, 142);
             this.panel7.TabIndex = 2;
             // 
             // btnConsultarCliente
@@ -337,7 +337,7 @@ namespace ProjetoExtensionista2026_2
             this.btnConsultarCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnConsultarCliente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConsultarCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnConsultarCliente.Location = new System.Drawing.Point(180, 104);
+            this.btnConsultarCliente.Location = new System.Drawing.Point(174, 104);
             this.btnConsultarCliente.Name = "btnConsultarCliente";
             this.btnConsultarCliente.Size = new System.Drawing.Size(102, 28);
             this.btnConsultarCliente.TabIndex = 14;
@@ -354,7 +354,7 @@ namespace ProjetoExtensionista2026_2
             this.lblNomeCliente.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNomeCliente.Location = new System.Drawing.Point(15, 32);
             this.lblNomeCliente.Name = "lblNomeCliente";
-            this.lblNomeCliente.Size = new System.Drawing.Size(362, 24);
+            this.lblNomeCliente.Size = new System.Drawing.Size(356, 24);
             this.lblNomeCliente.TabIndex = 13;
             this.lblNomeCliente.Text = "Cliente: Consumidor Final";
             // 
@@ -363,7 +363,7 @@ namespace ProjetoExtensionista2026_2
             this.btnCadastrarCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCadastrarCliente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCadastrarCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCadastrarCliente.Location = new System.Drawing.Point(94, 104);
+            this.btnCadastrarCliente.Location = new System.Drawing.Point(88, 104);
             this.btnCadastrarCliente.Name = "btnCadastrarCliente";
             this.btnCadastrarCliente.Size = new System.Drawing.Size(80, 28);
             this.btnCadastrarCliente.TabIndex = 12;
@@ -393,7 +393,7 @@ namespace ProjetoExtensionista2026_2
             // 
             this.lblStatusCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblStatusCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusCliente.Location = new System.Drawing.Point(232, 56);
+            this.lblStatusCliente.Location = new System.Drawing.Point(226, 56);
             this.lblStatusCliente.Name = "lblStatusCliente";
             this.lblStatusCliente.Size = new System.Drawing.Size(145, 18);
             this.lblStatusCliente.TabIndex = 9;
@@ -418,7 +418,7 @@ namespace ProjetoExtensionista2026_2
             this.lblEnderecoCliente.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEnderecoCliente.Location = new System.Drawing.Point(15, 76);
             this.lblEnderecoCliente.Name = "lblEnderecoCliente";
-            this.lblEnderecoCliente.Size = new System.Drawing.Size(362, 18);
+            this.lblEnderecoCliente.Size = new System.Drawing.Size(356, 18);
             this.lblEnderecoCliente.TabIndex = 7;
             this.lblEnderecoCliente.Tag = "subtitulo";
             this.lblEnderecoCliente.Text = "Endereço: Não informado";
@@ -429,7 +429,7 @@ namespace ProjetoExtensionista2026_2
             this.btnLimparCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLimparCliente.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLimparCliente.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLimparCliente.Location = new System.Drawing.Point(287, 104);
+            this.btnLimparCliente.Location = new System.Drawing.Point(281, 104);
             this.btnLimparCliente.Name = "btnLimparCliente";
             this.btnLimparCliente.Size = new System.Drawing.Size(90, 28);
             this.btnLimparCliente.TabIndex = 6;
@@ -444,16 +444,16 @@ namespace ProjetoExtensionista2026_2
             this.panel8.BackColor = System.Drawing.Color.LightGray;
             this.panel8.Location = new System.Drawing.Point(15, 28);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(362, 1);
+            this.panel8.Size = new System.Drawing.Size(356, 1);
             this.panel8.TabIndex = 1;
             // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.LightGray;
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(15, 128);
+            this.panel2.Location = new System.Drawing.Point(15, 141);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(360, 1);
+            this.panel2.Size = new System.Drawing.Size(354, 1);
             this.panel2.TabIndex = 2;
             // 
             // label4
@@ -463,30 +463,57 @@ namespace ProjetoExtensionista2026_2
             this.label4.Font = new System.Drawing.Font("Segoe UI Semibold", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(15, 4);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(362, 22);
+            this.label4.Size = new System.Drawing.Size(356, 22);
             this.label4.TabIndex = 0;
             this.label4.Text = "Identificação do Cliente";
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.label1);
-            this.panel1.Controls.Add(this.comboBox1);
+            this.panel1.Controls.Add(this.cmbTipoVenda);
             this.panel1.Controls.Add(this.panelCarrinho);
             this.panel1.Controls.Add(this.lblQtdItens);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 138);
+            this.panel1.Location = new System.Drawing.Point(3, 151);
             this.panel1.Name = "panel1";
             this.panel1.Padding = new System.Windows.Forms.Padding(12, 5, 12, 5);
-            this.panel1.Size = new System.Drawing.Size(390, 725);
+            this.panel1.Size = new System.Drawing.Size(384, 712);
             this.panel1.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(238, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(37, 17);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Tipo:";
+            // 
+            // cmbTipoVenda
+            // 
+            this.cmbTipoVenda.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbTipoVenda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbTipoVenda.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbTipoVenda.FormattingEnabled = true;
+            this.cmbTipoVenda.Items.AddRange(new object[] {
+            "Venda",
+            "Orçamento"});
+            this.cmbTipoVenda.Location = new System.Drawing.Point(281, 8);
+            this.cmbTipoVenda.Name = "cmbTipoVenda";
+            this.cmbTipoVenda.Size = new System.Drawing.Size(88, 21);
+            this.cmbTipoVenda.TabIndex = 4;
+            this.cmbTipoVenda.SelectedIndexChanged += new System.EventHandler(this.cmbTipoVenda_SelectedIndexChanged);
             // 
             // panelCarrinho
             // 
+            this.panelCarrinho.AutoScroll = true;
             this.panelCarrinho.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panelCarrinho.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelCarrinho.Location = new System.Drawing.Point(12, 33);
             this.panelCarrinho.Name = "panelCarrinho";
-            this.panelCarrinho.Size = new System.Drawing.Size(366, 687);
+            this.panelCarrinho.Size = new System.Drawing.Size(360, 674);
             this.panelCarrinho.TabIndex = 0;
             // 
             // lblQtdItens
@@ -495,34 +522,10 @@ namespace ProjetoExtensionista2026_2
             this.lblQtdItens.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblQtdItens.Location = new System.Drawing.Point(12, 5);
             this.lblQtdItens.Name = "lblQtdItens";
-            this.lblQtdItens.Size = new System.Drawing.Size(366, 28);
+            this.lblQtdItens.Size = new System.Drawing.Size(360, 28);
             this.lblQtdItens.TabIndex = 3;
             this.lblQtdItens.Text = "Itens: 0 item(ns)";
             this.lblQtdItens.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBox1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "Venda",
-            "Orçamento"});
-            this.comboBox1.Location = new System.Drawing.Point(287, 8);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(88, 21);
-            this.comboBox1.TabIndex = 4;
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(244, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 17);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Tipo:";
             // 
             // formVenda
             // 
@@ -587,7 +590,7 @@ namespace ProjetoExtensionista2026_2
         private System.Windows.Forms.Button btnCadastrarCliente;
         private System.Windows.Forms.Label lblNomeCliente;
         private System.Windows.Forms.Button btnConsultarCliente;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox cmbTipoVenda;
         private System.Windows.Forms.Label label1;
     }
 }

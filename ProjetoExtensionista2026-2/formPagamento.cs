@@ -1,7 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Npgsql;
+using NpgsqlTypes;
+using ProjetoExtensionista2026_2.DTOs;
+using ProjetoExtensionista2026_2.SQL;
 
 namespace ProjetoExtensionista2026_2
 {
@@ -16,6 +22,13 @@ namespace ProjetoExtensionista2026_2
         private bool _atualizandoDesconto = false;
         private decimal DescontoAtual => _descontoCentavos / 100m;
 
+        // Dados contextuais da venda
+        private long _idCliente = 1; // Padrão 1 = Consumidor Não Identificado
+        private List<ItemVenda> _itensVenda = new List<ItemVenda>();
+        private long? _idVendaAberta = null; // Caso venha de uma pré-venda já salva
+
+        public long IdVendaFinalizada { get; private set; }
+
         private UcPagamento _ucPagamento;
         private UcObservacoes _ucObservacoes;
 
@@ -27,12 +40,23 @@ namespace ProjetoExtensionista2026_2
             this.Load += formPagamento_Load;
         }
 
-        public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal) : this()
+        // Construtor completo recebendo os itens e o cliente do formVenda
+        public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal,
+                              List<ItemVenda> itens, long idCliente = 1, long? idVendaAberta = null) : this()
         {
             _subtotal = subtotal;
             _descontoCentavos = (long)Math.Round(desconto * 100m);
             _descontoPorcentagem = descontoPorcentagem;
             _totalFinal = totalFinal;
+            _itensVenda = itens ?? new List<ItemVenda>();
+            _idCliente = idCliente > 0 ? idCliente : 1;
+            _idVendaAberta = idVendaAberta;
+        }
+
+        // Sobrecarga de compatibilidade
+        public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal)
+            : this(subtotal, desconto, descontoPorcentagem, totalFinal, new List<ItemVenda>(), 1, null)
+        {
         }
 
         private void formPagamento_Load(object sender, EventArgs e)
@@ -88,19 +112,13 @@ namespace ProjetoExtensionista2026_2
             uc.Focus();
 
             if (btnPagamento != null)
-            {
                 btnPagamento.Tag = (btnPagamento == botaoAtivo) ? "aba_ativa" : null;
-            }
 
             if (btnObservacoes != null)
-            {
                 btnObservacoes.Tag = (btnObservacoes == botaoAtivo) ? "aba_ativa" : null;
-            }
 
             if (panel9 != null)
-            {
                 GerenciadorTema.AplicarTema(panel9);
-            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -256,6 +274,7 @@ namespace ProjetoExtensionista2026_2
 
             _ucPagamento?.DefinirSaldoRestante(temTroco ? 0m : diferenca);
 
+            // Vinculação com o botão btnFinalizar
             if (btnFinalizar != null)
             {
                 btnFinalizar.Tag = quitado ? "sucesso" : null;
@@ -266,16 +285,251 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
+        #region Gravação da Venda no Banco de Dados
+
         private void FinalizarVenda()
         {
             if (_totalPago < _totalFinal)
             {
-                MessageBox.Show($"Ainda resta um saldo de {(_totalFinal - _totalPago):C2} a ser pago.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                decimal falta = _totalFinal - _totalPago;
+                MessageBox.Show($"Ainda resta um saldo de {falta:C2} a ser pago.", "Pagamento Incompleto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            DialogResult = DialogResult.OK;
-            Close();
+
+            if (dgvPagamentos.Rows.Count == 0)
+            {
+                MessageBox.Show("Nenhuma forma de pagamento foi lançada.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                Cursor = Cursors.WaitCursor;
+                if (btnFinalizar != null) btnFinalizar.Enabled = false;
+
+                GravarVendaNoBanco();
+
+                MessageBox.Show("Venda finalizada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Erro ao salvar a venda no banco de dados:\n\n{ex.Message}", "Falha na Gravação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+                if (btnFinalizar != null) btnFinalizar.Enabled = true;
+            }
         }
+
+        private void GravarVendaNoBanco()
+        {
+            // 1. Identifica se foi lançado Carnê, A Prazo ou Fiado
+            bool temPagamentoAPrazo = dgvPagamentos.Rows.Cast<DataGridViewRow>()
+                .Where(row => !row.IsNewRow)
+                .Any(row =>
+                {
+                    string metodo = (row.Cells[0].Value?.ToString() ?? string.Empty).ToLower();
+                    return metodo.Contains("carnê") || metodo.Contains("carne") ||
+                           metodo.Contains("prazo") || metodo.Contains("fiado");
+                });
+
+            // 2. Se for Carnê, exige cliente cadastrado (não permite cliente padrão ID 1)[cite: 3]
+            if (temPagamentoAPrazo && _idCliente <= 1)
+            {
+                throw new InvalidOperationException("Para compras no Carnê/A Prazo é obrigatório selecionar um cliente cadastrado no sistema.");
+            }
+
+            // 3. Define o status correto para o financeiro puxar[cite: 3]
+            string statusPagamento = temPagamentoAPrazo ? "PENDENTE" : "PAGO";
+
+            string observacoes = _ucObservacoes?.ObterObservacoes() ?? string.Empty;
+            decimal trocoTotal = Math.Max(0m, _totalPago - _totalFinal);
+            decimal trocoRestanteParaAbater = trocoTotal;
+
+            using (var db = new Connection())
+            {
+                db.IniciarConexao();
+                var conexao = db.Conexao;
+
+                using (var transacao = conexao.BeginTransaction())
+                {
+                    try
+                    {
+                        long idVendaAtual;
+
+                        // 1. Grava ou Atualiza a Venda principal (sale)[cite: 3]
+                        if (_idVendaAberta.HasValue && _idVendaAberta.Value > 0)
+                        {
+                            idVendaAtual = _idVendaAberta.Value;
+
+                            string sqlUpdateSale = @"
+                                UPDATE public.sale 
+                                SET subtotal = @subtotal,
+                                    discount = @discount,
+                                    total = @total,
+                                    payment_status = @payment_status,
+                                    notes = @notes,
+                                    sale_type = 'VENDA',
+                                    sale_date = NOW()
+                                WHERE public.sale.id_sale = @id_sale;";
+
+                            using (var cmdSale = new NpgsqlCommand(sqlUpdateSale, conexao, transacao))
+                            {
+                                cmdSale.Parameters.Add(new NpgsqlParameter("subtotal", NpgsqlDbType.Numeric) { Value = _subtotal });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("discount", NpgsqlDbType.Numeric) { Value = DescontoAtual });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("total", NpgsqlDbType.Numeric) { Value = _totalFinal });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("payment_status", NpgsqlDbType.Text) { Value = statusPagamento });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("notes", NpgsqlDbType.Text) { Value = string.IsNullOrWhiteSpace(observacoes) ? (object)DBNull.Value : observacoes });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVendaAtual });
+                                cmdSale.ExecuteNonQuery();
+                            }
+                        }
+                        else
+                        {
+                            string sqlInsertSale = @"
+                                INSERT INTO public.sale (
+                                    sale_date, 
+                                    subtotal, 
+                                    discount, 
+                                    total, 
+                                    payment_status, 
+                                    notes, 
+                                    id_client,
+                                    sale_type
+                                ) 
+                                VALUES (
+                                    NOW(), 
+                                    @subtotal, 
+                                    @discount, 
+                                    @total, 
+                                    @payment_status, 
+                                    @notes, 
+                                    @id_client,
+                                    'VENDA'
+                                ) 
+                                RETURNING public.sale.id_sale;";
+
+                            using (var cmdSale = new NpgsqlCommand(sqlInsertSale, conexao, transacao))
+                            {
+                                cmdSale.Parameters.Add(new NpgsqlParameter("subtotal", NpgsqlDbType.Numeric) { Value = _subtotal });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("discount", NpgsqlDbType.Numeric) { Value = DescontoAtual });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("total", NpgsqlDbType.Numeric) { Value = _totalFinal });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("payment_status", NpgsqlDbType.Text) { Value = statusPagamento });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("notes", NpgsqlDbType.Text) { Value = string.IsNullOrWhiteSpace(observacoes) ? (object)DBNull.Value : observacoes });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("id_client", NpgsqlDbType.Bigint) { Value = _idCliente });
+
+                                idVendaAtual = Convert.ToInt64(cmdSale.ExecuteScalar());
+                            }
+                        }
+
+                        IdVendaFinalizada = idVendaAtual;
+
+                        // 2. Grava os Itens e Abate o Estoque[cite: 3]
+                        if (_itensVenda != null && _itensVenda.Count > 0 && !_idVendaAberta.HasValue)
+                        {
+                            foreach (var item in _itensVenda)
+                            {
+                                string sqlItem = @"
+                                    INSERT INTO public.sale_product (
+                                        id_sale, 
+                                        id_product, 
+                                        quantity, 
+                                        unit_price, 
+                                        unit_cost,
+                                        subtotal, 
+                                        discount_product
+                                    ) 
+                                    VALUES (
+                                        @id_sale, 
+                                        @id_product, 
+                                        @quantity, 
+                                        @unit_price, 
+                                        COALESCE((SELECT public.product.purchase_price FROM public.product WHERE public.product.id_product = @id_product), 0),
+                                        @subtotal, 
+                                        @discount_product
+                                    );
+
+                                    UPDATE public.product 
+                                    SET stock_quantity = public.product.stock_quantity - @quantity 
+                                    WHERE public.product.id_product = @id_product;";
+
+                                using (var cmdItem = new NpgsqlCommand(sqlItem, conexao, transacao))
+                                {
+                                    cmdItem.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVendaAtual });
+                                    cmdItem.Parameters.Add(new NpgsqlParameter("id_product", NpgsqlDbType.Integer) { Value = (int)item.IdProduto });
+                                    cmdItem.Parameters.Add(new NpgsqlParameter("quantity", NpgsqlDbType.Numeric) { Value = item.Quantidade });
+                                    cmdItem.Parameters.Add(new NpgsqlParameter("unit_price", NpgsqlDbType.Numeric) { Value = item.PrecoUnitario });
+                                    cmdItem.Parameters.Add(new NpgsqlParameter("subtotal", NpgsqlDbType.Numeric) { Value = item.TotalItem });
+                                    cmdItem.Parameters.Add(new NpgsqlParameter("discount_product", NpgsqlDbType.Numeric) { Value = 0m });
+
+                                    cmdItem.ExecuteNonQuery();
+                                }
+                            }
+                        }
+
+                        // 3. Grava os pagamentos em sale_payment com abatimento de troco[cite: 3]
+                        foreach (DataGridViewRow row in dgvPagamentos.Rows)
+                        {
+                            if (row.IsNewRow) continue;
+
+                            string metodo = row.Cells[0].Value?.ToString() ?? "Dinheiro";
+                            decimal valorBruto = row.Tag is decimal d ? d : 0m;
+
+                            string textoParcelas = row.Cells[2].Value?.ToString() ?? "1";
+                            string digitos = Regex.Replace(textoParcelas, @"\D", "");
+                            int parcelas = int.TryParse(digitos, out int p) && p > 0 ? p : 1;
+
+                            decimal valorLiquido = valorBruto;
+                            if (metodo.ToLower().Contains("dinheiro") && trocoRestanteParaAbater > 0m)
+                            {
+                                decimal abatimento = Math.Min(valorLiquido, trocoRestanteParaAbater);
+                                valorLiquido -= abatimento;
+                                trocoRestanteParaAbater -= abatimento;
+                            }
+
+                            if (valorLiquido <= 0m) continue;
+
+                            string sqlPayment = @"
+                                INSERT INTO public.sale_payment (
+                                    id_sale, 
+                                    payment_method, 
+                                    amount, 
+                                    installments, 
+                                    created_at
+                                ) 
+                                VALUES (
+                                    @id_sale, 
+                                    @payment_method, 
+                                    @amount, 
+                                    @installments, 
+                                    NOW()
+                                );";
+
+                            using (var cmdPayment = new NpgsqlCommand(sqlPayment, conexao, transacao))
+                            {
+                                cmdPayment.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVendaAtual });
+                                cmdPayment.Parameters.Add(new NpgsqlParameter("payment_method", NpgsqlDbType.Text) { Value = metodo });
+                                cmdPayment.Parameters.Add(new NpgsqlParameter("amount", NpgsqlDbType.Numeric) { Value = valorLiquido });
+                                cmdPayment.Parameters.Add(new NpgsqlParameter("installments", NpgsqlDbType.Integer) { Value = parcelas });
+                                cmdPayment.ExecuteNonQuery();
+                            }
+                        }
+
+                        transacao.Commit();
+                    }
+                    catch
+                    {
+                        transacao.Rollback();
+                        throw;
+                    }
+                }
+            }
+        }
+
+        #endregion
 
         private void btnPagamento_Click(object sender, EventArgs e) => AlternarAba(_ucPagamento, btnPagamento);
         private void btnObservacoes_Click(object sender, EventArgs e) => AlternarAba(_ucObservacoes, btnObservacoes);
