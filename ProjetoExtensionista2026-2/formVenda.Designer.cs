@@ -369,6 +369,7 @@ namespace ProjetoExtensionista2026_2
             this.btnCadastrarCliente.TabIndex = 12;
             this.btnCadastrarCliente.Text = "Novo";
             this.btnCadastrarCliente.UseVisualStyleBackColor = true;
+            this.btnCadastrarCliente.Click += new System.EventHandler(this.btnCadastrarCliente_Click);
             // 
             // lblTelefoneCliente
             // 

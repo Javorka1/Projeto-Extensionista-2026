@@ -133,6 +133,28 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
+        private void btnCadastrarCliente_Click(object sender, EventArgs e)
+        {
+            using (var formularioCadastro = new Form
+            {
+                Text = "Cadastrar Cliente",
+                StartPosition = FormStartPosition.CenterParent,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                MinimizeBox = false,
+                MaximizeBox = false,
+                ClientSize = new Size(920, 500)
+            })
+            {
+                var cadastroCliente = new UcCadastroCliente
+                {
+                    Dock = DockStyle.Fill
+                };
+
+                formularioCadastro.Controls.Add(cadastroCliente);
+                formularioCadastro.ShowDialog(this);
+            }
+        }
+
         private void btnLimparCliente_Click(object sender, EventArgs e)
         {
             DefinirClientePadrao();

@@ -124,22 +124,22 @@ namespace ProjetoExtensionista2026_2
 
                         const string sql = @"
                             SELECT 
-                                customer.id_customer, 
-                                customer.name, 
-                                customer.nickname, 
-                                customer.cpf_cnpj, 
-                                customer.rg_ie, 
-                                customer.phone, 
-                                customer.email, 
-                                customer.cep, 
-                                customer.street, 
-                                customer.number_address, 
-                                customer.neighborhood, 
-                                customer.complement, 
-                                customer.city, 
-                                customer.uf, 
-                                customer.credit_limit, 
-                                customer.is_active, 
+                                customer.id_customer,
+                                customer.name,
+                                customer.nickname,
+                                customer.cpf_cnpj,
+                                customer.rg_ie,
+                                customer.phone,
+                                customer.email,
+                                customer.cep,
+                                customer.street,
+                                customer.number_address,
+                                customer.neighborhood,
+                                customer.complement,
+                                customer.city,
+                                customer.uf,
+                                customer.credit_limit,
+                                customer.is_active,
                                 customer.notes
                             FROM public.customer
                             WHERE customer.is_active = TRUE
@@ -177,8 +177,8 @@ namespace ProjetoExtensionista2026_2
                                     lista.Add(new ClienteDTO
                                     {
                                         Id = reader["id_customer"] != DBNull.Value ? Convert.ToInt64(reader["id_customer"]) : 0,
-                                        Nome = reader["name"]?.ToString() ?? string.Empty,
-                                        Apelido = reader["nickname"]?.ToString() ?? string.Empty,
+                                         Nome = reader["name"]?.ToString() ?? string.Empty,
+                                         Apelido = reader["nickname"]?.ToString() ?? string.Empty,
                                         CpfCnpj = reader["cpf_cnpj"]?.ToString() ?? string.Empty,
                                         RgIe = reader["rg_ie"]?.ToString() ?? string.Empty,
                                         Telefone = reader["phone"]?.ToString() ?? string.Empty,
