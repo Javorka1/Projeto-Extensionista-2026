@@ -77,7 +77,7 @@ namespace ProjetoExtensionista2026_2
             if (keyData == Keys.Escape)
             {
                 btnCancelar.PerformClick();
-                return true; // Informa ao Windows Forms que a tecla foi tratada
+                return true;
             }
 
             return base.ProcessCmdKey(ref msg, keyData);
@@ -177,8 +177,8 @@ namespace ProjetoExtensionista2026_2
                                     lista.Add(new ClienteDTO
                                     {
                                         Id = reader["id_customer"] != DBNull.Value ? Convert.ToInt64(reader["id_customer"]) : 0,
-                                         Nome = reader["name"]?.ToString() ?? string.Empty,
-                                         Apelido = reader["nickname"]?.ToString() ?? string.Empty,
+                                        Nome = reader["name"]?.ToString() ?? string.Empty,
+                                        Apelido = reader["nickname"]?.ToString() ?? string.Empty,
                                         CpfCnpj = reader["cpf_cnpj"]?.ToString() ?? string.Empty,
                                         RgIe = reader["rg_ie"]?.ToString() ?? string.Empty,
                                         Telefone = reader["phone"]?.ToString() ?? string.Empty,
@@ -243,6 +243,75 @@ namespace ProjetoExtensionista2026_2
             else
             {
                 MessageBox.Show("Selecione um cliente na lista.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private async void btnEditarCliente_Click(object sender, EventArgs e)
+        {
+            if (dgwClientes.CurrentRow == null || dgwClientes.CurrentRow.Index < 0)
+            {
+                MessageBox.Show("Selecione um cliente na lista para editar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int indice = dgwClientes.CurrentRow.Index;
+            if (indice >= _listaClientes.Count) return;
+
+            ClienteDTO clienteSelecionado = _listaClientes[indice];
+
+            if (clienteSelecionado.Id == 1)
+            {
+                MessageBox.Show("O cliente padrão 'Cliente não informado' não pode ser editado.", "Operação não permitida", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            await AbrirModalEdicaoClienteAsync(clienteSelecionado);
+        }
+
+        private async Task AbrirModalEdicaoClienteAsync(ClienteDTO cliente)
+        {
+            bool atualizado = false;
+
+            using (var formModal = new Form())
+            {
+                var ucCadastro = new UcCadastroCliente();
+
+                formModal.Text = $"Editar Cliente - {cliente.Nome}";
+                formModal.ClientSize = ucCadastro.Size;
+                formModal.StartPosition = FormStartPosition.CenterParent;
+                formModal.FormBorderStyle = FormBorderStyle.FixedDialog;
+                formModal.MaximizeBox = false;
+                formModal.MinimizeBox = false;
+
+                ucCadastro.Dock = DockStyle.Fill;
+                ucCadastro.CarregarDadosParaEdicao(cliente);
+
+                ucCadastro.AoConcluirOperacao += () =>
+                {
+                    atualizado = true;
+                    formModal.DialogResult = DialogResult.OK;
+                    formModal.Close();
+                };
+
+                formModal.Controls.Add(ucCadastro);
+                GerenciadorTema.AplicarTema(formModal);
+
+                formModal.ShowDialog(this.FindForm());
+            }
+
+            if (atualizado)
+            {
+                string termoAtual = txtPesquisa?.Text.Trim() ?? string.Empty;
+                await BuscarClientesBancoAsync(termoAtual);
+
+                // Mantém o foco na linha do cliente recém-editado
+                int novoIndice = _listaClientes.FindIndex(c => c.Id == cliente.Id);
+                if (novoIndice >= 0 && novoIndice < dgwClientes.Rows.Count)
+                {
+                    dgwClientes.ClearSelection();
+                    dgwClientes.Rows[novoIndice].Selected = true;
+                    dgwClientes.CurrentCell = dgwClientes.Rows[novoIndice].Cells[0];
+                }
             }
         }
 

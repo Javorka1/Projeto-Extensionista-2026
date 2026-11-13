@@ -1,4 +1,6 @@
 ﻿using Npgsql;
+using NpgsqlTypes;
+using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
 using System.IO;
@@ -18,21 +20,41 @@ namespace ProjetoExtensionista2026_2
             Timeout = TimeSpan.FromSeconds(10)
         };
 
+        public long? ClienteIdEmEdicao { get; private set; }
+        public event Action AoConcluirOperacao;
+
         public UcCadastroCliente()
         {
             InitializeComponent();
+        }
 
-            btnSalvar.Click += btnSalvar_Click;
-            btnLimpar.Click += btnLimpar_Click;
-            btnCancelar.Click += btnCancelar_Click;
-            textBox7.Leave += textBox7_Leave;
-            rbAtivo.Checked = true;
-            comboBox1.Items.AddRange(new object[]
-            {
-                "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA",
-                "MT", "MS", "MG", "PA", "PB", "PR", "PE", "PI", "RJ", "RN",
-                "RS", "RO", "RR", "SC", "SP", "SE", "TO"
-            });
+        public void CarregarDadosParaEdicao(ClienteDTO c)
+        {
+            if (c == null) return;
+
+            ClienteIdEmEdicao = c.Id;
+
+            txtCodigo.Text = c.Id.ToString();
+            txtNome.Text = c.Nome ?? string.Empty;
+            txtApelido.Text = c.Apelido ?? string.Empty;
+            txtCpfCnpj.Text = c.CpfCnpj ?? string.Empty;
+            txtRgIe.Text = c.RgIe ?? string.Empty;
+            txtTelefone.Text = c.Telefone ?? string.Empty;
+            txtEmail.Text = c.Email ?? string.Empty;
+            txtCep.Text = c.Cep ?? string.Empty;
+            txtRua.Text = c.Rua ?? string.Empty;
+            txtNumero.Text = c.Numero ?? string.Empty;
+            txtBairro.Text = c.Bairro ?? string.Empty;
+            txtCidade.Text = c.Cidade ?? string.Empty;
+            txtDescricao.Text = c.Observacoes ?? string.Empty;
+
+            if (!string.IsNullOrWhiteSpace(c.Uf))
+                cboUf.SelectedItem = c.Uf.Trim().ToUpperInvariant();
+            else
+                cboUf.SelectedIndex = -1;
+
+            rbAtivo.Checked = c.Ativo;
+            btnSalvar.Text = "Atualizar";
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
@@ -51,46 +73,79 @@ namespace ProjetoExtensionista2026_2
                 {
                     conexaoDb.IniciarConexao();
 
-                    const string sql = @"
-                        INSERT INTO public.customer
-                        (
-                            name, nickname, cpf_cnpj, rg_ie, phone, email, cep,
-                            street, number_address, neighborhood, complement, city,
-                            uf, notes, is_active
-                        )
-                        VALUES
-                        (
-                            @name, @nickname, @cpf_cnpj, @rg_ie, @phone, @email, @cep,
-                            @street, @number_address, @neighborhood, @complement, @city,
-                            @uf, @notes, @is_active
-                        )
-                        RETURNING id_customer;";
+                    string sql = ClienteIdEmEdicao.HasValue
+                        ? @"UPDATE public.customer SET
+                                name = @name,
+                                nickname = @nickname,
+                                cpf_cnpj = @cpf_cnpj,
+                                rg_ie = @rg_ie,
+                                phone = @phone,
+                                email = @email,
+                                cep = @cep,
+                                street = @street,
+                                number_address = @number_address,
+                                neighborhood = @neighborhood,
+                                city = @city,
+                                uf = @uf,
+                                notes = @notes,
+                                is_active = @is_active,
+                                updated_at = NOW()
+                            WHERE id_customer = @id;"
+                        : @"INSERT INTO public.customer
+                            (
+                                name, nickname, cpf_cnpj, rg_ie, phone, email, cep,
+                                street, number_address, neighborhood, complement, city,
+                                uf, notes, is_active
+                            )
+                            VALUES
+                            (
+                                @name, @nickname, @cpf_cnpj, @rg_ie, @phone, @email, @cep,
+                                @street, @number_address, @neighborhood, @complement, @city,
+                                @uf, @notes, @is_active
+                            )
+                            RETURNING id_customer;";
 
-                    long idCliente;
                     using (var comando = new NpgsqlCommand(sql, conexaoDb.Conexao))
                     {
+                        if (ClienteIdEmEdicao.HasValue)
+                            comando.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, ClienteIdEmEdicao.Value);
+                        else
+                            comando.Parameters.AddWithValue("@complement", DBNull.Value);
+
                         comando.Parameters.AddWithValue("@name", nome);
-                        comando.Parameters.AddWithValue("@nickname", ValorOuNulo(textBox1.Text));
-                        comando.Parameters.AddWithValue("@cpf_cnpj", ValorOuNulo(textBox2.Text));
-                        comando.Parameters.AddWithValue("@rg_ie", ValorOuNulo(textBox4.Text));
-                        comando.Parameters.AddWithValue("@phone", ValorOuNulo(textBox5.Text));
-                        comando.Parameters.AddWithValue("@email", ValorOuNulo(textBox3.Text));
-                        comando.Parameters.AddWithValue("@cep", ValorOuNulo(textBox7.Text));
-                        comando.Parameters.AddWithValue("@street", ValorOuNulo(textBox10.Text));
-                        comando.Parameters.AddWithValue("@number_address", ValorOuNulo(textBox8.Text));
-                        comando.Parameters.AddWithValue("@neighborhood", ValorOuNulo(textBox6.Text));
-                        comando.Parameters.AddWithValue("@complement", DBNull.Value);
-                        comando.Parameters.AddWithValue("@city", ValorOuNulo(textBox12.Text));
-                        comando.Parameters.AddWithValue("@uf", ValorOuNulo(comboBox1.Text));
+                        comando.Parameters.AddWithValue("@nickname", ValorOuNulo(txtApelido.Text));
+                        comando.Parameters.AddWithValue("@cpf_cnpj", ValorOuNulo(txtCpfCnpj.Text));
+                        comando.Parameters.AddWithValue("@rg_ie", ValorOuNulo(txtRgIe.Text));
+                        comando.Parameters.AddWithValue("@phone", ValorOuNulo(txtTelefone.Text));
+                        comando.Parameters.AddWithValue("@email", ValorOuNulo(txtEmail.Text));
+                        comando.Parameters.AddWithValue("@cep", ValorOuNulo(txtCep.Text));
+                        comando.Parameters.AddWithValue("@street", ValorOuNulo(txtRua.Text));
+                        comando.Parameters.AddWithValue("@number_address", ValorOuNulo(txtNumero.Text));
+                        comando.Parameters.AddWithValue("@neighborhood", ValorOuNulo(txtBairro.Text));
+                        comando.Parameters.AddWithValue("@city", ValorOuNulo(txtCidade.Text));
+                        comando.Parameters.AddWithValue("@uf", ValorOuNulo(cboUf.Text));
                         comando.Parameters.AddWithValue("@notes", ValorOuNulo(txtDescricao.Text));
                         comando.Parameters.AddWithValue("@is_active", rbAtivo.Checked);
-                        idCliente = Convert.ToInt64(comando.ExecuteScalar());
 
-                        txtCodigo.Text = idCliente.ToString();
+                        if (ClienteIdEmEdicao.HasValue)
+                        {
+                            comando.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            long idCliente = Convert.ToInt64(comando.ExecuteScalar());
+                            txtCodigo.Text = idCliente.ToString();
+                        }
                     }
                 }
 
-                MessageBox.Show($"Cliente cadastrado com sucesso. Código: {txtCodigo.Text}", "Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                string mensagem = ClienteIdEmEdicao.HasValue
+                    ? "Cliente atualizado com sucesso!"
+                    : $"Cliente cadastrado com sucesso. Código: {txtCodigo.Text}";
+
+                MessageBox.Show(mensagem, "Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                AoConcluirOperacao?.Invoke();
 
                 Form formulario = FindForm();
                 if (formulario != null)
@@ -105,7 +160,7 @@ namespace ProjetoExtensionista2026_2
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao cadastrar cliente: {ex.Message}", "Falha de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao salvar cliente: {ex.Message}", "Falha de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -114,9 +169,9 @@ namespace ProjetoExtensionista2026_2
             return string.IsNullOrWhiteSpace(valor) ? (object)DBNull.Value : valor.Trim();
         }
 
-        private async void textBox7_Leave(object sender, EventArgs e)
+        private async void txtCep_Leave(object sender, EventArgs e)
         {
-            string cep = ExtrairDigitos(textBox7.Text);
+            string cep = ExtrairDigitos(txtCep.Text);
             if (cep.Length != 8)
                 return;
 
@@ -137,13 +192,13 @@ namespace ProjetoExtensionista2026_2
                         return;
 
                     if (!string.IsNullOrWhiteSpace(endereco.Street))
-                        textBox10.Text = endereco.Street;
+                        txtRua.Text = endereco.Street;
                     if (!string.IsNullOrWhiteSpace(endereco.Neighborhood))
-                        textBox6.Text = endereco.Neighborhood;
+                        txtBairro.Text = endereco.Neighborhood;
                     if (!string.IsNullOrWhiteSpace(endereco.City))
-                        textBox12.Text = endereco.City;
+                        txtCidade.Text = endereco.City;
                     if (!string.IsNullOrWhiteSpace(endereco.State))
-                        comboBox1.SelectedItem = endereco.State.ToUpperInvariant();
+                        cboUf.SelectedItem = endereco.State.ToUpperInvariant();
                 }
             }
             catch (TaskCanceledException)
@@ -180,31 +235,28 @@ namespace ProjetoExtensionista2026_2
             return resultado.ToString();
         }
 
-        private void btnLimpar_Click(object sender, EventArgs e)
-        {
-            LimparFormulario();
-        }
+        private void btnLimpar_Click(object sender, EventArgs e) => LimparFormulario();
 
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            FindForm()?.Close();
-        }
+        private void btnCancelar_Click(object sender, EventArgs e) => FindForm()?.Close();
 
         private void LimparFormulario()
         {
+            ClienteIdEmEdicao = null;
+            btnSalvar.Text = "Salvar";
+
             foreach (Control controle in Controls)
             {
                 LimparControle(controle);
             }
 
             rbAtivo.Checked = true;
-            comboBox1.SelectedIndex = -1;
+            cboUf.SelectedIndex = -1;
             txtNome.Focus();
         }
 
-        private static void LimparControle(Control controle)
+        private void LimparControle(Control controle)
         {
-            if (controle is TextBox textBox && textBox.Name != "textBox9")
+            if (controle is TextBox textBox && textBox != txtCodigo)
             {
                 textBox.Clear();
             }

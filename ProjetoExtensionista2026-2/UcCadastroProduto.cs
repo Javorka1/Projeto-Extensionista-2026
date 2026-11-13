@@ -26,12 +26,12 @@ namespace ProjetoExtensionista2026_2
         {
             InitializeComponent();
 
-            this.DoubleBuffered = true;
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+            DoubleBuffered = true;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
 
-            ConfigurarControlesIniciais();
+            if (cboUnidade.Items.Count > 0)
+                cboUnidade.SelectedIndex = 0;
 
-            // Carrega diretamente sem depender exclusivamente do evento Load do UserControl
             _ = InicializarDadosAsync();
         }
 
@@ -40,32 +40,6 @@ namespace ProjetoExtensionista2026_2
             var client = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
             client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
             return client;
-        }
-
-        private void ConfigurarControlesIniciais()
-        {
-            txtCodigo.ReadOnly = true;
-            txtCodigo.TabStop = false;
-            txtMargem.ReadOnly = true;
-            txtMargem.TabStop = false;
-
-            // 1. Unidade (UNID ou JG)
-            cboUnidade.DropDownStyle = ComboBoxStyle.DropDownList;
-            if (cboUnidade.Items.Count == 0)
-            {
-                cboUnidade.Items.AddRange(new object[] { "UNID", "JG" });
-            }
-            cboUnidade.SelectedIndex = 0;
-
-            // 2. ComboBoxes de Categoria e Fornecedor
-            cboCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
-            cboFornecedor.DropDownStyle = ComboBoxStyle.DropDownList;
-
-            // 3. Status inicial
-            DefinirStatusProduto(true);
-
-            numPrecoCompra.ValueChanged += (s, e) => CalcularMargem();
-            numPrecoVenda.ValueChanged += (s, e) => CalcularMargem();
         }
 
         private async Task InicializarDadosAsync()
@@ -124,15 +98,10 @@ namespace ProjetoExtensionista2026_2
                 cboCategoria.DisplayMember = "Nome";
                 cboCategoria.ValueMember = "Id";
                 cboCategoria.DataSource = lista;
+                cboCategoria.SelectedIndex = idParaSelecionar.HasValue ? -1 : -1;
 
                 if (idParaSelecionar.HasValue)
-                {
                     cboCategoria.SelectedValue = idParaSelecionar.Value;
-                }
-                else
-                {
-                    cboCategoria.SelectedIndex = -1;
-                }
             }
             catch (Exception ex)
             {
@@ -170,15 +139,10 @@ namespace ProjetoExtensionista2026_2
                 cboFornecedor.DisplayMember = "Nome";
                 cboFornecedor.ValueMember = "Id";
                 cboFornecedor.DataSource = lista;
+                cboFornecedor.SelectedIndex = -1;
 
                 if (idParaSelecionar.HasValue)
-                {
                     cboFornecedor.SelectedValue = idParaSelecionar.Value;
-                }
-                else
-                {
-                    cboFornecedor.SelectedIndex = -1;
-                }
             }
             catch (Exception ex)
             {
@@ -202,16 +166,17 @@ namespace ProjetoExtensionista2026_2
                         db.IniciarConexao();
                         const string sql = @"
                             INSERT INTO public.category (name_category)
-                            VALUES (@cat)
-                            ON CONFLICT (name_category) DO NOTHING;
+                            SELECT @cat
+                            WHERE NOT EXISTS (
+                                SELECT 1 FROM public.category WHERE LOWER(TRIM(name_category)) = LOWER(@cat)
+                            );
 
-                            SELECT id_category FROM public.category WHERE name_category = @cat LIMIT 1;";
+                            SELECT id_category FROM public.category WHERE LOWER(TRIM(name_category)) = LOWER(@cat) LIMIT 1;";
 
                         using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         {
                             cmd.Parameters.AddWithValue("@cat", novaCategoria);
-                            object resultado = cmd.ExecuteScalar();
-                            return Convert.ToInt64(resultado);
+                            return Convert.ToInt64(cmd.ExecuteScalar());
                         }
                     }
                 });
@@ -227,10 +192,12 @@ namespace ProjetoExtensionista2026_2
 
         private async void btnAdicionarFornecedor_Click(object sender, EventArgs e)
         {
-            string novoFornecedor = PromptDialog.Mostrar("Digite o nome do novo fornecedor:", "Novo Fornecedor");
-            if (string.IsNullOrWhiteSpace(novoFornecedor)) return;
+            var dados = PromptDialog.MostrarFornecedor();
+            if (!dados.Confirmado || string.IsNullOrWhiteSpace(dados.Nome)) return;
 
-            novoFornecedor = novoFornecedor.Trim();
+            string nome = dados.Nome.Trim();
+            string documento = string.IsNullOrWhiteSpace(dados.Documento) ? null : dados.Documento.Trim();
+            string telefone = string.IsNullOrWhiteSpace(dados.Telefone) ? null : dados.Telefone.Trim();
 
             try
             {
@@ -240,15 +207,21 @@ namespace ProjetoExtensionista2026_2
                     {
                         db.IniciarConexao();
                         const string sql = @"
-                            INSERT INTO public.supplier (name, is_active)
-                            VALUES (@nome, TRUE)
-                            RETURNING id_supplier;";
+                    INSERT INTO public.supplier (name, document, phone, is_active)
+                    SELECT @nome, @doc, @tel, TRUE
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome)
+                    );
+
+                    SELECT id_supplier FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome) LIMIT 1;";
 
                         using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         {
-                            cmd.Parameters.AddWithValue("@nome", novoFornecedor);
-                            object resultado = cmd.ExecuteScalar();
-                            return Convert.ToInt64(resultado);
+                            cmd.Parameters.AddWithValue("@nome", NpgsqlDbType.Varchar, nome);
+                            cmd.Parameters.AddWithValue("@doc", NpgsqlDbType.Varchar, (object)documento ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue("@tel", NpgsqlDbType.Varchar, (object)telefone ?? DBNull.Value);
+
+                            return Convert.ToInt64(cmd.ExecuteScalar());
                         }
                     }
                 });
@@ -268,10 +241,7 @@ namespace ProjetoExtensionista2026_2
             rbInativo.Checked = !ativo;
         }
 
-        public bool ObterStatusProduto()
-        {
-            return rbAtivo.Checked;
-        }
+        public bool ObterStatusProduto() => rbAtivo.Checked;
 
         public async Task GerarProximoCodigoAsync()
         {
@@ -293,30 +263,23 @@ namespace ProjetoExtensionista2026_2
                     }
                 });
 
-                if (!this.IsDisposed && !ProdutoIdEmEdicao.HasValue)
-                {
+                if (!IsDisposed && !ProdutoIdEmEdicao.HasValue)
                     txtCodigo.Text = codigoGerado;
-                }
             }
             catch
             {
-                if (!this.IsDisposed && !ProdutoIdEmEdicao.HasValue)
-                {
+                if (!IsDisposed && !ProdutoIdEmEdicao.HasValue)
                     txtCodigo.Text = "1";
-                }
             }
         }
 
-        public async void CarregarDadosParaEdicao(ProdutoDTO p)
-        {
-            await CarregarDadosParaEdicaoAsync(p);
-        }
+        public async void CarregarDadosParaEdicao(ProdutoDTO p) => await CarregarDadosParaEdicaoAsync(p);
 
         public async Task CarregarDadosParaEdicaoAsync(ProdutoDTO p)
         {
             if (p == null) return;
 
-            this.SuspendLayout();
+            SuspendLayout();
 
             _produtoRef = p;
             ProdutoIdEmEdicao = p.Id;
@@ -334,9 +297,7 @@ namespace ProjetoExtensionista2026_2
             string unidade = string.IsNullOrWhiteSpace(p.Unidade) ? "UNID" : p.Unidade.Trim().ToUpper();
             if (unidade == "UN") unidade = "UNID";
             if (!cboUnidade.Items.Contains(unidade))
-            {
                 cboUnidade.Items.Add(unidade);
-            }
             cboUnidade.SelectedItem = unidade;
 
             DefinirStatusProduto(p.Ativo);
@@ -346,77 +307,54 @@ namespace ProjetoExtensionista2026_2
 
             DefinirImagemPreview(Properties.Resources.produto_ausente);
 
-            this.ResumeLayout();
+            ResumeLayout();
 
             var tasks = new List<Task>();
             if (cboCategoria.Items.Count == 0) tasks.Add(CarregarCategoriasBancoAsync());
             if (cboFornecedor.Items.Count == 0) tasks.Add(CarregarFornecedoresBancoAsync());
 
             if (tasks.Count > 0)
-            {
                 await Task.WhenAll(tasks);
-            }
 
-            if (!string.IsNullOrWhiteSpace(p.Categoria))
-            {
-                int indexCat = -1;
-                string catAlvo = p.Categoria.Trim();
-                for (int i = 0; i < cboCategoria.Items.Count; i++)
-                {
-                    if (cboCategoria.Items[i] is ItemCombo item &&
-                        string.Equals(item.Nome?.Trim(), catAlvo, StringComparison.OrdinalIgnoreCase))
-                    {
-                        indexCat = i;
-                        break;
-                    }
-                }
-                cboCategoria.SelectedIndex = indexCat;
-            }
-            else
-            {
-                cboCategoria.SelectedIndex = -1;
-            }
-
-            if (!string.IsNullOrWhiteSpace(p.Fornecedor))
-            {
-                int indexSup = -1;
-                string supAlvo = p.Fornecedor.Trim();
-                for (int i = 0; i < cboFornecedor.Items.Count; i++)
-                {
-                    if (cboFornecedor.Items[i] is ItemCombo item &&
-                        string.Equals(item.Nome?.Trim(), supAlvo, StringComparison.OrdinalIgnoreCase))
-                    {
-                        indexSup = i;
-                        break;
-                    }
-                }
-                cboFornecedor.SelectedIndex = indexSup;
-            }
-            else
-            {
-                cboFornecedor.SelectedIndex = -1;
-            }
+            SelecionarItemComboPorNome(cboCategoria, p.Categoria);
+            SelecionarItemComboPorNome(cboFornecedor, p.Fornecedor);
 
             if (!string.IsNullOrWhiteSpace(p.FotoUrl))
-            {
                 _ = CarregarImagemPorUrlAsync(p.FotoUrl, exibirErros: false);
-            }
         }
+
+        private static void SelecionarItemComboPorNome(ComboBox combo, string nomeAlvo)
+        {
+            if (string.IsNullOrWhiteSpace(nomeAlvo))
+            {
+                combo.SelectedIndex = -1;
+                return;
+            }
+
+            string alvo = nomeAlvo.Trim();
+            for (int i = 0; i < combo.Items.Count; i++)
+            {
+                if (combo.Items[i] is ItemCombo item &&
+                    string.Equals(item.Nome?.Trim(), alvo, StringComparison.OrdinalIgnoreCase))
+                {
+                    combo.SelectedIndex = i;
+                    return;
+                }
+            }
+            combo.SelectedIndex = -1;
+        }
+
+        // Evento vinculado pelo Designer aos dois NumericUpDown (numPrecoCompra e numPrecoVenda)
+        private void numPreco_ValueChanged(object sender, EventArgs e) => CalcularMargem();
 
         private void CalcularMargem()
         {
             decimal compra = numPrecoCompra.Value;
             decimal venda = numPrecoVenda.Value;
 
-            if (compra > 0)
-            {
-                decimal margem = ((venda - compra) / compra) * 100m;
-                txtMargem.Text = $"{margem:F2}%";
-            }
-            else
-            {
-                txtMargem.Text = "0,00%";
-            }
+            txtMargem.Text = compra > 0
+                ? $"{((venda - compra) / compra) * 100m:F2}%"
+                : "0,00%";
         }
 
         private async void btnSalvar_Click(object sender, EventArgs e)
@@ -449,18 +387,8 @@ namespace ProjetoExtensionista2026_2
             bool statusAtivo = ObterStatusProduto();
             string fotoUrl = string.IsNullOrWhiteSpace(txtFotoUrl.Text) ? null : txtFotoUrl.Text.Trim();
 
-            long? idCategoria = null;
-            if (cboCategoria.SelectedItem is ItemCombo itemCat)
-                idCategoria = itemCat.Id;
-            else if (cboCategoria.SelectedValue != null && long.TryParse(cboCategoria.SelectedValue.ToString(), out long catParsed))
-                idCategoria = catParsed;
-
-            long? idFornecedor = null;
-            if (cboFornecedor.SelectedItem is ItemCombo itemSup)
-                idFornecedor = itemSup.Id;
-            else if (cboFornecedor.SelectedValue != null && long.TryParse(cboFornecedor.SelectedValue.ToString(), out long supParsed))
-                idFornecedor = supParsed;
-
+            long? idCategoria = (cboCategoria.SelectedItem as ItemCombo)?.Id;
+            long? idFornecedor = (cboFornecedor.SelectedItem as ItemCombo)?.Id;
             string textoCategoria = cboCategoria.Text;
             string textoFornecedor = cboFornecedor.Text;
 
@@ -501,7 +429,7 @@ namespace ProjetoExtensionista2026_2
                         using (var cmd = new NpgsqlCommand(query, db.Conexao))
                         {
                             if (ProdutoIdEmEdicao.HasValue)
-                                cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, (long)ProdutoIdEmEdicao.Value);
+                                cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Integer, ProdutoIdEmEdicao.Value);
 
                             cmd.Parameters.AddWithValue("@nome", NpgsqlDbType.Varchar, nome);
                             cmd.Parameters.AddWithValue("@descricao", NpgsqlDbType.Text, (object)descricao ?? DBNull.Value);
@@ -521,11 +449,8 @@ namespace ProjetoExtensionista2026_2
                                 await cmd.ExecuteNonQueryAsync();
                                 return ProdutoIdEmEdicao.Value;
                             }
-                            else
-                            {
-                                object resId = await cmd.ExecuteScalarAsync();
-                                return Convert.ToInt32(resId);
-                            }
+
+                            return Convert.ToInt32(await cmd.ExecuteScalarAsync());
                         }
                     }
                 });
@@ -534,10 +459,10 @@ namespace ProjetoExtensionista2026_2
                 {
                     _produtoRef.Id = idFinal;
                     _produtoRef.Nome = nome;
-                    _produtoRef.Descricao = descricao ?? "";
+                    _produtoRef.Descricao = descricao ?? string.Empty;
                     _produtoRef.PrecoCompra = precoCompra;
                     _produtoRef.PrecoVenda = precoVenda;
-                    _produtoRef.Localizacao = localizacao ?? "";
+                    _produtoRef.Localizacao = localizacao ?? string.Empty;
                     _produtoRef.Estoque = (int)estoque;
                     _produtoRef.EstoqueMinimo = estoqueMin;
                     _produtoRef.Unidade = unidade;
@@ -554,9 +479,7 @@ namespace ProjetoExtensionista2026_2
                 MessageBox.Show(msg, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 if (!ProdutoIdEmEdicao.HasValue)
-                {
                     await LimparCamposAsync();
-                }
 
                 AoConcluirOperacao?.Invoke();
             }
@@ -566,7 +489,7 @@ namespace ProjetoExtensionista2026_2
             }
             finally
             {
-                if (!this.IsDisposed)
+                if (!IsDisposed)
                 {
                     btnSalvar.Enabled = true;
                     Cursor.Current = Cursors.Default;
@@ -574,19 +497,12 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        private async void btnLimpar_Click(object sender, EventArgs e)
-        {
-            await LimparCamposAsync();
-        }
-
-        public async void LimparCampos()
-        {
-            await LimparCamposAsync();
-        }
+        private async void btnLimpar_Click(object sender, EventArgs e) => await LimparCamposAsync();
+        public async void LimparCampos() => await LimparCamposAsync();
 
         public async Task LimparCamposAsync()
         {
-            this.SuspendLayout();
+            SuspendLayout();
 
             _produtoRef = null;
             ProdutoIdEmEdicao = null;
@@ -603,7 +519,7 @@ namespace ProjetoExtensionista2026_2
             numEstoque.Value = 0;
             numEstoqueMinimo.Value = 0;
 
-            cboUnidade.SelectedIndex = 0;
+            if (cboUnidade.Items.Count > 0) cboUnidade.SelectedIndex = 0;
             cboCategoria.SelectedIndex = -1;
             cboFornecedor.SelectedIndex = -1;
 
@@ -611,7 +527,7 @@ namespace ProjetoExtensionista2026_2
             DefinirImagemPreview(Properties.Resources.produto_ausente);
             btnSalvar.Text = "Salvar";
 
-            this.ResumeLayout();
+            ResumeLayout();
             txtNome.Focus();
 
             await GerarProximoCodigoAsync();
@@ -619,11 +535,7 @@ namespace ProjetoExtensionista2026_2
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-            Form formPai = this.FindForm();
-            if (formPai != null)
-            {
-                formPai.Close();
-            }
+            FindForm()?.Close();
             AoConcluirOperacao?.Invoke();
         }
 
@@ -639,7 +551,6 @@ namespace ProjetoExtensionista2026_2
             {
                 ofd.Title = "Selecione a imagem do produto";
                 ofd.Filter = "Imagens (*.jpg;*.jpeg;*.png;*.webp)|*.jpg;*.jpeg;*.png;*.webp|Todos os arquivos (*.*)|*.*";
-                ofd.Multiselect = false;
 
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
@@ -661,10 +572,8 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        private async void btnCarregarFoto_Click(object sender, EventArgs e)
-        {
+        private async void btnCarregarFoto_Click(object sender, EventArgs e) =>
             await CarregarImagemPorUrlAsync(txtFotoUrl.Text.Trim(), exibirErros: true);
-        }
 
         private async void txtFotoUrl_KeyDown(object sender, KeyEventArgs e)
         {
@@ -689,9 +598,7 @@ namespace ProjetoExtensionista2026_2
 
             try
             {
-                byte[] dadosImagem = null;
-
-                if (!_imageBytesCache.TryGetValue(url, out dadosImagem))
+                if (!_imageBytesCache.TryGetValue(url, out byte[] dadosImagem))
                 {
                     if (File.Exists(url))
                     {
@@ -710,12 +617,10 @@ namespace ProjetoExtensionista2026_2
                     }
 
                     if (dadosImagem != null && dadosImagem.Length > 0)
-                    {
                         _imageBytesCache.TryAdd(url, dadosImagem);
-                    }
                 }
 
-                if (dadosImagem != null && !this.IsDisposed)
+                if (dadosImagem != null && !IsDisposed)
                 {
                     using (var ms = new MemoryStream(dadosImagem))
                     using (var imgOriginal = Image.FromStream(ms))
@@ -726,7 +631,7 @@ namespace ProjetoExtensionista2026_2
             }
             catch (Exception ex)
             {
-                if (!this.IsDisposed)
+                if (!IsDisposed)
                 {
                     DefinirImagemPreview(Properties.Resources.produto_ausente);
                     if (exibirErros)
@@ -741,10 +646,8 @@ namespace ProjetoExtensionista2026_2
         private void DefinirImagemPreview(Image novaImagem)
         {
             if (picFotoPreview.Image != null && !ReferenceEquals(picFotoPreview.Image, Properties.Resources.produto_ausente))
-            {
                 picFotoPreview.Image.Dispose();
-            }
-            picFotoPreview.SizeMode = PictureBoxSizeMode.Zoom;
+
             picFotoPreview.Image = novaImagem;
         }
     }
@@ -753,7 +656,7 @@ namespace ProjetoExtensionista2026_2
     {
         public static string Mostrar(string texto, string titulo)
         {
-            Form formPrompt = new Form()
+            using (Form formPrompt = new Form
             {
                 Width = 380,
                 Height = 160,
@@ -762,21 +665,65 @@ namespace ProjetoExtensionista2026_2
                 StartPosition = FormStartPosition.CenterParent,
                 MaximizeBox = false,
                 MinimizeBox = false
-            };
+            })
+            {
+                Label lblTexto = new Label { Left = 16, Top = 16, Width = 330, Text = texto };
+                TextBox txtInput = new TextBox { Left = 16, Top = 40, Width = 330 };
+                Button btnOk = new Button { Text = "Salvar", Left = 180, Width = 80, Top = 75, DialogResult = DialogResult.OK };
+                Button btnCancel = new Button { Text = "Cancelar", Left = 266, Width = 80, Top = 75, DialogResult = DialogResult.Cancel };
 
-            Label lblTexto = new Label() { Left = 16, Top = 16, Width = 330, Text = texto };
-            TextBox txtInput = new TextBox() { Left = 16, Top = 40, Width = 330 };
-            Button btnOk = new Button() { Text = "Salvar", Left = 180, Width = 80, Top = 75, DialogResult = DialogResult.OK };
-            Button btnCancel = new Button() { Text = "Cancelar", Left = 266, Width = 80, Top = 75, DialogResult = DialogResult.Cancel };
+                formPrompt.Controls.AddRange(new Control[] { lblTexto, txtInput, btnOk, btnCancel });
+                formPrompt.AcceptButton = btnOk;
+                formPrompt.CancelButton = btnCancel;
 
-            formPrompt.Controls.Add(lblTexto);
-            formPrompt.Controls.Add(txtInput);
-            formPrompt.Controls.Add(btnOk);
-            formPrompt.Controls.Add(btnCancel);
-            formPrompt.AcceptButton = btnOk;
-            formPrompt.CancelButton = btnCancel;
+                return formPrompt.ShowDialog() == DialogResult.OK ? txtInput.Text : string.Empty;
+            }
+        }
 
-            return formPrompt.ShowDialog() == DialogResult.OK ? txtInput.Text : string.Empty;
+        public static (bool Confirmado, string Nome, string Documento, string Telefone) MostrarFornecedor()
+        {
+            using (Form formPrompt = new Form
+            {
+                Width = 400,
+                Height = 270,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = "Novo Fornecedor",
+                StartPosition = FormStartPosition.CenterParent,
+                MaximizeBox = false,
+                MinimizeBox = false
+            })
+            {
+                Label lblNome = new Label { Left = 16, Top = 16, Width = 350, Text = "Nome / Razão Social *:" };
+                TextBox txtNome = new TextBox { Left = 16, Top = 38, Width = 350 };
+
+                Label lblDoc = new Label { Left = 16, Top = 72, Width = 350, Text = "Documento (CPF / CNPJ):" };
+                TextBox txtDoc = new TextBox { Left = 16, Top = 94, Width = 350, MaxLength = 20 };
+
+                Label lblTel = new Label { Left = 16, Top = 128, Width = 350, Text = "Telefone:" };
+                TextBox txtTel = new TextBox { Left = 16, Top = 150, Width = 350, MaxLength = 20 };
+
+                Button btnOk = new Button { Text = "Salvar", Left = 200, Width = 80, Top = 190 };
+                Button btnCancel = new Button { Text = "Cancelar", Left = 286, Width = 80, Top = 190, DialogResult = DialogResult.Cancel };
+
+                btnOk.Click += (s, e) =>
+                {
+                    if (string.IsNullOrWhiteSpace(txtNome.Text))
+                    {
+                        MessageBox.Show("O nome do fornecedor é obrigatório.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        txtNome.Focus();
+                        return;
+                    }
+                    formPrompt.DialogResult = DialogResult.OK;
+                    formPrompt.Close();
+                };
+
+                formPrompt.Controls.AddRange(new Control[] { lblNome, txtNome, lblDoc, txtDoc, lblTel, txtTel, btnOk, btnCancel });
+                formPrompt.AcceptButton = btnOk;
+                formPrompt.CancelButton = btnCancel;
+
+                bool ok = formPrompt.ShowDialog() == DialogResult.OK;
+                return (ok, txtNome.Text, txtDoc.Text, txtTel.Text);
+            }
         }
     }
 }
