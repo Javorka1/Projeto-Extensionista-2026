@@ -31,6 +31,7 @@ namespace ProjetoExtensionista2026_2
             this.panelSidebar = new System.Windows.Forms.Panel();
             this.pnlNav = new System.Windows.Forms.Panel();
             this.btnNavConfig = new System.Windows.Forms.Button();
+            this.btnNavAdmin = new System.Windows.Forms.Button();
             this.btnNavCadastro = new System.Windows.Forms.Button();
             this.btnNavFinanceiro = new System.Windows.Forms.Button();
             this.btnNavEstoque = new System.Windows.Forms.Button();
@@ -71,6 +72,7 @@ namespace ProjetoExtensionista2026_2
             // pnlNav
             // 
             this.pnlNav.Controls.Add(this.btnNavConfig);
+            this.pnlNav.Controls.Add(this.btnNavAdmin);
             this.pnlNav.Controls.Add(this.btnNavCadastro);
             this.pnlNav.Controls.Add(this.btnNavFinanceiro);
             this.pnlNav.Controls.Add(this.btnNavEstoque);
@@ -80,7 +82,7 @@ namespace ProjetoExtensionista2026_2
             this.pnlNav.Location = new System.Drawing.Point(0, 75);
             this.pnlNav.Name = "pnlNav";
             this.pnlNav.Padding = new System.Windows.Forms.Padding(10, 8, 10, 8);
-            this.pnlNav.Size = new System.Drawing.Size(240, 476);
+            this.pnlNav.Size = new System.Drawing.Size(240, 456);
             this.pnlNav.TabIndex = 1;
             // 
             // btnNavConfig
@@ -89,7 +91,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavConfig.FlatAppearance.BorderSize = 0;
             this.btnNavConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavConfig.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNavConfig.Location = new System.Drawing.Point(10, 218);
+            this.btnNavConfig.Location = new System.Drawing.Point(10, 260);
             this.btnNavConfig.Name = "btnNavConfig";
             this.btnNavConfig.Size = new System.Drawing.Size(220, 42);
             this.btnNavConfig.TabIndex = 5;
@@ -98,6 +100,22 @@ namespace ProjetoExtensionista2026_2
             this.btnNavConfig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavConfig.UseVisualStyleBackColor = true;
             this.btnNavConfig.Click += new System.EventHandler(this.btnNavConfig_Click);
+            // 
+            // btnNavAdmin
+            // 
+            this.btnNavAdmin.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavAdmin.FlatAppearance.BorderSize = 0;
+            this.btnNavAdmin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavAdmin.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNavAdmin.Location = new System.Drawing.Point(10, 218);
+            this.btnNavAdmin.Name = "btnNavAdmin";
+            this.btnNavAdmin.Size = new System.Drawing.Size(220, 42);
+            this.btnNavAdmin.TabIndex = 6;
+            this.btnNavAdmin.Tag = "admin_item";
+            this.btnNavAdmin.Text = " 🛡 Admin";
+            this.btnNavAdmin.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavAdmin.UseVisualStyleBackColor = true;
+            this.btnNavAdmin.Click += new System.EventHandler(this.btnNavAdmin_Click);
             // 
             // btnNavCadastro
             // 
@@ -194,10 +212,9 @@ namespace ProjetoExtensionista2026_2
             // btnSair
             // 
             this.btnSair.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnSair.FlatAppearance.BorderSize = 1;
             this.btnSair.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSair.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSair.Location = new System.Drawing.Point(10, 92);
+            this.btnSair.Location = new System.Drawing.Point(10, 86);
             this.btnSair.Name = "btnSair";
             this.btnSair.Size = new System.Drawing.Size(220, 30);
             this.btnSair.TabIndex = 2;
@@ -209,10 +226,9 @@ namespace ProjetoExtensionista2026_2
             // btnToggleTema
             // 
             this.btnToggleTema.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnToggleTema.FlatAppearance.BorderSize = 1;
             this.btnToggleTema.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnToggleTema.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnToggleTema.Location = new System.Drawing.Point(10, 56);
+            this.btnToggleTema.Location = new System.Drawing.Point(10, 54);
             this.btnToggleTema.Name = "btnToggleTema";
             this.btnToggleTema.Size = new System.Drawing.Size(220, 32);
             this.btnToggleTema.TabIndex = 1;
@@ -241,7 +257,7 @@ namespace ProjetoExtensionista2026_2
             this.lblCargoUsuario.ForeColor = System.Drawing.Color.ForestGreen;
             this.lblCargoUsuario.Location = new System.Drawing.Point(48, 26);
             this.lblCargoUsuario.Name = "lblCargoUsuario";
-            this.lblCargoUsuario.Size = new System.Drawing.Size(81, 13);
+            this.lblCargoUsuario.Size = new System.Drawing.Size(82, 13);
             this.lblCargoUsuario.TabIndex = 2;
             this.lblCargoUsuario.Text = "Administrador";
             // 
@@ -285,7 +301,7 @@ namespace ProjetoExtensionista2026_2
             this.lblLogoSubtitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(150)))), ((int)(((byte)(160)))), ((int)(((byte)(175)))));
             this.lblLogoSubtitulo.Location = new System.Drawing.Point(54, 43);
             this.lblLogoSubtitulo.Name = "lblLogoSubtitulo";
-            this.lblLogoSubtitulo.Size = new System.Drawing.Size(126, 13);
+            this.lblLogoSubtitulo.Size = new System.Drawing.Size(120, 13);
             this.lblLogoSubtitulo.TabIndex = 2;
             this.lblLogoSubtitulo.Tag = "subtitulo";
             this.lblLogoSubtitulo.Text = "Ponto de Venda e ERP";
@@ -296,7 +312,7 @@ namespace ProjetoExtensionista2026_2
             this.lblLogoTitulo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLogoTitulo.Location = new System.Drawing.Point(54, 20);
             this.lblLogoTitulo.Name = "lblLogoTitulo";
-            this.lblLogoTitulo.Size = new System.Drawing.Size(119, 21);
+            this.lblLogoTitulo.Size = new System.Drawing.Size(121, 21);
             this.lblLogoTitulo.TabIndex = 1;
             this.lblLogoTitulo.Text = "NexStore 2026";
             // 
@@ -317,7 +333,7 @@ namespace ProjetoExtensionista2026_2
             this.listBoxSidebar.FormattingEnabled = true;
             this.listBoxSidebar.Location = new System.Drawing.Point(0, 0);
             this.listBoxSidebar.Name = "listBoxSidebar";
-            this.listBoxSidebar.Size = new System.Drawing.Size(10, 10);
+            this.listBoxSidebar.Size = new System.Drawing.Size(10, 4);
             this.listBoxSidebar.TabIndex = 3;
             this.listBoxSidebar.Visible = false;
             // 
@@ -376,5 +392,6 @@ namespace ProjetoExtensionista2026_2
         public System.Windows.Forms.Button btnSair;
         public System.Windows.Forms.ListBox listBoxSidebar;
         private System.Windows.Forms.Panel panelWorkspace;
+        public System.Windows.Forms.Button btnNavAdmin;
     }
 }

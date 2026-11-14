@@ -163,6 +163,11 @@ namespace ProjetoExtensionista2026_2
             AtivarNavegacao(btnNavConfig, new FormConfig());
         }
 
+        private void btnNavAdmin_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavAdmin, new formAdmin());
+        }
+
         private void btnToggleTema_Click(object sender, EventArgs e)
         {
             GerenciadorTema.AlternarTema(this);
@@ -209,6 +214,9 @@ namespace ProjetoExtensionista2026_2
                 case "Financeiro":
                     btnNavFinanceiro.PerformClick();
                     break;
+                case "Administração":
+                    btnNavAdmin.PerformClick();
+                    break;
                 case "Configurações":
                     btnNavConfig.PerformClick();
                     break;
@@ -217,5 +225,7 @@ namespace ProjetoExtensionista2026_2
                     break;
             }
         }
+
+        
     }
 }

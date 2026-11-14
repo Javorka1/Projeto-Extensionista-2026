@@ -66,6 +66,7 @@ namespace ProjetoExtensionista2026_2
 
                 if (ver)
                 {
+                    AuditLogSQL.Register("Login realizado", username);
                     try
                     {
                         lockIcon.Image = Properties.Resources.cadeado_aberto;
@@ -83,6 +84,7 @@ namespace ProjetoExtensionista2026_2
                 }
                 else
                 {
+                    AuditLogSQL.Register("Falha de login", username);
                     try
                     {
                         lockIcon.Image = Properties.Resources.cadeado;
