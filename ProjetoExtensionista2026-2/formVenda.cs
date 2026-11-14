@@ -564,6 +564,37 @@ namespace ProjetoExtensionista2026_2
                 LimparCarrinhoCompleto();
         }
 
+        private DadosDocumentoVenda MontarDadosDocumentoOrcamento(long idOrcamento, decimal desconto, List<ItemVenda> itens)
+        {
+            bool temCliente = _clienteSelecionado != null && _clienteSelecionado.Id > 1;
+
+            string enderecoCompleto = string.Empty;
+            if (temCliente)
+            {
+                string endFormatado = FormatarEndereco(_clienteSelecionado);
+                if (!endFormatado.StartsWith("Endereço: Não informado", StringComparison.OrdinalIgnoreCase))
+                    enderecoCompleto = endFormatado;
+            }
+
+            return new DadosDocumentoVenda
+            {
+                NumeroVenda = (int)idOrcamento,
+                DataEmissao = DateTime.Now,
+                EhOrcamento = true,
+                NomeCliente = temCliente ? _clienteSelecionado.Nome : "Consumidor Não Identificado",
+                DocumentoCliente = temCliente ? _clienteSelecionado.CpfCnpj : string.Empty,
+                TelefoneCliente = temCliente ? _clienteSelecionado.Telefone : string.Empty,
+                EnderecoCliente = enderecoCompleto,
+                CidadeCliente = temCliente ? _clienteSelecionado.Cidade : string.Empty,
+                UfCliente = temCliente ? _clienteSelecionado.Uf : string.Empty,
+                CepCliente = temCliente ? _clienteSelecionado.Cep : string.Empty,
+                FormaPagamento = "A definir (Orçamento)",
+                Desconto = desconto,
+                Observacoes = "Orçamento gerado pelo PDV — sujeito à disponibilidade de estoque.",
+                Itens = itens ?? new List<ItemVenda>()
+            };
+        }
+
         private void btnAvancarPagamento_Click(object sender, EventArgs e)
         {
             var (subtotal, totalItens) = CalcularMetricasCarrinho();
@@ -585,7 +616,6 @@ namespace ProjetoExtensionista2026_2
             var itens = ObterItensDoCarrinho();
             long idCliente = IdClienteSelecionado;
 
-            // FLUXO DE ORÇAMENTO (sale_type = 'ORCAMENTO', payment_status = 'PENDENTE')
             if (EhOrcamentoSelecionado())
             {
                 try
@@ -594,13 +624,14 @@ namespace ProjetoExtensionista2026_2
                     if (btnAvancarPagamento != null) btnAvancarPagamento.Enabled = false;
 
                     long idOrcamento = SalvarOrcamentoNoBanco(subtotal, desconto, totalFinal, itens, idCliente);
+                    var dadosOrcamento = MontarDadosDocumentoOrcamento(idOrcamento, desconto, itens);
 
-                    MessageBox.Show(
-                        $"Orçamento Nº {idOrcamento} registrado com sucesso!\n\nNenhum valor foi baixado do estoque.",
-                        "Orçamento Salvo",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information
-                    );
+                    Cursor = Cursors.Default;
+
+                    using (var modalDocs = new formDocumentosFiscais(dadosOrcamento))
+                    {
+                        modalDocs.ShowDialog(this);
+                    }
 
                     LimparCarrinhoCompleto();
                     _ucEstoque?.FocarCampoBusca();

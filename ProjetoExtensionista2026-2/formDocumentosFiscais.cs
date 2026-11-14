@@ -8,7 +8,7 @@ namespace ProjetoExtensionista2026_2
 {
     public partial class formDocumentosFiscais : Form
     {
-        public bool EmitirCupomFiscal => chkCupom.Checked;
+        public bool EmitirCupomFiscal => chkCupom.Checked && !_dados.EhOrcamento;
         public bool EmitirNotaPromissoria => chkPromissoria.Checked;
         public string ImpressoraSelecionada => cmbImpressoras.SelectedItem?.ToString() ?? string.Empty;
 
@@ -34,10 +34,17 @@ namespace ProjetoExtensionista2026_2
 
         private void GerarPaginasEmMemoria()
         {
-            _paginasCupom = ImpressorDocumentos.RenderizarPaginasCupom(_dados);
-            _paginasPromissoria = ImpressorDocumentos.RenderizarPaginasPromissoria(_dados);
+            if (!_dados.EhOrcamento)
+            {
+                _paginasCupom = ImpressorDocumentos.RenderizarPaginasCupom(_dados);
+                ConfigurarPainelMiniatura(picCupom, ehCupom: true);
+            }
+            else if (picCupom != null)
+            {
+                picCupom.Visible = false;
+            }
 
-            ConfigurarPainelMiniatura(picCupom, ehCupom: true);
+            _paginasPromissoria = ImpressorDocumentos.RenderizarPaginasPromissoria(_dados);
             ConfigurarPainelMiniatura(picPromissoria, ehCupom: false);
         }
 
@@ -63,6 +70,7 @@ namespace ProjetoExtensionista2026_2
         private void PainelMiniatura_Paint(object sender, PaintEventArgs e)
         {
             if (!(sender is PictureBox pic) || !(pic.Tag is bool ehCupom)) return;
+            if (ehCupom && _dados.EhOrcamento) return;
 
             var lista = ehCupom ? _paginasCupom : _paginasPromissoria;
             int indice = ehCupom ? _paginaAtualCupom : _paginaAtualPromissoria;
@@ -102,8 +110,10 @@ namespace ProjetoExtensionista2026_2
 
         private void TrocarPaginaMiniatura(bool ehCupom, int delta)
         {
+            if (ehCupom && _dados.EhOrcamento) return;
+
             var lista = ehCupom ? _paginasCupom : _paginasPromissoria;
-            if (lista.Count <= 1) return;
+            if (lista == null || lista.Count <= 1) return;
 
             if (ehCupom)
             {
@@ -121,20 +131,28 @@ namespace ProjetoExtensionista2026_2
 
         private void VincularEventosDosControles(bool vendaAPrazo)
         {
-            chkCupom.Checked = true;
-            chkPromissoria.Checked = vendaAPrazo;
+            if (_dados.EhOrcamento)
+            {
+                chkCupom.Checked = false;
+                chkCupom.Enabled = false;
+                chkPromissoria.Checked = true;
+            }
+            else
+            {
+                chkCupom.Enabled = true;
+                chkCupom.Checked = true;
+                chkPromissoria.Checked = vendaAPrazo;
+            }
 
             chkCupom.CheckedChanged += (s, e) => AtualizarEstadoTela();
             chkPromissoria.CheckedChanged += (s, e) => AtualizarEstadoTela();
 
-            // Botões de expandir em tela cheia
             if (btnVerCupom != null)
                 btnVerCupom.Click += (s, e) => AbrirPopupTelaCheia(ehCupom: true);
 
             if (btnVerPromissoria != null)
                 btnVerPromissoria.Click += (s, e) => AbrirPopupTelaCheia(ehCupom: false);
 
-            // Também permite clicar direto na miniatura ou rolar o mouse sobre ela
             if (picCupom != null)
             {
                 picCupom.Cursor = Cursors.Hand;
@@ -163,10 +181,14 @@ namespace ProjetoExtensionista2026_2
 
         private void AbrirPopupTelaCheia(bool ehCupom)
         {
+            if (ehCupom && _dados.EhOrcamento) return;
+
             var paginas = ehCupom ? _paginasCupom : _paginasPromissoria;
             if (paginas == null || paginas.Count == 0) return;
 
-            string titulo = ehCupom ? "Cupom Fiscal (80 mm)" : "Nota Promissória";
+            string titulo = ehCupom
+                ? "Cupom Fiscal (80 mm)"
+                : (_dados.EhOrcamento ? "Orçamento de Venda" : "Nota Promissória");
             int paginaInicial = ehCupom ? _paginaAtualCupom : _paginaAtualPromissoria;
 
             using (var popup = new formVisualizarDocumento(titulo, paginas, paginaInicial))
@@ -210,17 +232,32 @@ namespace ProjetoExtensionista2026_2
         private void AtualizarEstadoTela()
         {
             if (lblAviso != null) lblAviso.Text = string.Empty;
-            if (picCupom != null) picCupom.Visible = chkCupom.Checked;
-            if (btnVerCupom != null) btnVerCupom.Enabled = chkCupom.Checked;
+
+            if (_dados.EhOrcamento)
+            {
+                chkCupom.Checked = false;
+                chkCupom.Enabled = false;
+            }
+
+            bool cupomAtivo = chkCupom.Checked && !_dados.EhOrcamento;
+
+            if (picCupom != null) picCupom.Visible = cupomAtivo;
+            if (btnVerCupom != null) btnVerCupom.Enabled = cupomAtivo;
             if (picPromissoria != null) picPromissoria.Visible = chkPromissoria.Checked;
             if (btnVerPromissoria != null) btnVerPromissoria.Enabled = chkPromissoria.Checked;
-            if (chkPromissoria.Checked && !_dados.PossuiClienteIdentificado)
+
+            if (_dados.EhOrcamento)
+            {
+                if (lblAviso != null)
+                    lblAviso.Text = "Modo Orçamento: apenas a Nota de Orçamento pode ser salva ou impressa.";
+            }
+            else if (chkPromissoria.Checked && !_dados.PossuiClienteIdentificado)
             {
                 if (lblAviso != null)
                     lblAviso.Text = "Sem cliente informado: será emitido sem valor de Nota Promissória.";
             }
 
-            bool algumMarcado = chkCupom.Checked || chkPromissoria.Checked;
+            bool algumMarcado = cupomAtivo || chkPromissoria.Checked;
 
             if (btnSalvarPdf != null)
                 btnSalvarPdf.Enabled = algumMarcado;
@@ -251,7 +288,7 @@ namespace ProjetoExtensionista2026_2
         {
             base.OnMouseWheel(e);
 
-            if (picCupom != null && picCupom.Visible &&
+            if (picCupom != null && picCupom.Visible && !_dados.EhOrcamento &&
                 picCupom.ClientRectangle.Contains(picCupom.PointToClient(Cursor.Position)))
             {
                 TrocarPaginaMiniatura(ehCupom: true, delta: e.Delta);
@@ -266,16 +303,18 @@ namespace ProjetoExtensionista2026_2
         private void BtnSalvarPdf_Click(object sender, EventArgs e)
         {
             var paginasParaSalvar = new List<Bitmap>();
-            if (chkCupom.Checked) paginasParaSalvar.AddRange(_paginasCupom);
+            if (chkCupom.Checked && !_dados.EhOrcamento) paginasParaSalvar.AddRange(_paginasCupom);
             if (chkPromissoria.Checked) paginasParaSalvar.AddRange(_paginasPromissoria);
 
             if (paginasParaSalvar.Count == 0) return;
 
+            string prefixoArquivo = _dados.EhOrcamento ? "Orcamento" : "Documentos_Venda";
+
             using (var sfd = new SaveFileDialog
             {
-                Title = "Salvar Documentos da Venda em PDF",
+                Title = _dados.EhOrcamento ? "Salvar Orçamento em PDF" : "Salvar Documentos da Venda em PDF",
                 Filter = "Arquivo PDF (*.pdf)|*.pdf",
-                FileName = $"Documentos_Venda_{_dados.NumeroVenda:D6}.pdf"
+                FileName = $"{prefixoArquivo}_{_dados.NumeroVenda:D6}.pdf"
             })
             {
                 if (sfd.ShowDialog(this) != DialogResult.OK) return;
@@ -296,7 +335,10 @@ namespace ProjetoExtensionista2026_2
 
         private void BtnImprimir_Click(object sender, EventArgs e)
         {
-            if (!chkCupom.Checked && !chkPromissoria.Checked)
+            bool imprimirCupom = chkCupom.Checked && !_dados.EhOrcamento;
+            bool imprimirNota = chkPromissoria.Checked;
+
+            if (!imprimirCupom && !imprimirNota)
             {
                 DialogResult = DialogResult.OK;
                 Close();
@@ -311,11 +353,16 @@ namespace ProjetoExtensionista2026_2
 
             try
             {
-                if (chkCupom.Checked)
+                if (imprimirCupom)
                     ImpressorDocumentos.ImprimirPaginasNaImpressora(_paginasCupom, ImpressoraSelecionada, $"Cupom_{_dados.NumeroVenda:D6}", true);
 
-                if (chkPromissoria.Checked)
-                    ImpressorDocumentos.ImprimirPaginasNaImpressora(_paginasPromissoria, ImpressoraSelecionada, $"Promissoria_{_dados.NumeroVenda:D6}", false);
+                if (imprimirNota)
+                {
+                    string nomeDoc = _dados.EhOrcamento
+                        ? $"Orcamento_{_dados.NumeroVenda:D6}"
+                        : $"Promissoria_{_dados.NumeroVenda:D6}";
+                    ImpressorDocumentos.ImprimirPaginasNaImpressora(_paginasPromissoria, ImpressoraSelecionada, nomeDoc, false);
+                }
 
                 DialogResult = DialogResult.OK;
                 Close();
