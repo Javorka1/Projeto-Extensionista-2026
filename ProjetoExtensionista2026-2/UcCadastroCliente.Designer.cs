@@ -198,7 +198,7 @@
             this.textBox9.ReadOnly = true;
             this.textBox9.Size = new System.Drawing.Size(296, 38);
             this.textBox9.TabIndex = 22;
-            this.textBox9.Text = "Atenção: Esta ação não excluirá nada do sistema, apenas bloqueará sua venda.";
+            this.textBox9.Text = "Atenção: Esta ação não excluirá nada do sistema, apenas bloqueará seu uso.";
             // 
             // txtCodigo
             // 
@@ -216,9 +216,9 @@
             this.label4.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(24, 24);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 17);
+            this.label4.Size = new System.Drawing.Size(114, 17);
             this.label4.TabIndex = 48;
-            this.label4.Text = "Código:";
+            this.label4.Text = "Código(Opcional):";
             // 
             // txtDescricao
             // 
