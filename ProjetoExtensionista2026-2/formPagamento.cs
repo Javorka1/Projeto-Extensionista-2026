@@ -21,11 +21,9 @@ namespace ProjetoExtensionista2026_2
         private int _descontoPorcentagem = 0;
         private bool _atualizandoDesconto = false;
         private decimal DescontoAtual => _descontoCentavos / 100m;
-
-        // Dados contextuais da venda
-        private long _idCliente = 1; // Padrão 1 = Consumidor Não Identificado
+        private long _idCliente = 1;
         private List<ItemVenda> _itensVenda = new List<ItemVenda>();
-        private long? _idVendaAberta = null; // Caso venha de uma pré-venda já salva
+        private long? _idVendaAberta = null;
 
         public long IdVendaFinalizada { get; private set; }
 
@@ -40,7 +38,6 @@ namespace ProjetoExtensionista2026_2
             this.Load += formPagamento_Load;
         }
 
-        // Construtor completo recebendo os itens e o cliente do formVenda
         public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal,
                               List<ItemVenda> itens, long idCliente = 1, long? idVendaAberta = null) : this()
         {
@@ -53,7 +50,6 @@ namespace ProjetoExtensionista2026_2
             _idVendaAberta = idVendaAberta;
         }
 
-        // Sobrecarga de compatibilidade
         public formPagamento(decimal subtotal, decimal desconto, int descontoPorcentagem, decimal totalFinal)
             : this(subtotal, desconto, descontoPorcentagem, totalFinal, new List<ItemVenda>(), 1, null)
         {
@@ -274,7 +270,6 @@ namespace ProjetoExtensionista2026_2
 
             _ucPagamento?.DefinirSaldoRestante(temTroco ? 0m : diferenca);
 
-            // Vinculação com o botão btnFinalizar
             if (btnFinalizar != null)
             {
                 btnFinalizar.Tag = quitado ? "sucesso" : null;
@@ -286,6 +281,185 @@ namespace ProjetoExtensionista2026_2
         }
 
         #region Gravação da Venda no Banco de Dados
+
+        private bool VerificarPagamentoAPrazo()
+        {
+            return dgvPagamentos.Rows.Cast<DataGridViewRow>()
+                .Where(row => !row.IsNewRow)
+                .Any(row =>
+                {
+                    string metodo = (row.Cells[0].Value?.ToString() ?? string.Empty).ToLower();
+                    return metodo.Contains("carnê") || metodo.Contains("carne") ||
+                           metodo.Contains("prazo") || metodo.Contains("fiado");
+                });
+        }
+
+        private DadosDocumentoVenda MontarDadosDocumentoVenda(long idVenda)
+        {
+            var dados = new DadosDocumentoVenda
+            {
+                NumeroVenda = (int)idVenda,
+                DataEmissao = DateTime.Now,
+                NomeCliente = "Consumidor Não Identificado",
+                Desconto = DescontoAtual,
+                ValorPago = _totalPago,
+                Troco = Math.Max(0m, _totalPago - _totalFinal),
+                Observacoes = _ucObservacoes?.ObterObservacoes() ?? string.Empty,
+                Itens = _itensVenda ?? new List<ItemVenda>()
+            };
+
+            if (_idCliente > 1)
+            {
+                using (var db = new Connection())
+                {
+                    db.IniciarConexao();
+                    const string sqlCliente = @"
+                SELECT *
+                FROM public.customer
+                WHERE public.customer.id_customer = @id_customer
+                LIMIT 1;";
+
+                    using (var cmd = new NpgsqlCommand(sqlCliente, db.Conexao))
+                    {
+                        cmd.Parameters.Add(new NpgsqlParameter("id_customer", NpgsqlDbType.Bigint) { Value = _idCliente });
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                dados.NomeCliente = LerColunaTexto(reader, "name", "nome") ?? "Cliente Cadastrado";
+                                dados.DocumentoCliente = LerColunaTexto(reader, "cpf_cnpj", "cpf", "cnpj", "document");
+                                dados.TelefoneCliente = LerColunaTexto(reader, "phone", "telefone", "cellphone");
+
+                                string logradouro = LerColunaTexto(reader, "address", "street", "logradouro", "endereco");
+                                string numero = LerColunaTexto(reader, "number", "numero");
+                                string bairro = LerColunaTexto(reader, "neighborhood", "bairro");
+                                string cidade = LerColunaTexto(reader, "city", "cidade");
+                                string uf = LerColunaTexto(reader, "state", "uf", "estado");
+
+                                dados.CidadeCliente = cidade;
+                                dados.UfCliente = uf;
+
+                                var partesEndereco = new List<string>();
+                                if (!string.IsNullOrWhiteSpace(logradouro))
+                                    partesEndereco.Add(string.IsNullOrWhiteSpace(numero) ? logradouro : $"{logradouro}, {numero}");
+                                if (!string.IsNullOrWhiteSpace(bairro))
+                                    partesEndereco.Add(bairro);
+                                if (!string.IsNullOrWhiteSpace(cidade))
+                                    partesEndereco.Add(string.IsNullOrWhiteSpace(uf) ? cidade : $"{cidade}/{uf}");
+
+                                dados.EnderecoCliente = string.Join(" - ", partesEndereco);
+                            }
+                        }
+                    }
+                }
+            }
+
+            var metodosUsados = new List<string>();
+            var parcelasGeradas = new List<ParcelaPromissoria>();
+            var pagamentosDetalhados = new List<PagamentoDocumento>();
+            decimal trocoRestante = dados.Troco;
+
+            foreach (DataGridViewRow row in dgvPagamentos.Rows)
+            {
+                if (row.IsNewRow) continue;
+
+                string metodo = row.Cells[0].Value?.ToString() ?? "Dinheiro";
+                decimal valorBruto = row.Tag is decimal d ? d : 0m;
+
+                string textoParcelas = row.Cells[2].Value?.ToString() ?? "1";
+                string digitos = Regex.Replace(textoParcelas, @"\D", "");
+                int qtdParcelas = int.TryParse(digitos, out int p) && p > 0 ? p : 1;
+
+                decimal valorLiquido = valorBruto;
+                if (metodo.ToLower().Contains("dinheiro") && trocoRestante > 0m)
+                {
+                    decimal abatimento = Math.Min(valorLiquido, trocoRestante);
+                    valorLiquido -= abatimento;
+                    trocoRestante -= abatimento;
+                }
+
+                if (valorLiquido <= 0m) continue;
+
+                string metodoLower = metodo.ToLower();
+                bool ehLinhaPrazo = metodoLower.Contains("carnê") || metodoLower.Contains("carne") ||
+                                    metodoLower.Contains("prazo") || metodoLower.Contains("fiado");
+
+                metodosUsados.Add(qtdParcelas > 1 ? $"{metodo} ({qtdParcelas}x)" : metodo);
+
+                pagamentosDetalhados.Add(new PagamentoDocumento
+                {
+                    Metodo = metodo,
+                    Valor = valorLiquido,
+                    Parcelas = qtdParcelas,
+                    EhAPrazo = ehLinhaPrazo
+                });
+
+                if (ehLinhaPrazo)
+                {
+                    decimal valorBaseParcela = Math.Floor((valorLiquido / qtdParcelas) * 100m) / 100m;
+                    decimal diferencaCentavos = valorLiquido - (valorBaseParcela * qtdParcelas);
+
+                    for (int i = 1; i <= qtdParcelas; i++)
+                    {
+                        decimal valorDestaParcela = (i == qtdParcelas)
+                            ? valorBaseParcela + diferencaCentavos
+                            : valorBaseParcela;
+
+                        parcelasGeradas.Add(new ParcelaPromissoria
+                        {
+                            NumeroParcela = i,
+                            TotalParcelas = qtdParcelas,
+                            DataVencimento = dados.DataEmissao.AddMonths(i),
+                            Valor = valorDestaParcela
+                        });
+                    }
+                }
+            }
+
+            dados.FormaPagamento = string.Join(" + ", metodosUsados);
+            dados.Parcelas = parcelasGeradas;
+            dados.Pagamentos = pagamentosDetalhados;
+
+            return dados;
+        }
+
+        private void AtualizarFlagsDocumentosVenda(long idVenda, bool emitiuCupom, bool emitiuPromissoria)
+        {
+            using (var db = new Connection())
+            {
+                db.IniciarConexao();
+                const string sqlUpdateDocs = @"
+            UPDATE public.sale
+            SET 
+                issued_fiscal_coupon = @issued_fiscal_coupon,
+                issued_promissory_note = @issued_promissory_note
+            WHERE public.sale.id_sale = @id_sale;";
+
+                using (var cmd = new NpgsqlCommand(sqlUpdateDocs, db.Conexao))
+                {
+                    cmd.Parameters.Add(new NpgsqlParameter("issued_fiscal_coupon", NpgsqlDbType.Boolean) { Value = emitiuCupom });
+                    cmd.Parameters.Add(new NpgsqlParameter("issued_promissory_note", NpgsqlDbType.Boolean) { Value = emitiuPromissoria });
+                    cmd.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVenda });
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        private static string LerColunaTexto(NpgsqlDataReader reader, params string[] possiveisColunas)
+        {
+            foreach (string coluna in possiveisColunas)
+            {
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    if (reader.GetName(i).Equals(coluna, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return reader.IsDBNull(i) ? string.Empty : reader.GetValue(i).ToString();
+                    }
+                }
+            }
+            return string.Empty;
+        }
 
         private void FinalizarVenda()
         {
@@ -302,31 +476,61 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
+            // 1. Gravação isolada no Supabase
             try
             {
                 Cursor = Cursors.WaitCursor;
                 if (btnFinalizar != null) btnFinalizar.Enabled = false;
-
                 GravarVendaNoBanco();
-
-                MessageBox.Show("Venda finalizada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                DialogResult = DialogResult.OK;
-                Close();
             }
             catch (Exception ex)
             {
+                Cursor = Cursors.Default;
+                if (btnFinalizar != null) btnFinalizar.Enabled = true;
                 MessageBox.Show($"Erro ao salvar a venda no banco de dados:\n\n{ex.Message}", "Falha na Gravação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // 2. A venda JÁ está salva; abre a tela de documentos de forma independente
+            try
+            {
+                Cursor = Cursors.Default;
+                bool ehVendaAPrazo = VerificarPagamentoAPrazo();
+                var dadosDocumento = MontarDadosDocumentoVenda(IdVendaFinalizada);
+
+                using (var modalDocs = new formDocumentosFiscais(dadosDocumento, ehVendaAPrazo))
+                {
+                    if (modalDocs.ShowDialog(this) == DialogResult.OK)
+                    {
+                        AtualizarFlagsDocumentosVenda(
+                            IdVendaFinalizada,
+                            modalDocs.EmitirCupomFiscal,
+                            modalDocs.EmitirNotaPromissoria
+                        );
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"A venda #{IdVendaFinalizada} foi registrada com sucesso, mas não foi possível abrir o módulo de impressão:\n\n{ex.Message}\n\n" +
+                    "Verifique se o serviço 'Spooler de Impressão' do Windows está iniciado.",
+                    "Aviso de Impressão",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
             }
             finally
             {
                 Cursor = Cursors.Default;
                 if (btnFinalizar != null) btnFinalizar.Enabled = true;
             }
+
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void GravarVendaNoBanco()
         {
-            // 1. Identifica se foi lançado Carnê, A Prazo ou Fiado
             bool temPagamentoAPrazo = dgvPagamentos.Rows.Cast<DataGridViewRow>()
                 .Where(row => !row.IsNewRow)
                 .Any(row =>
@@ -336,13 +540,11 @@ namespace ProjetoExtensionista2026_2
                            metodo.Contains("prazo") || metodo.Contains("fiado");
                 });
 
-            // 2. Se for Carnê, exige cliente cadastrado (não permite cliente padrão ID 1)[cite: 3]
             if (temPagamentoAPrazo && _idCliente <= 1)
             {
                 throw new InvalidOperationException("Para compras no Carnê/A Prazo é obrigatório selecionar um cliente cadastrado no sistema.");
             }
 
-            // 3. Define o status correto para o financeiro puxar[cite: 3]
             string statusPagamento = temPagamentoAPrazo ? "PENDENTE" : "PAGO";
 
             string observacoes = _ucObservacoes?.ObterObservacoes() ?? string.Empty;
@@ -360,7 +562,6 @@ namespace ProjetoExtensionista2026_2
                     {
                         long idVendaAtual;
 
-                        // 1. Grava ou Atualiza a Venda principal (sale)[cite: 3]
                         if (_idVendaAberta.HasValue && _idVendaAberta.Value > 0)
                         {
                             idVendaAtual = _idVendaAberta.Value;
@@ -427,7 +628,6 @@ namespace ProjetoExtensionista2026_2
 
                         IdVendaFinalizada = idVendaAtual;
 
-                        // 2. Grava os Itens e Abate o Estoque[cite: 3]
                         if (_itensVenda != null && _itensVenda.Count > 0 && !_idVendaAberta.HasValue)
                         {
                             foreach (var item in _itensVenda)
@@ -470,7 +670,6 @@ namespace ProjetoExtensionista2026_2
                             }
                         }
 
-                        // 3. Grava os pagamentos em sale_payment com abatimento de troco[cite: 3]
                         foreach (DataGridViewRow row in dgvPagamentos.Rows)
                         {
                             if (row.IsNewRow) continue;
