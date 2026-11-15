@@ -140,6 +140,8 @@ namespace ProjetoExtensionista2026_2
         {
             using (var formConsulta = new formConsultaCliente())
             {
+                GerenciadorTema.AplicarTema(formConsulta);
+
                 if (formConsulta.ShowDialog(this) == DialogResult.OK && formConsulta.ClienteSelecionado != null)
                 {
                     SelecionarCliente(formConsulta.ClienteSelecionado);

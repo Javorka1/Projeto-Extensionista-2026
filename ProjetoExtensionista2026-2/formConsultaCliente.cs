@@ -11,35 +11,27 @@ namespace ProjetoExtensionista2026_2
         public formConsultaCliente()
         {
             InitializeComponent();
-        }
 
-        private void formConsultaCliente_Load(object sender, EventArgs e)
-        {
-            var consultaCliente = new UcConsultaCliente
-            {
-                Dock = DockStyle.Fill
-            };
-
+            var consultaCliente = new UcConsultaCliente { Dock = DockStyle.Fill };
             consultaCliente.AoSelecionarCliente += FinalizarComCliente;
             panelConteudo.Controls.Add(consultaCliente);
-            consultaCliente.Focus();
         }
 
         private void FinalizarComCliente(ClienteDTO cliente)
         {
-            if (cliente == null) return;
+            if (cliente == null || !this.Modal) return;
 
             ClienteSelecionado = cliente;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void formConsultaCliente_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            if (this.Modal && e.KeyCode == Keys.Escape)
             {
-                this.DialogResult = DialogResult.Cancel;
-                this.Close();
+                DialogResult = DialogResult.Cancel;
+                Close();
             }
         }
     }

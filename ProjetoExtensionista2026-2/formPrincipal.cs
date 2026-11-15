@@ -38,9 +38,9 @@ namespace ProjetoExtensionista2026_2
                     {
                         AtivarNavegacao(btnNavVendas, new formVenda());
                     }
-                    else if (btnNavFinanceiro.Visible)
+                    else if (btnNavClientes.Visible)
                     {
-                        AtivarNavegacao(btnNavFinanceiro, new FormFinanceiro());
+                        AtivarNavegacao(btnNavClientes, new FormFinanceiro());
                     }
                     else if (btnNavEstoque.Visible)
                     {
@@ -133,6 +133,12 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
+        public void AbrirHistoricoCliente(DTOs.ClienteDTO cliente)
+        {
+            if (cliente == null) return;
+            AtivarNavegacao(btnNavRegistroVendas, new FormRegistroVendas(cliente));
+        }
+
         private void btnNavPrincipal_Click(object sender, EventArgs e)
         {
             AtivarNavegacao(btnNavPrincipal, new FormFinanceiro());
@@ -158,9 +164,9 @@ namespace ProjetoExtensionista2026_2
             AtivarNavegacao(btnNavFinanceiro, new FormFinanceiro());
         }
 
-        private void btnNavCadastro_Click(object sender, EventArgs e)
+        private void btnNavClientes_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavCadastro, new formCadastro());
+            AtivarNavegacao(btnNavClientes, new formConsultaCliente());
         }
 
         private void btnNavConfig_Click(object sender, EventArgs e)
@@ -208,7 +214,7 @@ namespace ProjetoExtensionista2026_2
                     btnNavPrincipal.PerformClick();
                     break;
                 case "Cadastro":
-                    btnNavCadastro.PerformClick();
+                    btnNavFinanceiro.PerformClick();
                     break;
                 case "Vendas":
                     btnNavVendas.PerformClick();
@@ -217,7 +223,7 @@ namespace ProjetoExtensionista2026_2
                     btnNavEstoque.PerformClick();
                     break;
                 case "Financeiro":
-                    btnNavFinanceiro.PerformClick();
+                    btnNavClientes.PerformClick();
                     break;
                 case "Administração":
                     btnNavAdmin.PerformClick();

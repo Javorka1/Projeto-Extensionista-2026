@@ -26,13 +26,27 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
+        private readonly DTOs.ClienteDTO _clienteFiltro;
+
         public FormRegistroVendas()
         {
             InitializeComponent();
         }
 
+        public FormRegistroVendas(DTOs.ClienteDTO clienteFiltro) : this()
+        {
+            _clienteFiltro = clienteFiltro;
+        }
+
         private async void FormRegistroVendas_Load(object sender, EventArgs e)
         {
+            if (_clienteFiltro != null)
+            {
+                dtpInicio.Value = DateTime.Today.AddYears(-2);
+                dtpFim.Value = DateTime.Today;
+                txtBusca.Text = _clienteFiltro.Nome;
+            }
+
             cmbTipo.SelectedIndex = 0;
             cmbStatus.SelectedIndex = 0;
 

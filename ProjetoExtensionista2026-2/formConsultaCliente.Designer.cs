@@ -31,7 +31,6 @@
             this.panelConteudo = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
-            // 
             // panelConteudo
             // 
             this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -46,10 +45,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 511);
             this.Controls.Add(this.panelConteudo);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.KeyPreview = true;
+            this.MaximizeBox = false;
             this.Name = "formConsultaCliente";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "formConsultaCliente";
-            this.Load += new System.EventHandler(this.formConsultaCliente_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.formConsultaCliente_KeyDown);
             this.ResumeLayout(false);
 

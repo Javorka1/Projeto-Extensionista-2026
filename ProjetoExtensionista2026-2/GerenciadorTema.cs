@@ -733,7 +733,7 @@ namespace ProjetoExtensionista2026_2
             if (nome == "btnNavRegistroVendas") return "invoice";
             if (nome == "btnNavEstoque") return "box";
             if (nome == "btnNavFinanceiro") return "chart";
-            if (nome == "btnNavCadastro") return "users";
+            if (nome == "btnNavClientes") return "users";
             if (nome == "btnNavAdmin") return "shield";
             if (nome == "btnNavConfig") return "sliders";
             if (nome == "btnToggleTema" || nome == "btnAlternarTema") return "theme";

@@ -32,8 +32,8 @@ namespace ProjetoExtensionista2026_2
             this.pnlNav = new System.Windows.Forms.Panel();
             this.btnNavConfig = new System.Windows.Forms.Button();
             this.btnNavAdmin = new System.Windows.Forms.Button();
-            this.btnNavCadastro = new System.Windows.Forms.Button();
             this.btnNavFinanceiro = new System.Windows.Forms.Button();
+            this.btnNavClientes = new System.Windows.Forms.Button();
             this.btnNavEstoque = new System.Windows.Forms.Button();
             this.btnNavRegistroVendas = new System.Windows.Forms.Button();
             this.btnNavVendas = new System.Windows.Forms.Button();
@@ -74,8 +74,8 @@ namespace ProjetoExtensionista2026_2
             // 
             this.pnlNav.Controls.Add(this.btnNavConfig);
             this.pnlNav.Controls.Add(this.btnNavAdmin);
-            this.pnlNav.Controls.Add(this.btnNavCadastro);
             this.pnlNav.Controls.Add(this.btnNavFinanceiro);
+            this.pnlNav.Controls.Add(this.btnNavClientes);
             this.pnlNav.Controls.Add(this.btnNavEstoque);
             this.pnlNav.Controls.Add(this.btnNavRegistroVendas);
             this.pnlNav.Controls.Add(this.btnNavVendas);
@@ -93,7 +93,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavConfig.FlatAppearance.BorderSize = 0;
             this.btnNavConfig.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavConfig.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNavConfig.Location = new System.Drawing.Point(10, 260);
+            this.btnNavConfig.Location = new System.Drawing.Point(10, 302);
             this.btnNavConfig.Name = "btnNavConfig";
             this.btnNavConfig.Size = new System.Drawing.Size(220, 42);
             this.btnNavConfig.TabIndex = 5;
@@ -109,7 +109,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavAdmin.FlatAppearance.BorderSize = 0;
             this.btnNavAdmin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavAdmin.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNavAdmin.Location = new System.Drawing.Point(10, 218);
+            this.btnNavAdmin.Location = new System.Drawing.Point(10, 260);
             this.btnNavAdmin.Name = "btnNavAdmin";
             this.btnNavAdmin.Size = new System.Drawing.Size(220, 42);
             this.btnNavAdmin.TabIndex = 6;
@@ -119,37 +119,37 @@ namespace ProjetoExtensionista2026_2
             this.btnNavAdmin.UseVisualStyleBackColor = true;
             this.btnNavAdmin.Click += new System.EventHandler(this.btnNavAdmin_Click);
             // 
-            // btnNavCadastro
-            // 
-            this.btnNavCadastro.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnNavCadastro.FlatAppearance.BorderSize = 0;
-            this.btnNavCadastro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnNavCadastro.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNavCadastro.Location = new System.Drawing.Point(10, 176);
-            this.btnNavCadastro.Name = "btnNavCadastro";
-            this.btnNavCadastro.Size = new System.Drawing.Size(220, 42);
-            this.btnNavCadastro.TabIndex = 4;
-            this.btnNavCadastro.Tag = "nav_item";
-            this.btnNavCadastro.Text = "  Clientes e Produtos";
-            this.btnNavCadastro.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnNavCadastro.UseVisualStyleBackColor = true;
-            this.btnNavCadastro.Click += new System.EventHandler(this.btnNavCadastro_Click);
-            // 
             // btnNavFinanceiro
             // 
             this.btnNavFinanceiro.Dock = System.Windows.Forms.DockStyle.Top;
             this.btnNavFinanceiro.FlatAppearance.BorderSize = 0;
             this.btnNavFinanceiro.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavFinanceiro.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNavFinanceiro.Location = new System.Drawing.Point(10, 134);
+            this.btnNavFinanceiro.Location = new System.Drawing.Point(10, 218);
             this.btnNavFinanceiro.Name = "btnNavFinanceiro";
             this.btnNavFinanceiro.Size = new System.Drawing.Size(220, 42);
-            this.btnNavFinanceiro.TabIndex = 3;
+            this.btnNavFinanceiro.TabIndex = 4;
             this.btnNavFinanceiro.Tag = "nav_item";
             this.btnNavFinanceiro.Text = "  Painel Financeiro";
             this.btnNavFinanceiro.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavFinanceiro.UseVisualStyleBackColor = true;
             this.btnNavFinanceiro.Click += new System.EventHandler(this.btnNavFinanceiro_Click);
+            // 
+            // btnNavClientes
+            // 
+            this.btnNavClientes.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavClientes.FlatAppearance.BorderSize = 0;
+            this.btnNavClientes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavClientes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNavClientes.Location = new System.Drawing.Point(10, 176);
+            this.btnNavClientes.Name = "btnNavClientes";
+            this.btnNavClientes.Size = new System.Drawing.Size(220, 42);
+            this.btnNavClientes.TabIndex = 3;
+            this.btnNavClientes.Tag = "nav_item";
+            this.btnNavClientes.Text = "  Gestão de Clientes";
+            this.btnNavClientes.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavClientes.UseVisualStyleBackColor = true;
+            this.btnNavClientes.Click += new System.EventHandler(this.btnNavClientes_Click);
             // 
             // btnNavEstoque
             // 
@@ -157,7 +157,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavEstoque.FlatAppearance.BorderSize = 0;
             this.btnNavEstoque.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNavEstoque.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNavEstoque.Location = new System.Drawing.Point(10, 92);
+            this.btnNavEstoque.Location = new System.Drawing.Point(10, 134);
             this.btnNavEstoque.Name = "btnNavEstoque";
             this.btnNavEstoque.Size = new System.Drawing.Size(220, 42);
             this.btnNavEstoque.TabIndex = 2;
@@ -399,8 +399,8 @@ namespace ProjetoExtensionista2026_2
         public System.Windows.Forms.Button btnNavVendas;
         public System.Windows.Forms.Button btnNavRegistroVendas;
         public System.Windows.Forms.Button btnNavEstoque;
+        public System.Windows.Forms.Button btnNavClientes;
         public System.Windows.Forms.Button btnNavFinanceiro;
-        public System.Windows.Forms.Button btnNavCadastro;
         public System.Windows.Forms.Button btnNavConfig;
         private System.Windows.Forms.Panel pnlUserFooter;
         private System.Windows.Forms.Panel pnlCardUsuario;

@@ -21,8 +21,8 @@ namespace ProjetoExtensionista2026_2
                 formPrincipal.btnNavVendas.Visible = true;
                 formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = true;
+                formPrincipal.btnNavClientes.Visible = true;
                 formPrincipal.btnNavFinanceiro.Visible = true;
-                formPrincipal.btnNavCadastro.Visible = true;
 
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Cadastro");
@@ -38,8 +38,8 @@ namespace ProjetoExtensionista2026_2
                 formPrincipal.btnNavVendas.Visible = true;
                 formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = false;
+                formPrincipal.btnNavClientes.Visible = false;
                 formPrincipal.btnNavFinanceiro.Visible = false;
-                formPrincipal.btnNavCadastro.Visible = false;
 
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Vendas");
@@ -52,8 +52,8 @@ namespace ProjetoExtensionista2026_2
                 formPrincipal.btnNavVendas.Visible = false;
                 formPrincipal.btnNavRegistroVendas.Visible = false;
                 formPrincipal.btnNavEstoque.Visible = true;
+                formPrincipal.btnNavClientes.Visible = false;
                 formPrincipal.btnNavFinanceiro.Visible = false;
-                formPrincipal.btnNavCadastro.Visible = false;
 
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Estoque");
@@ -66,8 +66,8 @@ namespace ProjetoExtensionista2026_2
                 formPrincipal.btnNavVendas.Visible = false;
                 formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = false;
-                formPrincipal.btnNavFinanceiro.Visible = true;
-                formPrincipal.btnNavCadastro.Visible = false;
+                formPrincipal.btnNavClientes.Visible = true;
+                formPrincipal.btnNavFinanceiro.Visible = false;
 
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
                 formPrincipal.listBoxSidebar.Items.Add("Financeiro");
@@ -80,8 +80,8 @@ namespace ProjetoExtensionista2026_2
                 formPrincipal.btnNavVendas.Visible = false;
                 formPrincipal.btnNavRegistroVendas.Visible = false;
                 formPrincipal.btnNavEstoque.Visible = false;
+                formPrincipal.btnNavClientes.Visible = false;
                 formPrincipal.btnNavFinanceiro.Visible = false;
-                formPrincipal.btnNavCadastro.Visible = false;
                 formPrincipal.listBoxSidebar.Items.Add("Sair");
             }
         }
