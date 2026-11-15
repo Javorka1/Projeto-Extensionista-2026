@@ -122,43 +122,43 @@ namespace ProjetoExtensionista2026_2
             // 
             // btn1000
             // 
-            this.btn1000.Font = new System.Drawing.Font("Segoe UI Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn1000.Location = new System.Drawing.Point(223, 103);
+            this.btn1000.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn1000.Location = new System.Drawing.Point(229, 103);
             this.btn1000.Name = "btn1000";
-            this.btn1000.Size = new System.Drawing.Size(54, 23);
+            this.btn1000.Size = new System.Drawing.Size(66, 26);
             this.btn1000.TabIndex = 7;
             this.btn1000.Tag = "1000";
-            this.btn1000.Text = "R$ 1000";
+            this.btn1000.Text = "+ 1000";
             this.btn1000.UseVisualStyleBackColor = true;
             // 
             // btn100
             // 
-            this.btn100.Font = new System.Drawing.Font("Segoe UI Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn100.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn100.Location = new System.Drawing.Point(163, 103);
             this.btn100.Name = "btn100";
-            this.btn100.Size = new System.Drawing.Size(54, 23);
+            this.btn100.Size = new System.Drawing.Size(60, 26);
             this.btn100.TabIndex = 4;
             this.btn100.Tag = "100";
-            this.btn100.Text = "R$ 100";
+            this.btn100.Text = "+ 100";
             this.btn100.UseVisualStyleBackColor = true;
             // 
             // btn10
             // 
-            this.btn10.Font = new System.Drawing.Font("Segoe UI Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btn10.Location = new System.Drawing.Point(112, 103);
+            this.btn10.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btn10.Location = new System.Drawing.Point(104, 103);
             this.btn10.Name = "btn10";
-            this.btn10.Size = new System.Drawing.Size(45, 23);
+            this.btn10.Size = new System.Drawing.Size(53, 26);
             this.btn10.TabIndex = 3;
             this.btn10.Tag = "10";
-            this.btn10.Text = "R$ 10";
+            this.btn10.Text = "+ 10";
             this.btn10.UseVisualStyleBackColor = true;
             // 
             // btnExato
             // 
-            this.btnExato.Font = new System.Drawing.Font("Segoe UI Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExato.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExato.Location = new System.Drawing.Point(10, 103);
             this.btnExato.Name = "btnExato";
-            this.btnExato.Size = new System.Drawing.Size(96, 23);
+            this.btnExato.Size = new System.Drawing.Size(88, 26);
             this.btnExato.TabIndex = 2;
             this.btnExato.Text = "Valor Exato";
             this.btnExato.UseVisualStyleBackColor = true;
@@ -170,7 +170,7 @@ namespace ProjetoExtensionista2026_2
             this.txtPagamento.Location = new System.Drawing.Point(10, 66);
             this.txtPagamento.Name = "txtPagamento";
             this.txtPagamento.ShortcutsEnabled = false;
-            this.txtPagamento.Size = new System.Drawing.Size(267, 29);
+            this.txtPagamento.Size = new System.Drawing.Size(285, 29);
             this.txtPagamento.TabIndex = 1;
             this.txtPagamento.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
@@ -223,11 +223,11 @@ namespace ProjetoExtensionista2026_2
             this.btnAdicionarPagamento.BackColor = System.Drawing.SystemColors.ControlDark;
             this.btnAdicionarPagamento.FlatAppearance.BorderSize = 0;
             this.btnAdicionarPagamento.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAdicionarPagamento.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAdicionarPagamento.Font = new System.Drawing.Font("Segoe UI", 11.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdicionarPagamento.ForeColor = System.Drawing.Color.White;
-            this.btnAdicionarPagamento.Location = new System.Drawing.Point(45, 264);
+            this.btnAdicionarPagamento.Location = new System.Drawing.Point(16, 260);
             this.btnAdicionarPagamento.Name = "btnAdicionarPagamento";
-            this.btnAdicionarPagamento.Size = new System.Drawing.Size(212, 50);
+            this.btnAdicionarPagamento.Size = new System.Drawing.Size(275, 48);
             this.btnAdicionarPagamento.TabIndex = 10;
             this.btnAdicionarPagamento.Text = "Adicionar [Enter]";
             this.btnAdicionarPagamento.UseVisualStyleBackColor = false;

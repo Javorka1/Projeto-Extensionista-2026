@@ -124,7 +124,7 @@ namespace ProjetoExtensionista2026_2
             if (gpbLancamentoValores != null)
             {
                 gpbLancamentoValores.Enabled = false;
-                gpbLancamentoValores.Text = "Lançamento de Valores (Selecione a forma)";
+                gpbLancamentoValores.Text = "Valores (Selecione a forma)";
                 gpbLancamentoValores.Invalidate();
             }
 

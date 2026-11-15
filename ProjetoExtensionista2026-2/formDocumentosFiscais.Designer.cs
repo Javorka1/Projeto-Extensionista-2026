@@ -1,4 +1,4 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class formDocumentosFiscais
     {
@@ -86,7 +86,7 @@
             this.lblAviso.Name = "lblAviso";
             this.lblAviso.Size = new System.Drawing.Size(660, 44);
             this.lblAviso.TabIndex = 1;
-            this.lblAviso.Text = "⚠️ Aviso: ";
+            this.lblAviso.Text = "Aviso:";
             this.lblAviso.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cmbImpressoras
@@ -117,7 +117,7 @@
             this.btnAtualizarImpressoras.Name = "btnAtualizarImpressoras";
             this.btnAtualizarImpressoras.Size = new System.Drawing.Size(100, 25);
             this.btnAtualizarImpressoras.TabIndex = 4;
-            this.btnAtualizarImpressoras.Text = "🔄️ Atualizar";
+            this.btnAtualizarImpressoras.Text = "Atualizar";
             this.btnAtualizarImpressoras.UseVisualStyleBackColor = true;
             // 
             // btnVerPromissoria
@@ -128,7 +128,7 @@
             this.btnVerPromissoria.Name = "btnVerPromissoria";
             this.btnVerPromissoria.Size = new System.Drawing.Size(30, 30);
             this.btnVerPromissoria.TabIndex = 7;
-            this.btnVerPromissoria.Text = "🔎 ";
+            this.btnVerPromissoria.Text = "";
             this.btnVerPromissoria.UseVisualStyleBackColor = true;
             // 
             // btnVerCupom
@@ -139,7 +139,7 @@
             this.btnVerCupom.Name = "btnVerCupom";
             this.btnVerCupom.Size = new System.Drawing.Size(30, 30);
             this.btnVerCupom.TabIndex = 8;
-            this.btnVerCupom.Text = "🔎 ";
+            this.btnVerCupom.Text = "";
             this.btnVerCupom.UseVisualStyleBackColor = true;
             // 
             // btnImprimir
@@ -208,8 +208,11 @@
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.picPromissoria);
             this.Controls.Add(this.picCupom);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
             this.Name = "formDocumentosFiscais";
-            this.Text = "formDocumentosFiscais";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            this.Text = "Documentos Fiscais";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picPromissoria)).EndInit();

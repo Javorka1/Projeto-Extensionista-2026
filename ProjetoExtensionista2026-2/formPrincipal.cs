@@ -143,6 +143,11 @@ namespace ProjetoExtensionista2026_2
             AtivarNavegacao(btnNavVendas, new formVenda());
         }
 
+        private void btnNavRegistroVendas_Click(object sender, EventArgs e)
+        {
+            AtivarNavegacao(btnNavRegistroVendas, new FormRegistroVendas());
+        }
+
         private void btnNavEstoque_Click(object sender, EventArgs e)
         {
             AtivarNavegacao(btnNavEstoque, new formEstoque());

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
@@ -235,8 +235,20 @@ namespace ProjetoExtensionista2026_2
 
             if (_dados.EhOrcamento)
             {
+                this.Text = $"Orçamento #{_dados.NumeroVenda}";
                 chkCupom.Checked = false;
                 chkCupom.Enabled = false;
+                chkCupom.Visible = false;
+                chkPromissoria.Text = "Nota de Orçamento";
+                chkPromissoria.Location = new Point((groupBox1.ClientSize.Width - chkPromissoria.Width) / 2, chkPromissoria.Location.Y);
+
+                if (picPromissoria != null)
+                {
+                    int xCentro = (this.ClientSize.Width - picPromissoria.Width) / 2;
+                    picPromissoria.Location = new Point(xCentro, picPromissoria.Location.Y);
+                    if (btnVerPromissoria != null)
+                        btnVerPromissoria.Location = new Point(picPromissoria.Right - btnVerPromissoria.Width - 6, btnVerPromissoria.Location.Y);
+                }
             }
 
             bool cupomAtivo = chkCupom.Checked && !_dados.EhOrcamento;

@@ -269,58 +269,7 @@ namespace ProjetoExtensionista2026_2
                 nomeSugestao = "resumo_fornecedores.csv";
             }
 
-            if (dgvAtual.Rows.Count == 0)
-            {
-                MessageBox.Show("Não há dados na tabela atual para exportar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "Arquivo CSV (*.csv)|*.csv";
-                sfd.Title = "Exportar Relatório Financeiro";
-                sfd.FileName = nomeSugestao;
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        StringBuilder sb = new StringBuilder();
-
-                        for (int i = 0; i < dgvAtual.Columns.Count; i++)
-                        {
-                            sb.Append(dgvAtual.Columns[i].HeaderText);
-                            if (i < dgvAtual.Columns.Count - 1)
-                                sb.Append(";");
-                        }
-                        sb.AppendLine();
-
-                        foreach (DataGridViewRow row in dgvAtual.Rows)
-                        {
-                            if (!row.IsNewRow)
-                            {
-                                for (int i = 0; i < dgvAtual.Columns.Count; i++)
-                                {
-                                    string valor = row.Cells[i].Value?.ToString() ?? "";
-                                    valor = valor.Replace(";", ",").Replace("\r", " ").Replace("\n", " ");
-                                    sb.Append(valor);
-
-                                    if (i < dgvAtual.Columns.Count - 1)
-                                        sb.Append(";");
-                                }
-                                sb.AppendLine();
-                            }
-                        }
-
-                        File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
-                        MessageBox.Show("Relatório exportado com sucesso!", "Exportação Concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show("Erro ao salvar o arquivo CSV: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
+            ExportadorCsv.ExportarDataGridView(dgvAtual, nomeSugestao, "Exportar Relatório Financeiro");
         }
     }
 }

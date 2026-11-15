@@ -8,6 +8,7 @@ using Npgsql;
 using NpgsqlTypes;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
+using ProjetoExtensionista2026_2.SQL.SQL_functions;
 
 namespace ProjetoExtensionista2026_2
 {
@@ -57,6 +58,22 @@ namespace ProjetoExtensionista2026_2
 
         private void formPagamento_Load(object sender, EventArgs e)
         {
+            if (_idVendaAberta.HasValue && _idVendaAberta.Value > 0)
+            {
+                this.Text = $"Efetivar Orçamento #{_idVendaAberta.Value} - Checkout";
+                if (label1 != null)
+                    label1.Text = $"Efetivar Orçamento #{_idVendaAberta.Value}";
+            }
+
+            if (dgvPagamentos.Columns.Count >= 4)
+            {
+                dgvPagamentos.Columns[0].HeaderText = "Forma";
+                dgvPagamentos.Columns[0].FillWeight = 115;
+                dgvPagamentos.Columns[1].FillWeight = 85;
+                dgvPagamentos.Columns[2].FillWeight = 82;
+                dgvPagamentos.Columns[3].FillWeight = 30;
+            }
+
             dgvPagamentos.CellClick -= dgvPagamentos_CellClick;
             dgvPagamentos.CellClick += dgvPagamentos_CellClick;
 
@@ -560,6 +577,11 @@ namespace ProjetoExtensionista2026_2
                 {
                     try
                     {
+                        VendaSQL.EnsureSchema(conexao, transacao);
+                        string nomeVendedor = string.IsNullOrWhiteSpace(LoginSQL.SessaoUsuario.Nome)
+                            ? "Sistema"
+                            : LoginSQL.SessaoUsuario.Nome;
+
                         long idVendaAtual;
 
                         if (_idVendaAberta.HasValue && _idVendaAberta.Value > 0)
@@ -573,6 +595,7 @@ namespace ProjetoExtensionista2026_2
                                     total = @total,
                                     payment_status = @payment_status,
                                     notes = @notes,
+                                    seller_name = @seller_name,
                                     sale_type = 'VENDA',
                                     sale_date = NOW()
                                 WHERE public.sale.id_sale = @id_sale;";
@@ -584,6 +607,7 @@ namespace ProjetoExtensionista2026_2
                                 cmdSale.Parameters.Add(new NpgsqlParameter("total", NpgsqlDbType.Numeric) { Value = _totalFinal });
                                 cmdSale.Parameters.Add(new NpgsqlParameter("payment_status", NpgsqlDbType.Text) { Value = statusPagamento });
                                 cmdSale.Parameters.Add(new NpgsqlParameter("notes", NpgsqlDbType.Text) { Value = string.IsNullOrWhiteSpace(observacoes) ? (object)DBNull.Value : observacoes });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("seller_name", NpgsqlDbType.Text) { Value = nomeVendedor });
                                 cmdSale.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVendaAtual });
                                 cmdSale.ExecuteNonQuery();
                             }
@@ -599,6 +623,7 @@ namespace ProjetoExtensionista2026_2
                                     payment_status, 
                                     notes, 
                                     id_client,
+                                    seller_name,
                                     sale_type
                                 ) 
                                 VALUES (
@@ -609,6 +634,7 @@ namespace ProjetoExtensionista2026_2
                                     @payment_status, 
                                     @notes, 
                                     @id_client,
+                                    @seller_name,
                                     'VENDA'
                                 ) 
                                 RETURNING public.sale.id_sale;";
@@ -621,6 +647,7 @@ namespace ProjetoExtensionista2026_2
                                 cmdSale.Parameters.Add(new NpgsqlParameter("payment_status", NpgsqlDbType.Text) { Value = statusPagamento });
                                 cmdSale.Parameters.Add(new NpgsqlParameter("notes", NpgsqlDbType.Text) { Value = string.IsNullOrWhiteSpace(observacoes) ? (object)DBNull.Value : observacoes });
                                 cmdSale.Parameters.Add(new NpgsqlParameter("id_client", NpgsqlDbType.Bigint) { Value = _idCliente });
+                                cmdSale.Parameters.Add(new NpgsqlParameter("seller_name", NpgsqlDbType.Text) { Value = nomeVendedor });
 
                                 idVendaAtual = Convert.ToInt64(cmdSale.ExecuteScalar());
                             }
@@ -628,44 +655,70 @@ namespace ProjetoExtensionista2026_2
 
                         IdVendaFinalizada = idVendaAtual;
 
-                        if (_itensVenda != null && _itensVenda.Count > 0 && !_idVendaAberta.HasValue)
+                        if (_itensVenda != null && _itensVenda.Count > 0)
                         {
-                            foreach (var item in _itensVenda)
+                            if (!_idVendaAberta.HasValue || _idVendaAberta.Value <= 0)
                             {
-                                string sqlItem = @"
-                                    INSERT INTO public.sale_product (
-                                        id_sale, 
-                                        id_product, 
-                                        quantity, 
-                                        unit_price, 
-                                        unit_cost,
-                                        subtotal, 
-                                        discount_product
-                                    ) 
-                                    VALUES (
-                                        @id_sale, 
-                                        @id_product, 
-                                        @quantity, 
-                                        @unit_price, 
-                                        COALESCE((SELECT public.product.purchase_price FROM public.product WHERE public.product.id_product = @id_product), 0),
-                                        @subtotal, 
-                                        @discount_product
-                                    );
-
-                                    UPDATE public.product 
-                                    SET stock_quantity = public.product.stock_quantity - @quantity 
-                                    WHERE public.product.id_product = @id_product;";
-
-                                using (var cmdItem = new NpgsqlCommand(sqlItem, conexao, transacao))
+                                foreach (var item in _itensVenda)
                                 {
-                                    cmdItem.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVendaAtual });
-                                    cmdItem.Parameters.Add(new NpgsqlParameter("id_product", NpgsqlDbType.Integer) { Value = (int)item.IdProduto });
-                                    cmdItem.Parameters.Add(new NpgsqlParameter("quantity", NpgsqlDbType.Numeric) { Value = item.Quantidade });
-                                    cmdItem.Parameters.Add(new NpgsqlParameter("unit_price", NpgsqlDbType.Numeric) { Value = item.PrecoUnitario });
-                                    cmdItem.Parameters.Add(new NpgsqlParameter("subtotal", NpgsqlDbType.Numeric) { Value = item.TotalItem });
-                                    cmdItem.Parameters.Add(new NpgsqlParameter("discount_product", NpgsqlDbType.Numeric) { Value = 0m });
+                                    string sqlItem = @"
+                                        INSERT INTO public.sale_product (
+                                            id_sale, 
+                                            id_product, 
+                                            quantity, 
+                                            unit_price, 
+                                            unit_cost,
+                                            subtotal, 
+                                            discount_product
+                                        ) 
+                                        VALUES (
+                                            @id_sale, 
+                                            @id_product, 
+                                            @quantity, 
+                                            @unit_price, 
+                                            COALESCE((SELECT public.product.purchase_price FROM public.product WHERE public.product.id_product = @id_product), 0),
+                                            @subtotal, 
+                                            @discount_product
+                                        );
 
-                                    cmdItem.ExecuteNonQuery();
+                                        UPDATE public.product 
+                                        SET stock_quantity = public.product.stock_quantity - @quantity 
+                                        WHERE public.product.id_product = @id_product;";
+
+                                    using (var cmdItem = new NpgsqlCommand(sqlItem, conexao, transacao))
+                                    {
+                                        cmdItem.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVendaAtual });
+                                        cmdItem.Parameters.Add(new NpgsqlParameter("id_product", NpgsqlDbType.Integer) { Value = (int)item.IdProduto });
+                                        cmdItem.Parameters.Add(new NpgsqlParameter("quantity", NpgsqlDbType.Numeric) { Value = item.Quantidade });
+                                        cmdItem.Parameters.Add(new NpgsqlParameter("unit_price", NpgsqlDbType.Numeric) { Value = item.PrecoUnitario });
+                                        cmdItem.Parameters.Add(new NpgsqlParameter("subtotal", NpgsqlDbType.Numeric) { Value = item.TotalItem });
+                                        cmdItem.Parameters.Add(new NpgsqlParameter("discount_product", NpgsqlDbType.Numeric) { Value = 0m });
+
+                                        cmdItem.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                // Efetivação de orçamento: atualiza custo unitário e dá baixa no estoque dos itens já gravados
+                                foreach (var item in _itensVenda)
+                                {
+                                    string sqlBaixaOrcamento = @"
+                                        UPDATE public.sale_product
+                                        SET unit_cost = COALESCE((SELECT public.product.purchase_price FROM public.product WHERE public.product.id_product = @id_product), 0)
+                                        WHERE id_sale = @id_sale AND id_product = @id_product;
+
+                                        UPDATE public.product
+                                        SET stock_quantity = public.product.stock_quantity - @quantity
+                                        WHERE public.product.id_product = @id_product;";
+
+                                    using (var cmdBaixa = new NpgsqlCommand(sqlBaixaOrcamento, conexao, transacao))
+                                    {
+                                        cmdBaixa.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idVendaAtual });
+                                        cmdBaixa.Parameters.Add(new NpgsqlParameter("id_product", NpgsqlDbType.Integer) { Value = (int)item.IdProduto });
+                                        cmdBaixa.Parameters.Add(new NpgsqlParameter("quantity", NpgsqlDbType.Numeric) { Value = item.Quantidade });
+                                        cmdBaixa.ExecuteNonQuery();
+                                    }
                                 }
                             }
                         }
@@ -718,6 +771,7 @@ namespace ProjetoExtensionista2026_2
                         }
 
                         transacao.Commit();
+                        AuditLogSQL.Register($"Venda #{idVendaAtual} registrada ({_totalFinal:C2} - {statusPagamento})", LoginSQL.SessaoUsuario.Nome);
                     }
                     catch
                     {

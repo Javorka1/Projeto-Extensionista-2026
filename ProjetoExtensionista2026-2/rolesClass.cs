@@ -19,6 +19,7 @@ namespace ProjetoExtensionista2026_2
             {
                 // Administrador tem acesso completo
                 formPrincipal.btnNavVendas.Visible = true;
+                formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = true;
                 formPrincipal.btnNavFinanceiro.Visible = true;
                 formPrincipal.btnNavCadastro.Visible = true;
@@ -33,8 +34,9 @@ namespace ProjetoExtensionista2026_2
             }
             else if (r == "seller")
             {
-                // Vendedor acessa Vendas e Principal
+                // Vendedor acessa Vendas, Registro de Vendas e Principal
                 formPrincipal.btnNavVendas.Visible = true;
+                formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = false;
                 formPrincipal.btnNavFinanceiro.Visible = false;
                 formPrincipal.btnNavCadastro.Visible = false;
@@ -48,6 +50,7 @@ namespace ProjetoExtensionista2026_2
             {
                 // Estoquista acessa Estoque e Principal
                 formPrincipal.btnNavVendas.Visible = false;
+                formPrincipal.btnNavRegistroVendas.Visible = false;
                 formPrincipal.btnNavEstoque.Visible = true;
                 formPrincipal.btnNavFinanceiro.Visible = false;
                 formPrincipal.btnNavCadastro.Visible = false;
@@ -59,8 +62,9 @@ namespace ProjetoExtensionista2026_2
             }
             else if (r == "monetary")
             {
-                // Financeiro acessa Financeiro e Principal
+                // Financeiro acessa Financeiro, Registro de Vendas e Principal
                 formPrincipal.btnNavVendas.Visible = false;
+                formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = false;
                 formPrincipal.btnNavFinanceiro.Visible = true;
                 formPrincipal.btnNavCadastro.Visible = false;
@@ -74,6 +78,7 @@ namespace ProjetoExtensionista2026_2
             {
                 // Acesso restrito
                 formPrincipal.btnNavVendas.Visible = false;
+                formPrincipal.btnNavRegistroVendas.Visible = false;
                 formPrincipal.btnNavEstoque.Visible = false;
                 formPrincipal.btnNavFinanceiro.Visible = false;
                 formPrincipal.btnNavCadastro.Visible = false;

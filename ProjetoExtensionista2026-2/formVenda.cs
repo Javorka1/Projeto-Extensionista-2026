@@ -2,6 +2,7 @@ using Npgsql;
 using NpgsqlTypes;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
+using ProjetoExtensionista2026_2.SQL.SQL_functions;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -677,6 +678,11 @@ namespace ProjetoExtensionista2026_2
                 {
                     try
                     {
+                        VendaSQL.EnsureSchema(conexao, transacao);
+                        string nomeVendedor = string.IsNullOrWhiteSpace(LoginSQL.SessaoUsuario.Nome)
+                            ? "Sistema"
+                            : LoginSQL.SessaoUsuario.Nome;
+
                         long idOrcamento;
 
                         // Grava com sale_type = 'ORCAMENTO' e payment_status = 'PENDENTE'
@@ -689,6 +695,7 @@ namespace ProjetoExtensionista2026_2
                                 payment_status, 
                                 notes, 
                                 id_client,
+                                seller_name,
                                 sale_type
                             ) 
                             VALUES (
@@ -699,6 +706,7 @@ namespace ProjetoExtensionista2026_2
                                 'PENDENTE', 
                                 'Orçamento gerado pelo PDV', 
                                 @id_client,
+                                @seller_name,
                                 'ORCAMENTO'
                             ) 
                             RETURNING public.sale.id_sale;";
@@ -709,6 +717,7 @@ namespace ProjetoExtensionista2026_2
                             cmdSale.Parameters.Add(new NpgsqlParameter("discount", NpgsqlDbType.Numeric) { Value = desconto });
                             cmdSale.Parameters.Add(new NpgsqlParameter("total", NpgsqlDbType.Numeric) { Value = totalFinal });
                             cmdSale.Parameters.Add(new NpgsqlParameter("id_client", NpgsqlDbType.Bigint) { Value = idCliente });
+                            cmdSale.Parameters.Add(new NpgsqlParameter("seller_name", NpgsqlDbType.Text) { Value = nomeVendedor });
 
                             idOrcamento = Convert.ToInt64(cmdSale.ExecuteScalar());
                         }
@@ -748,6 +757,7 @@ namespace ProjetoExtensionista2026_2
                         }
 
                         transacao.Commit();
+                        AuditLogSQL.Register($"Orçamento #{idOrcamento} salvo ({totalFinal:C2})", LoginSQL.SessaoUsuario.Nome);
                         return idOrcamento;
                     }
                     catch

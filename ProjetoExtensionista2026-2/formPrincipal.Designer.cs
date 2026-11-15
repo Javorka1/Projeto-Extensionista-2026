@@ -35,6 +35,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavCadastro = new System.Windows.Forms.Button();
             this.btnNavFinanceiro = new System.Windows.Forms.Button();
             this.btnNavEstoque = new System.Windows.Forms.Button();
+            this.btnNavRegistroVendas = new System.Windows.Forms.Button();
             this.btnNavVendas = new System.Windows.Forms.Button();
             this.btnNavPrincipal = new System.Windows.Forms.Button();
             this.pnlUserFooter = new System.Windows.Forms.Panel();
@@ -76,6 +77,7 @@ namespace ProjetoExtensionista2026_2
             this.pnlNav.Controls.Add(this.btnNavCadastro);
             this.pnlNav.Controls.Add(this.btnNavFinanceiro);
             this.pnlNav.Controls.Add(this.btnNavEstoque);
+            this.pnlNav.Controls.Add(this.btnNavRegistroVendas);
             this.pnlNav.Controls.Add(this.btnNavVendas);
             this.pnlNav.Controls.Add(this.btnNavPrincipal);
             this.pnlNav.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -112,7 +114,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavAdmin.Size = new System.Drawing.Size(220, 42);
             this.btnNavAdmin.TabIndex = 6;
             this.btnNavAdmin.Tag = "admin_item";
-            this.btnNavAdmin.Text = " 🛡 Admin";
+            this.btnNavAdmin.Text = "  Admin";
             this.btnNavAdmin.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavAdmin.UseVisualStyleBackColor = true;
             this.btnNavAdmin.Click += new System.EventHandler(this.btnNavAdmin_Click);
@@ -164,6 +166,22 @@ namespace ProjetoExtensionista2026_2
             this.btnNavEstoque.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavEstoque.UseVisualStyleBackColor = true;
             this.btnNavEstoque.Click += new System.EventHandler(this.btnNavEstoque_Click);
+            // 
+            // btnNavRegistroVendas
+            // 
+            this.btnNavRegistroVendas.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnNavRegistroVendas.FlatAppearance.BorderSize = 0;
+            this.btnNavRegistroVendas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNavRegistroVendas.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNavRegistroVendas.Location = new System.Drawing.Point(10, 92);
+            this.btnNavRegistroVendas.Name = "btnNavRegistroVendas";
+            this.btnNavRegistroVendas.Size = new System.Drawing.Size(220, 42);
+            this.btnNavRegistroVendas.TabIndex = 2;
+            this.btnNavRegistroVendas.Tag = "nav_item";
+            this.btnNavRegistroVendas.Text = "  Registro de Vendas";
+            this.btnNavRegistroVendas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnNavRegistroVendas.UseVisualStyleBackColor = true;
+            this.btnNavRegistroVendas.Click += new System.EventHandler(this.btnNavRegistroVendas_Click);
             // 
             // btnNavVendas
             // 
@@ -379,6 +397,7 @@ namespace ProjetoExtensionista2026_2
         private System.Windows.Forms.Panel pnlNav;
         public System.Windows.Forms.Button btnNavPrincipal;
         public System.Windows.Forms.Button btnNavVendas;
+        public System.Windows.Forms.Button btnNavRegistroVendas;
         public System.Windows.Forms.Button btnNavEstoque;
         public System.Windows.Forms.Button btnNavFinanceiro;
         public System.Windows.Forms.Button btnNavCadastro;

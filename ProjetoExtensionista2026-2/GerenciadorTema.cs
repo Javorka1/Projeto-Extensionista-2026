@@ -294,6 +294,15 @@ namespace ProjetoExtensionista2026_2
                 cmb.BackColor = corInput;
                 cmb.ForeColor = corTexto;
                 cmb.FlatStyle = FlatStyle.Flat;
+                ConfigurarComboBoxModerno(cmb);
+            }
+            else if (ctrl is DateTimePicker dtp)
+            {
+                dtp.CalendarMonthBackground = corCard;
+                dtp.CalendarTitleBackColor = CorDestaque;
+                dtp.CalendarTitleForeColor = Color.White;
+                dtp.CalendarForeColor = corTexto;
+                dtp.CalendarTrailingForeColor = ModoEscuro ? TextoSecundarioEscuro : TextoSecundarioClaro;
             }
             else if (ctrl is MaskedTextBox mtxt)
             {
@@ -361,6 +370,50 @@ namespace ProjetoExtensionista2026_2
             }
 
             lbl.Font = new Font("Segoe UI", 8.75F, FontStyle.Bold);
+        }
+
+        private static readonly System.Collections.Generic.HashSet<ComboBox> _combosEstilizados = new System.Collections.Generic.HashSet<ComboBox>();
+
+        private static void ConfigurarComboBoxModerno(ComboBox cmb)
+        {
+            if (cmb.DropDownStyle == ComboBoxStyle.DropDownList)
+            {
+                cmb.DrawMode = DrawMode.OwnerDrawFixed;
+                if (cmb.ItemHeight < 18) cmb.ItemHeight = 18;
+
+                if (_combosEstilizados.Add(cmb))
+                {
+                    cmb.DrawItem += (s, e) =>
+                    {
+                        if (e.Index < 0 || e.Index >= cmb.Items.Count) return;
+
+                        bool selecionado = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
+                        Color fundo = selecionado
+                            ? CorDestaque
+                            : (ModoEscuro ? InputEscuro : InputClaro);
+                        Color texto = selecionado
+                            ? Color.White
+                            : (ModoEscuro ? TextoEscuro : TextoClaro);
+
+                        using (var br = new SolidBrush(fundo))
+                        {
+                            e.Graphics.FillRectangle(br, e.Bounds);
+                        }
+
+                        string itemTexto = cmb.GetItemText(cmb.Items[e.Index]);
+                        TextRenderer.DrawText(
+                            e.Graphics,
+                            itemTexto,
+                            cmb.Font,
+                            new Rectangle(e.Bounds.X + 4, e.Bounds.Y, Math.Max(1, e.Bounds.Width - 6), e.Bounds.Height),
+                            texto,
+                            TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+                    };
+
+                    cmb.Disposed += (s, e) => _combosEstilizados.Remove(cmb);
+                }
+            }
+            cmb.Invalidate();
         }
 
         private static void ConfigurarFocoTextBox(TextBox txt)
@@ -655,11 +708,21 @@ namespace ProjetoExtensionista2026_2
                            nome.StartsWith("btnCredito") || nome.StartsWith("btnPix") || nome.StartsWith("btnCarne")) ? 20 : 16;
 
             btn.Image = ObterIconeVetorial(tipoIcone, corIcone, tamanho);
-            btn.ImageAlign = ContentAlignment.MiddleLeft;
-            btn.TextImageRelation = TextImageRelation.ImageBeforeText;
-            if (btn.Padding.Left < 8)
+            if (string.IsNullOrWhiteSpace(btn.Text))
             {
-                btn.Padding = new Padding(8, btn.Padding.Top, btn.Padding.Right, btn.Padding.Bottom);
+                btn.ImageAlign = ContentAlignment.MiddleCenter;
+                btn.TextImageRelation = TextImageRelation.Overlay;
+                btn.Padding = new Padding(0);
+            }
+            else
+            {
+                btn.ImageAlign = ContentAlignment.MiddleLeft;
+                btn.TextImageRelation = TextImageRelation.ImageBeforeText;
+                if (tag != "nav_item" && tag != "nav_ativa" && tag != "admin_item")
+                {
+                    btn.TextAlign = ContentAlignment.MiddleCenter;
+                }
+                btn.Padding = new Padding(8, 0, 6, 0);
             }
         }
 
@@ -667,9 +730,11 @@ namespace ProjetoExtensionista2026_2
         {
             if (nome == "btnNavPrincipal") return "dashboard";
             if (nome == "btnNavVendas") return "cart";
+            if (nome == "btnNavRegistroVendas") return "invoice";
             if (nome == "btnNavEstoque") return "box";
             if (nome == "btnNavFinanceiro") return "chart";
             if (nome == "btnNavCadastro") return "users";
+            if (nome == "btnNavAdmin") return "shield";
             if (nome == "btnNavConfig") return "sliders";
             if (nome == "btnToggleTema" || nome == "btnAlternarTema") return "theme";
             if (nome == "btnSair") return "logout";
@@ -677,12 +742,12 @@ namespace ProjetoExtensionista2026_2
             if (nome == "btnDinheiro") return "cash";
             if (nome == "btnDebito" || nome == "btnCredito") return "card";
             if (nome == "btnPix") return "pix";
-            if (nome == "btnCarne") return "invoice";
+            if (nome == "btnCarne" || nome == "btnReimprimir") return "invoice";
             if (nome == "btnAdicionar" || nome == "btnAdicionarPagamento" || nome == "btnCadastrar") return "plus";
-            if (nome == "btnSalvar") return "check";
-            if (nome == "searchBtn") return "search";
-            if (nome == "btnAtualizar") return "refresh";
-            if (nome == "btnExportarCsv") return "download";
+            if (nome == "btnSalvar" || nome == "btnEfetivar" || nome == "btnQuitar") return "check";
+            if (nome == "searchBtn" || nome == "btnVerPromissoria" || nome == "btnVerCupom") return "search";
+            if (nome == "btnAtualizar" || nome == "btnAtualizarImpressoras") return "refresh";
+            if (nome == "btnExportarCsv" || nome == "btnSalvarPdf") return "download";
 
             return null;
         }
@@ -805,6 +870,19 @@ namespace ProjetoExtensionista2026_2
                             g.DrawLine(pen, 8, 2, 8, 11);
                             g.DrawLines(pen, new[] { new Point(5, 8), new Point(8, 11), new Point(11, 8) });
                             g.DrawLine(pen, 3, 14, 13, 14);
+                            break;
+
+                        case "shield":
+                            g.DrawPolygon(pen, new[]
+                            {
+                                new Point(8, 2),
+                                new Point(14, 4),
+                                new Point(13, 10),
+                                new Point(8, 14),
+                                new Point(3, 10),
+                                new Point(2, 4)
+                            });
+                            g.DrawLine(pen, 8, 5, 8, 10);
                             break;
                     }
                 }
