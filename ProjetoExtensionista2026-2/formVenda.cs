@@ -158,7 +158,7 @@ namespace ProjetoExtensionista2026_2
                 FormBorderStyle = FormBorderStyle.FixedDialog,
                 MinimizeBox = false,
                 MaximizeBox = false,
-                ClientSize = new Size(920, 500)
+                ClientSize = new Size(950, 550)
             })
             {
                 var cadastroCliente = new UcCadastroCliente
@@ -167,6 +167,7 @@ namespace ProjetoExtensionista2026_2
                 };
 
                 formularioCadastro.Controls.Add(cadastroCliente);
+                GerenciadorTema.AplicarTema(formularioCadastro);
                 formularioCadastro.ShowDialog(this);
             }
         }

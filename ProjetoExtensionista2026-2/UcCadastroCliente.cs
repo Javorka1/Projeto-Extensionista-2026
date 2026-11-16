@@ -3,6 +3,7 @@ using NpgsqlTypes;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -20,12 +21,146 @@ namespace ProjetoExtensionista2026_2
             Timeout = TimeSpan.FromSeconds(10)
         };
 
+        private static readonly Color FundoObrigatorioClaro = Color.FromArgb(239, 246, 255); // #EFF6FF
+        private static readonly Color FundoObrigatorioEscuro = Color.FromArgb(30, 43, 69);   // #1E2B45
+
+        private bool _formatandoCampo = false;
+
         public long? ClienteIdEmEdicao { get; private set; }
         public event Action AoConcluirOperacao;
 
         public UcCadastroCliente()
         {
             InitializeComponent();
+            ConfigurarMascarasECamposObrigatorios();
+        }
+
+        private void ConfigurarMascarasECamposObrigatorios()
+        {
+            // Campos obrigatórios com destaque azul suave (mantido mesmo após o Leave do GerenciadorTema)
+            ConfigurarCampoObrigatorio(txtNome);
+            ConfigurarCampoObrigatorio(txtCpfCnpj);
+            ConfigurarCampoObrigatorio(txtTelefone);
+
+            // Formatação dinâmica enquanto digita
+            if (txtCpfCnpj != null)
+            {
+                txtCpfCnpj.KeyPress += ApenasNumeros_KeyPress;
+                txtCpfCnpj.TextChanged += (s, e) => AplicarMascaraDinamica(txtCpfCnpj, 14, FormatarCpfCnpjProgressivo);
+            }
+
+            if (txtTelefone != null)
+            {
+                txtTelefone.KeyPress += ApenasNumeros_KeyPress;
+                txtTelefone.TextChanged += (s, e) => AplicarMascaraDinamica(txtTelefone, 11, FormatarTelefoneProgressivo);
+            }
+
+            if (txtCep != null)
+            {
+                txtCep.KeyPress += ApenasNumeros_KeyPress;
+                txtCep.TextChanged += (s, e) => AplicarMascaraDinamica(txtCep, 8, FormatarCepProgressivo);
+            }
+
+            if (txtNumero != null)
+            {
+                txtNumero.KeyPress += (s, e) =>
+                {
+                    if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '-' && e.KeyChar != '/')
+                        e.Handled = true;
+                };
+            }
+
+            this.Load += (s, e) => AplicarDestaqueObrigatorios();
+            this.VisibleChanged += (s, e) => { if (this.Visible) AplicarDestaqueObrigatorios(); };
+        }
+
+        private void ConfigurarCampoObrigatorio(TextBox txt)
+        {
+            if (txt == null) return;
+
+            txt.BackColor = ObterCorObrigatoria();
+            txt.Leave += (s, e) => txt.BackColor = ObterCorObrigatoria();
+            txt.BackColorChanged += (s, e) =>
+            {
+                Color desejada = ObterCorObrigatoria();
+                if (txt.BackColor != desejada)
+                    txt.BackColor = desejada;
+            };
+        }
+
+        private void AplicarDestaqueObrigatorios()
+        {
+            Color cor = ObterCorObrigatoria();
+            if (txtNome != null) txtNome.BackColor = cor;
+            if (txtCpfCnpj != null) txtCpfCnpj.BackColor = cor;
+            if (txtTelefone != null) txtTelefone.BackColor = cor;
+        }
+
+        private static Color ObterCorObrigatoria() =>
+            GerenciadorTema.ModoEscuro ? FundoObrigatorioEscuro : FundoObrigatorioClaro;
+
+        private static void ApenasNumeros_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                e.Handled = true;
+        }
+
+        private void AplicarMascaraDinamica(TextBox txt, int maxDigitos, Func<string, string> formatador)
+        {
+            if (_formatandoCampo || txt == null) return;
+            _formatandoCampo = true;
+
+            try
+            {
+                string digitos = ExtrairDigitos(txt.Text);
+                if (digitos.Length > maxDigitos)
+                    digitos = digitos.Substring(0, maxDigitos);
+
+                string formatado = formatador(digitos);
+                if (txt.Text != formatado)
+                {
+                    txt.Text = formatado;
+                    txt.SelectionStart = txt.Text.Length;
+                }
+            }
+            finally
+            {
+                _formatandoCampo = false;
+            }
+        }
+
+        private static string FormatarCpfCnpjProgressivo(string d)
+        {
+            if (string.IsNullOrEmpty(d)) return string.Empty;
+
+            if (d.Length <= 11)
+            {
+                if (d.Length <= 3) return d;
+                if (d.Length <= 6) return $"{d.Substring(0, 3)}.{d.Substring(3)}";
+                if (d.Length <= 9) return $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6)}";
+                return $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6, 3)}-{d.Substring(9)}";
+            }
+
+            if (d.Length <= 12)
+                return $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8)}";
+
+            return $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8, 4)}-{d.Substring(12)}";
+        }
+
+        private static string FormatarTelefoneProgressivo(string d)
+        {
+            if (string.IsNullOrEmpty(d)) return string.Empty;
+            if (d.Length <= 2) return $"({d}";
+            if (d.Length <= 6) return $"({d.Substring(0, 2)}) {d.Substring(2)}";
+            if (d.Length <= 10) return $"({d.Substring(0, 2)}) {d.Substring(2, 4)}-{d.Substring(6)}";
+            return $"({d.Substring(0, 2)}) {d.Substring(2, 5)}-{d.Substring(7)}";
+        }
+
+        private static string FormatarCepProgressivo(string d)
+        {
+            if (string.IsNullOrEmpty(d)) return string.Empty;
+            if (d.Length <= 5) return d;
+            return $"{d.Substring(0, 5)}-{d.Substring(5)}";
         }
 
         public void CarregarDadosParaEdicao(ClienteDTO c)
@@ -37,11 +172,11 @@ namespace ProjetoExtensionista2026_2
             txtCodigo.Text = c.Id.ToString();
             txtNome.Text = c.Nome ?? string.Empty;
             txtApelido.Text = c.Apelido ?? string.Empty;
-            txtCpfCnpj.Text = c.CpfCnpj ?? string.Empty;
+            txtCpfCnpj.Text = ExtrairDigitos(c.CpfCnpj);
             txtRgIe.Text = c.RgIe ?? string.Empty;
-            txtTelefone.Text = c.Telefone ?? string.Empty;
+            txtTelefone.Text = ExtrairDigitos(c.Telefone);
             txtEmail.Text = c.Email ?? string.Empty;
-            txtCep.Text = c.Cep ?? string.Empty;
+            txtCep.Text = ExtrairDigitos(c.Cep);
             txtRua.Text = c.Rua ?? string.Empty;
             txtNumero.Text = c.Numero ?? string.Empty;
             txtBairro.Text = c.Bairro ?? string.Empty;
@@ -55,6 +190,7 @@ namespace ProjetoExtensionista2026_2
 
             rbAtivo.Checked = c.Ativo;
             btnSalvar.Text = "Atualizar";
+            AplicarDestaqueObrigatorios();
         }
 
         private void btnSalvar_Click(object sender, EventArgs e)
@@ -64,6 +200,30 @@ namespace ProjetoExtensionista2026_2
             {
                 MessageBox.Show("Informe o nome do cliente.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNome.Focus();
+                return;
+            }
+
+            string docDigitos = ExtrairDigitos(txtCpfCnpj.Text);
+            if (docDigitos.Length != 11 && docDigitos.Length != 14)
+            {
+                MessageBox.Show("Informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtCpfCnpj.Focus();
+                return;
+            }
+
+            string foneDigitos = ExtrairDigitos(txtTelefone.Text);
+            if (foneDigitos.Length < 10 || foneDigitos.Length > 11)
+            {
+                MessageBox.Show("Informe um telefone válido com DDD (10 ou 11 dígitos).", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTelefone.Focus();
+                return;
+            }
+
+            string cepDigitos = ExtrairDigitos(txtCep.Text);
+            if (cepDigitos.Length > 0 && cepDigitos.Length != 8)
+            {
+                MessageBox.Show("O CEP deve conter 8 dígitos ou ficar em branco.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtCep.Focus();
                 return;
             }
 
@@ -114,11 +274,11 @@ namespace ProjetoExtensionista2026_2
 
                         comando.Parameters.AddWithValue("@name", nome);
                         comando.Parameters.AddWithValue("@nickname", ValorOuNulo(txtApelido.Text));
-                        comando.Parameters.AddWithValue("@cpf_cnpj", ValorOuNulo(txtCpfCnpj.Text));
+                        comando.Parameters.AddWithValue("@cpf_cnpj", docDigitos);
                         comando.Parameters.AddWithValue("@rg_ie", ValorOuNulo(txtRgIe.Text));
-                        comando.Parameters.AddWithValue("@phone", ValorOuNulo(txtTelefone.Text));
+                        comando.Parameters.AddWithValue("@phone", foneDigitos);
                         comando.Parameters.AddWithValue("@email", ValorOuNulo(txtEmail.Text));
-                        comando.Parameters.AddWithValue("@cep", ValorOuNulo(txtCep.Text));
+                        comando.Parameters.AddWithValue("@cep", ValorOuNulo(cepDigitos));
                         comando.Parameters.AddWithValue("@street", ValorOuNulo(txtRua.Text));
                         comando.Parameters.AddWithValue("@number_address", ValorOuNulo(txtNumero.Text));
                         comando.Parameters.AddWithValue("@neighborhood", ValorOuNulo(txtBairro.Text));
@@ -251,6 +411,7 @@ namespace ProjetoExtensionista2026_2
 
             rbAtivo.Checked = true;
             cboUf.SelectedIndex = -1;
+            AplicarDestaqueObrigatorios();
             txtNome.Focus();
         }
 
