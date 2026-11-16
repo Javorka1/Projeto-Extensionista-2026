@@ -96,8 +96,8 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                     FROM public.sale_payment
                     GROUP BY id_sale
                 ) sp ON sp.id_sale = s.id_sale
-                WHERE s.sale_date >= @inicio
-                  AND s.sale_date < @fim
+                WHERE s.sale_date >= (@inicio::date AT TIME ZONE 'America/Sao_Paulo')
+                  AND s.sale_date < ((@fim::date + INTERVAL '1 day') AT TIME ZONE 'America/Sao_Paulo')
                   AND (@tipo = 'Todos' OR UPPER(COALESCE(s.sale_type, 'VENDA')) = UPPER(@tipo))
                   AND (@status = 'Todos' OR UPPER(COALESCE(s.payment_status, 'PAGO')) = UPPER(@status))
                   AND (

@@ -16,6 +16,8 @@ namespace ProjetoExtensionista2026_2
         private long? _idVendaSelecionada;
         private string _tipoSelecionado = string.Empty;
         private string _statusSelecionado = string.Empty;
+        private readonly Timer _timerAtualizacao;
+        private bool _carregandoVendas;
 
         private static bool PodeCancelarRegistro
         {
@@ -31,6 +33,15 @@ namespace ProjetoExtensionista2026_2
         public FormRegistroVendas()
         {
             InitializeComponent();
+
+            _timerAtualizacao = new Timer { Interval = 30000 };
+            _timerAtualizacao.Tick += async (s, e) =>
+            {
+                if (!_carregandoVendas && IsHandleCreated && !IsDisposed)
+                    await CarregarVendasAsync();
+            };
+            _timerAtualizacao.Start();
+            FormClosed += (s, e) => _timerAtualizacao.Dispose();
         }
 
         public FormRegistroVendas(DTOs.ClienteDTO clienteFiltro) : this()
@@ -84,6 +95,9 @@ namespace ProjetoExtensionista2026_2
 
         private async Task CarregarVendasAsync()
         {
+            if (_carregandoVendas) return;
+
+            _carregandoVendas = true;
             try
             {
                 btnAtualizar.Enabled = false;
@@ -114,6 +128,7 @@ namespace ProjetoExtensionista2026_2
             }
             finally
             {
+                _carregandoVendas = false;
                 btnAtualizar.Text = "Atualizar";
                 btnAtualizar.Enabled = true;
                 btnFiltrar.Enabled = true;
