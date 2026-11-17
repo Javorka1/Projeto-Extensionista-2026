@@ -21,8 +21,8 @@ namespace ProjetoExtensionista2026_2
             Timeout = TimeSpan.FromSeconds(10)
         };
 
-        private static readonly Color FundoObrigatorioClaro = Color.FromArgb(239, 246, 255); // #EFF6FF
-        private static readonly Color FundoObrigatorioEscuro = Color.FromArgb(30, 43, 69);   // #1E2B45
+        private static readonly Color FundoObrigatorioClaro = Color.FromArgb(239, 246, 255);
+        private static readonly Color FundoObrigatorioEscuro = Color.FromArgb(30, 43, 69);
 
         private bool _formatandoCampo = false;
 
@@ -37,12 +37,10 @@ namespace ProjetoExtensionista2026_2
 
         private void ConfigurarMascarasECamposObrigatorios()
         {
-            // Campos obrigatórios com destaque azul suave (mantido mesmo após o Leave do GerenciadorTema)
             ConfigurarCampoObrigatorio(txtNome);
             ConfigurarCampoObrigatorio(txtCpfCnpj);
             ConfigurarCampoObrigatorio(txtTelefone);
 
-            // Formatação dinâmica enquanto digita
             if (txtCpfCnpj != null)
             {
                 txtCpfCnpj.KeyPress += ApenasNumeros_KeyPress;

@@ -382,7 +382,7 @@
             this.txtCep.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCep.Location = new System.Drawing.Point(16, 106);
             this.txtCep.Name = "txtCep";
-            this.txtCep.Size = new System.Drawing.Size(212, 25);
+            this.txtCep.Size = new System.Drawing.Size(242, 25);
             this.txtCep.TabIndex = 92;
             // 
             // label13
