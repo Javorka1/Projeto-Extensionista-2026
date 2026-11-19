@@ -6,7 +6,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -15,12 +17,23 @@ namespace ProjetoExtensionista2026_2
 {
     public partial class UcCadastroProduto : UserControl
     {
-        private static readonly HttpClient _httpClient = CriarHttpClient();
+        private static readonly HttpClient _httpClient = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
         private static readonly ConcurrentDictionary<string, byte[]> _imageBytesCache = new ConcurrentDictionary<string, byte[]>();
 
         private ProdutoDTO _produtoRef;
+        private bool _atualizandoValores;
+        private bool _margemManual;
+
         public int? ProdutoIdEmEdicao { get; private set; }
         public event Action AoConcluirOperacao;
+
+        public class ItemCombo
+        {
+            public long Id { get; set; }
+            public string Nome { get; set; }
+            public ItemCombo(long id, string nome) { Id = id; Nome = nome; }
+            public override string ToString() => Nome;
+        }
 
         public UcCadastroProduto()
         {
@@ -32,43 +45,28 @@ namespace ProjetoExtensionista2026_2
             if (cboUnidade.Items.Count > 0)
                 cboUnidade.SelectedIndex = 0;
 
+            AtualizarDataAtualizacao(null);
             _ = InicializarDadosAsync();
-        }
-
-        private static HttpClient CriarHttpClient()
-        {
-            var client = new HttpClient { Timeout = TimeSpan.FromSeconds(8) };
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-            return client;
         }
 
         private async Task InicializarDadosAsync()
         {
-            if (!ProdutoIdEmEdicao.HasValue)
-            {
-                await Task.WhenAll(
-                    CarregarCategoriasBancoAsync(),
-                    CarregarFornecedoresBancoAsync(),
-                    GerarProximoCodigoAsync()
-                );
-            }
+            if (ProdutoIdEmEdicao.HasValue) return;
+
+            await Task.WhenAll(
+                CarregarCategoriasBancoAsync(),
+                CarregarFornecedoresBancoAsync(),
+                GerarProximoCodigoAsync()
+            );
         }
 
-        public class ItemCombo
-        {
-            public long Id { get; set; }
-            public string Nome { get; set; }
+        public Task CarregarCategoriasBancoAsync(long? idSelecionar = null) =>
+            CarregarComboAsync(cboCategoria, "SELECT id_category, name_category FROM public.category ORDER BY name_category ASC;", idSelecionar);
 
-            public ItemCombo(long id, string nome)
-            {
-                Id = id;
-                Nome = nome;
-            }
+        public Task CarregarFornecedoresBancoAsync(long? idSelecionar = null) =>
+            CarregarComboAsync(cboFornecedor, "SELECT id_supplier, name FROM public.supplier WHERE is_active = TRUE ORDER BY name ASC;", idSelecionar);
 
-            public override string ToString() => Nome;
-        }
-
-        public async Task CarregarCategoriasBancoAsync(long? idParaSelecionar = null)
+        private async Task CarregarComboAsync(ComboBox combo, string sql, long? idSelecionar)
         {
             try
             {
@@ -78,111 +76,56 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        const string sql = "SELECT id_category, name_category FROM public.category ORDER BY name_category ASC;";
                         using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
-                            {
-                                itens.Add(new ItemCombo(
-                                    reader.GetInt64(reader.GetOrdinal("id_category")),
-                                    reader.GetString(reader.GetOrdinal("name_category"))
-                                ));
-                            }
+                                itens.Add(new ItemCombo(reader.GetInt64(0), reader.GetString(1)));
                         }
                     }
                     return itens;
                 });
 
-                cboCategoria.DataSource = null;
-                cboCategoria.DisplayMember = "Nome";
-                cboCategoria.ValueMember = "Id";
-                cboCategoria.DataSource = lista;
-                cboCategoria.SelectedIndex = idParaSelecionar.HasValue ? -1 : -1;
+                combo.DataSource = null;
+                combo.DisplayMember = "Nome";
+                combo.ValueMember = "Id";
+                combo.DataSource = lista;
+                combo.SelectedIndex = -1;
 
-                if (idParaSelecionar.HasValue)
-                    cboCategoria.SelectedValue = idParaSelecionar.Value;
+                if (idSelecionar.HasValue)
+                    combo.SelectedValue = idSelecionar.Value;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao carregar categorias: {ex.Message}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
-
-        public async Task CarregarFornecedoresBancoAsync(long? idParaSelecionar = null)
-        {
-            try
-            {
-                var lista = await Task.Run(() =>
-                {
-                    var itens = new List<ItemCombo>();
-                    using (var db = new Connection())
-                    {
-                        db.IniciarConexao();
-                        const string sql = "SELECT id_supplier, name FROM public.supplier WHERE is_active = TRUE ORDER BY name ASC;";
-                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                itens.Add(new ItemCombo(
-                                    reader.GetInt64(reader.GetOrdinal("id_supplier")),
-                                    reader.GetString(reader.GetOrdinal("name"))
-                                ));
-                            }
-                        }
-                    }
-                    return itens;
-                });
-
-                cboFornecedor.DataSource = null;
-                cboFornecedor.DisplayMember = "Nome";
-                cboFornecedor.ValueMember = "Id";
-                cboFornecedor.DataSource = lista;
-                cboFornecedor.SelectedIndex = -1;
-
-                if (idParaSelecionar.HasValue)
-                    cboFornecedor.SelectedValue = idParaSelecionar.Value;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Erro ao carregar fornecedores: {ex.Message}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Erro ao carregar lista: {ex.Message}", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private async void btnAdicionarCategoria_Click(object sender, EventArgs e)
         {
-            string novaCategoria = PromptDialog.Mostrar("Digite o nome da nova categoria:", "Nova Categoria");
-            if (string.IsNullOrWhiteSpace(novaCategoria)) return;
-
-            novaCategoria = novaCategoria.Trim();
+            string nome = PromptDialog.Mostrar("Digite o nome da nova categoria:", "Nova Categoria", 150).Trim();
+            if (string.IsNullOrWhiteSpace(nome)) return;
 
             try
             {
-                long idCriado = await Task.Run(() =>
+                long id = await Task.Run(() =>
                 {
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
                         const string sql = @"
                             INSERT INTO public.category (name_category)
-                            SELECT @cat
-                            WHERE NOT EXISTS (
-                                SELECT 1 FROM public.category WHERE LOWER(TRIM(name_category)) = LOWER(@cat)
-                            );
-
+                            SELECT @cat WHERE NOT EXISTS (SELECT 1 FROM public.category WHERE LOWER(TRIM(name_category)) = LOWER(@cat));
                             SELECT id_category FROM public.category WHERE LOWER(TRIM(name_category)) = LOWER(@cat) LIMIT 1;";
-
                         using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         {
-                            cmd.Parameters.AddWithValue("@cat", novaCategoria);
+                            cmd.Parameters.AddWithValue("@cat", nome);
                             return Convert.ToInt64(cmd.ExecuteScalar());
                         }
                     }
                 });
 
-                await CarregarCategoriasBancoAsync(idCriado);
-                MessageBox.Show("Categoria adicionada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await CarregarCategoriasBancoAsync(id);
             }
             catch (Exception ex)
             {
@@ -195,39 +138,28 @@ namespace ProjetoExtensionista2026_2
             var dados = PromptDialog.MostrarFornecedor();
             if (!dados.Confirmado || string.IsNullOrWhiteSpace(dados.Nome)) return;
 
-            string nome = dados.Nome.Trim();
-            string documento = string.IsNullOrWhiteSpace(dados.Documento) ? null : dados.Documento.Trim();
-            string telefone = string.IsNullOrWhiteSpace(dados.Telefone) ? null : dados.Telefone.Trim();
-
             try
             {
-                long idCriado = await Task.Run(() =>
+                long id = await Task.Run(() =>
                 {
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
                         const string sql = @"
-                    INSERT INTO public.supplier (name, document, phone, is_active)
-                    SELECT @nome, @doc, @tel, TRUE
-                    WHERE NOT EXISTS (
-                        SELECT 1 FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome)
-                    );
-
-                    SELECT id_supplier FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome) LIMIT 1;";
-
+                            INSERT INTO public.supplier (name, document, phone, is_active)
+                            SELECT @nome, @doc, @tel, TRUE WHERE NOT EXISTS (SELECT 1 FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome));
+                            SELECT id_supplier FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome) LIMIT 1;";
                         using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         {
-                            cmd.Parameters.AddWithValue("@nome", NpgsqlDbType.Varchar, nome);
-                            cmd.Parameters.AddWithValue("@doc", NpgsqlDbType.Varchar, (object)documento ?? DBNull.Value);
-                            cmd.Parameters.AddWithValue("@tel", NpgsqlDbType.Varchar, (object)telefone ?? DBNull.Value);
-
+                            cmd.Parameters.AddWithValue("@nome", dados.Nome.Trim());
+                            cmd.Parameters.AddWithValue("@doc", string.IsNullOrWhiteSpace(dados.Documento) ? (object)DBNull.Value : dados.Documento);
+                            cmd.Parameters.AddWithValue("@tel", string.IsNullOrWhiteSpace(dados.Telefone) ? (object)DBNull.Value : dados.Telefone);
                             return Convert.ToInt64(cmd.ExecuteScalar());
                         }
                     }
                 });
 
-                await CarregarFornecedoresBancoAsync(idCriado);
-                MessageBox.Show("Fornecedor adicionado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await CarregarFornecedoresBancoAsync(id);
             }
             catch (Exception ex)
             {
@@ -247,24 +179,18 @@ namespace ProjetoExtensionista2026_2
         {
             try
             {
-                string codigoGerado = await Task.Run(async () =>
+                object res = await Task.Run(async () =>
                 {
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        const string query = "SELECT COALESCE(MAX(id_product), 0) + 1 FROM public.product;";
-                        using (var cmd = new NpgsqlCommand(query, db.Conexao))
-                        {
-                            object resultado = await cmd.ExecuteScalarAsync();
-                            return (resultado != null && int.TryParse(resultado.ToString(), out int prox))
-                                ? prox.ToString()
-                                : "1";
-                        }
+                        using (var cmd = new NpgsqlCommand("SELECT COALESCE(MAX(id_product), 0) + 1 FROM public.product;", db.Conexao))
+                            return await cmd.ExecuteScalarAsync();
                     }
                 });
 
                 if (!IsDisposed && !ProdutoIdEmEdicao.HasValue)
-                    txtCodigo.Text = codigoGerado;
+                    txtCodigo.Text = res?.ToString() ?? "1";
             }
             catch
             {
@@ -280,220 +206,250 @@ namespace ProjetoExtensionista2026_2
             if (p == null) return;
 
             SuspendLayout();
+            _atualizandoValores = true;
+            try
+            {
+                _produtoRef = p;
+                ProdutoIdEmEdicao = p.Id;
+                _margemManual = false;
 
-            _produtoRef = p;
-            ProdutoIdEmEdicao = p.Id;
+                txtCodigo.Text = p.Id.ToString();
+                txtNome.Text = p.Nome ?? string.Empty;
+                txtDescricao.Text = p.Descricao ?? string.Empty;
+                txtLocalizacao.Text = p.Localizacao ?? string.Empty;
+                txtFotoUrl.Text = p.FotoUrl ?? string.Empty;
 
-            txtCodigo.Text = p.Id.ToString();
-            txtNome.Text = p.Nome ?? string.Empty;
-            txtDescricao.Text = p.Descricao ?? string.Empty;
-            txtLocalizacao.Text = p.Localizacao ?? string.Empty;
+                numPrecoCompra.Value = Math.Max(numPrecoCompra.Minimum, Math.Min(numPrecoCompra.Maximum, p.PrecoCompra));
+                numPrecoVenda.Value = Math.Max(numPrecoVenda.Minimum, Math.Min(numPrecoVenda.Maximum, p.PrecoVenda));
+                numEstoque.Value = Math.Max(numEstoque.Minimum, Math.Min(numEstoque.Maximum, (decimal)p.Estoque));
+                numEstoqueMinimo.Value = Math.Max(numEstoqueMinimo.Minimum, Math.Min(numEstoqueMinimo.Maximum, (decimal)p.EstoqueMinimo));
 
-            numPrecoCompra.Value = Math.Max(numPrecoCompra.Minimum, Math.Min(numPrecoCompra.Maximum, p.PrecoCompra));
-            numPrecoVenda.Value = Math.Max(numPrecoVenda.Minimum, Math.Min(numPrecoVenda.Maximum, p.PrecoVenda));
-            numEstoque.Value = Math.Max(numEstoque.Minimum, Math.Min(numEstoque.Maximum, (decimal)p.Estoque));
-            numEstoqueMinimo.Value = Math.Max(numEstoqueMinimo.Minimum, Math.Min(numEstoqueMinimo.Maximum, (decimal)p.EstoqueMinimo));
+                string unidade = string.IsNullOrWhiteSpace(p.Unidade) || p.Unidade.Trim().Equals("UN", StringComparison.OrdinalIgnoreCase)
+                    ? "UNID"
+                    : p.Unidade.Trim().ToUpper();
+                if (!cboUnidade.Items.Contains(unidade)) cboUnidade.Items.Add(unidade);
+                cboUnidade.SelectedItem = unidade;
 
-            string unidade = string.IsNullOrWhiteSpace(p.Unidade) ? "UNID" : p.Unidade.Trim().ToUpper();
-            if (unidade == "UN") unidade = "UNID";
-            if (!cboUnidade.Items.Contains(unidade))
-                cboUnidade.Items.Add(unidade);
-            cboUnidade.SelectedItem = unidade;
+                DefinirStatusProduto(p.Ativo);
+                DefinirImagemPreview(Properties.Resources.produto_ausente);
+                btnSalvar.Text = "Atualizar";
+            }
+            finally { _atualizandoValores = false; }
 
-            DefinirStatusProduto(p.Ativo);
             CalcularMargem();
-            txtFotoUrl.Text = p.FotoUrl ?? string.Empty;
-            btnSalvar.Text = "Atualizar";
-
-            DefinirImagemPreview(Properties.Resources.produto_ausente);
-
             ResumeLayout();
 
-            var tasks = new List<Task>();
-            if (cboCategoria.Items.Count == 0) tasks.Add(CarregarCategoriasBancoAsync());
-            if (cboFornecedor.Items.Count == 0) tasks.Add(CarregarFornecedoresBancoAsync());
+            var tarefas = new List<Task> { CarregarDataAtualizacaoAsync(p.Id) };
+            if (cboCategoria.Items.Count == 0) tarefas.Add(CarregarCategoriasBancoAsync());
+            if (cboFornecedor.Items.Count == 0) tarefas.Add(CarregarFornecedoresBancoAsync());
+            await Task.WhenAll(tarefas);
 
-            if (tasks.Count > 0)
-                await Task.WhenAll(tasks);
-
-            SelecionarItemComboPorNome(cboCategoria, p.Categoria);
-            SelecionarItemComboPorNome(cboFornecedor, p.Fornecedor);
+            SelecionarComboPorTexto(cboCategoria, p.Categoria);
+            SelecionarComboPorTexto(cboFornecedor, p.Fornecedor);
 
             if (!string.IsNullOrWhiteSpace(p.FotoUrl))
-                _ = CarregarImagemPorUrlAsync(p.FotoUrl, exibirErros: false);
+                _ = CarregarImagemPorUrlAsync(p.FotoUrl, false);
         }
 
-        private static void SelecionarItemComboPorNome(ComboBox combo, string nomeAlvo)
+        private async Task CarregarDataAtualizacaoAsync(int idProduto)
         {
-            if (string.IsNullOrWhiteSpace(nomeAlvo))
+            try
             {
-                combo.SelectedIndex = -1;
+                DateTime? atualizado = await Task.Run(async () =>
+                {
+                    using (var db = new Connection())
+                    {
+                        db.IniciarConexao();
+                        using (var cmd = new NpgsqlCommand("SELECT updated_at FROM public.product WHERE id_product = @id;", db.Conexao))
+                        {
+                            cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Integer, idProduto);
+                            object res = await cmd.ExecuteScalarAsync();
+                            return res != null && res != DBNull.Value ? Convert.ToDateTime(res) : (DateTime?)null;
+                        }
+                    }
+                });
+
+                if (!IsDisposed && ProdutoIdEmEdicao == idProduto)
+                    AtualizarDataAtualizacao(atualizado);
+            }
+            catch { }
+        }
+
+        private void AtualizarDataAtualizacao(DateTime? atualizado)
+        {
+            if (lblAtualizado != null)
+                lblAtualizado.Text = atualizado.HasValue ? $"Atualizado em: {atualizado.Value.ToLocalTime():dd/MM/yyyy HH:mm}" : "Atualizado em: -";
+        }
+
+        private static void SelecionarComboPorTexto(ComboBox combo, string alvo) =>
+            combo.SelectedIndex = string.IsNullOrWhiteSpace(alvo) ? -1 : combo.FindStringExact(alvo.Trim());
+
+        private void numPreco_ValueChanged(object sender, EventArgs e)
+        {
+            if (_atualizandoValores) return;
+
+            if (sender == numPrecoCompra && (_margemManual || numPrecoVenda.Value == 0m) && TryObterMargem(out decimal m) && m != 0m)
+            {
+                AplicarMargemNaVenda(m, false);
                 return;
             }
 
-            string alvo = nomeAlvo.Trim();
-            for (int i = 0; i < combo.Items.Count; i++)
-            {
-                if (combo.Items[i] is ItemCombo item &&
-                    string.Equals(item.Nome?.Trim(), alvo, StringComparison.OrdinalIgnoreCase))
-                {
-                    combo.SelectedIndex = i;
-                    return;
-                }
-            }
-            combo.SelectedIndex = -1;
+            if (sender == numPrecoVenda) _margemManual = false;
+            CalcularMargem();
         }
 
-        // Evento vinculado pelo Designer aos dois NumericUpDown (numPrecoCompra e numPrecoVenda)
-        private void numPreco_ValueChanged(object sender, EventArgs e) => CalcularMargem();
+        private void txtMargem_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            bool separador = (e.KeyChar == ',' || e.KeyChar == '.') && !txtMargem.Text.Contains(",") && !txtMargem.Text.Contains(".");
+            bool sinal = e.KeyChar == '-' && txtMargem.SelectionStart == 0 && !txtMargem.Text.Contains("-");
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && !separador && !sinal)
+                e.Handled = true;
+        }
+
+        private void txtMargem_TextChanged(object sender, EventArgs e)
+        {
+            if (_atualizandoValores) return;
+            _margemManual = true;
+            if (TryObterMargem(out decimal m)) AplicarMargemNaVenda(m, false);
+        }
+
+        private void txtMargem_Leave(object sender, EventArgs e)
+        {
+            if (_atualizandoValores) return;
+            if (TryObterMargem(out decimal m)) AplicarMargemNaVenda(m, true);
+            else { _margemManual = false; CalcularMargem(); }
+        }
+
+        private void txtMargem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; txtMargem_Leave(sender, EventArgs.Empty); }
+        }
+
+        private bool TryObterMargem(out decimal margem)
+        {
+            margem = 0m;
+            string limpo = txtMargem?.Text.Replace("%", "").Trim() ?? string.Empty;
+            return decimal.TryParse(limpo, NumberStyles.Number, CultureInfo.CurrentCulture, out margem) ||
+                   decimal.TryParse(limpo.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture, out margem);
+        }
+
+        private void AplicarMargemNaVenda(decimal margem, bool formatarTexto)
+        {
+            _atualizandoValores = true;
+            try
+            {
+                if (numPrecoCompra.Value > 0m)
+                {
+                    decimal venda = Math.Round(numPrecoCompra.Value * (1m + margem / 100m), 2);
+                    numPrecoVenda.Value = Math.Max(numPrecoVenda.Minimum, Math.Min(numPrecoVenda.Maximum, venda));
+                }
+                if (formatarTexto) txtMargem.Text = $"{margem:N2}%";
+            }
+            finally { _atualizandoValores = false; }
+        }
 
         private void CalcularMargem()
         {
-            decimal compra = numPrecoCompra.Value;
-            decimal venda = numPrecoVenda.Value;
-
-            txtMargem.Text = compra > 0
-                ? $"{((venda - compra) / compra) * 100m:F2}%"
-                : "0,00%";
+            if (_atualizandoValores) return;
+            _atualizandoValores = true;
+            try
+            {
+                txtMargem.Text = numPrecoCompra.Value > 0m
+                    ? $"{((numPrecoVenda.Value - numPrecoCompra.Value) / numPrecoCompra.Value) * 100m:N2}%"
+                    : "0,00%";
+            }
+            finally { _atualizandoValores = false; }
         }
 
         private async void btnSalvar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtNome.Text))
-            {
-                MessageBox.Show("O nome do produto é obrigatório.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNome.Focus();
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(cboUnidade.Text))
-            {
-                MessageBox.Show("Selecione a unidade de medida (UNID ou JG).", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cboUnidade.Focus();
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(txtNome.Text)) { MessageBox.Show("O nome do produto é obrigatório.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtNome.Focus(); return; }
+            if (string.IsNullOrWhiteSpace(cboUnidade.Text)) { MessageBox.Show("Selecione a unidade de medida.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning); cboUnidade.Focus(); return; }
+            if (numPrecoVenda.Value <= 0m) { MessageBox.Show("Informe um preço de venda maior que zero.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning); numPrecoVenda.Focus(); return; }
 
             btnSalvar.Enabled = false;
             Cursor.Current = Cursors.WaitCursor;
 
+            bool ehEdicao = ProdutoIdEmEdicao.HasValue;
             string nome = txtNome.Text.Trim();
             string descricao = string.IsNullOrWhiteSpace(txtDescricao.Text) ? null : txtDescricao.Text.Trim();
-            decimal precoCompra = numPrecoCompra.Value;
-            decimal precoVenda = numPrecoVenda.Value;
             string localizacao = string.IsNullOrWhiteSpace(txtLocalizacao.Text) ? null : txtLocalizacao.Text.Trim();
-            decimal estoque = numEstoque.Value;
-            int estoqueMin = (int)numEstoqueMinimo.Value;
-            string unidade = cboUnidade.Text.Trim();
-            bool statusAtivo = ObterStatusProduto();
             string fotoUrl = string.IsNullOrWhiteSpace(txtFotoUrl.Text) ? null : txtFotoUrl.Text.Trim();
-
-            long? idCategoria = (cboCategoria.SelectedItem as ItemCombo)?.Id;
-            long? idFornecedor = (cboFornecedor.SelectedItem as ItemCombo)?.Id;
-            string textoCategoria = cboCategoria.Text;
-            string textoFornecedor = cboFornecedor.Text;
+            long? idCat = (cboCategoria.SelectedItem as ItemCombo)?.Id;
+            long? idForn = (cboFornecedor.SelectedItem as ItemCombo)?.Id;
 
             try
             {
-                int idFinal = await Task.Run(async () =>
+                var res = await Task.Run(async () =>
                 {
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
 
-                        string query = ProdutoIdEmEdicao.HasValue
-                            ? @"UPDATE public.product SET
-                                    name = @nome,
-                                    description = @descricao,
-                                    purchase_price = @preco_compra,
-                                    sale_price = @preco_venda,
-                                    location = @localizacao,
-                                    stock_quantity = @estoque,
-                                    min_stock = @estoque_min,
-                                    unit = @unidade,
-                                    id_category = @id_categoria,
-                                    id_supplier = @id_fornecedor,
-                                    is_active = @ativo,
-                                    image_url = @foto_url,
-                                    updated_at = NOW()
-                                WHERE id_product = @id;"
-                            : @"INSERT INTO public.product (
-                                    name, description, purchase_price, sale_price,
-                                    location, stock_quantity, min_stock, unit,
-                                    id_category, id_supplier, is_active, image_url
-                                ) VALUES (
-                                    @nome, @descricao, @preco_compra, @preco_venda,
-                                    @localizacao, @estoque, @estoque_min, @unidade,
-                                    @id_categoria, @id_fornecedor, @ativo, @foto_url
-                                ) RETURNING id_product;";
+                        string sql = ehEdicao
+                            ? @"UPDATE public.product SET name=@nome, description=@desc, purchase_price=@compra, sale_price=@venda,
+                                location=@loc, stock_quantity=@est, min_stock=@min, unit=@un, id_category=@cat, id_supplier=@forn,
+                                is_active=@ativo, image_url=@foto, updated_at=NOW() WHERE id_product=@id RETURNING id_product, updated_at;"
+                            : @"INSERT INTO public.product (name, description, purchase_price, sale_price, location, stock_quantity,
+                                min_stock, unit, id_category, id_supplier, is_active, image_url) VALUES (@nome, @desc, @compra, @venda,
+                                @loc, @est, @min, @un, @cat, @forn, @ativo, @foto) RETURNING id_product, updated_at;";
 
-                        using (var cmd = new NpgsqlCommand(query, db.Conexao))
+                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         {
-                            if (ProdutoIdEmEdicao.HasValue)
-                                cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Integer, ProdutoIdEmEdicao.Value);
+                            if (ehEdicao) cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Integer, ProdutoIdEmEdicao.Value);
+                            cmd.Parameters.AddWithValue("@nome", nome);
+                            cmd.Parameters.AddWithValue("@desc", (object)descricao ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue("@compra", numPrecoCompra.Value);
+                            cmd.Parameters.AddWithValue("@venda", numPrecoVenda.Value);
+                            cmd.Parameters.AddWithValue("@loc", (object)localizacao ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue("@est", numEstoque.Value);
+                            cmd.Parameters.AddWithValue("@min", (int)numEstoqueMinimo.Value);
+                            cmd.Parameters.AddWithValue("@un", cboUnidade.Text.Trim());
+                            cmd.Parameters.AddWithValue("@cat", (object)idCat ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue("@forn", (object)idForn ?? DBNull.Value);
+                            cmd.Parameters.AddWithValue("@ativo", ObterStatusProduto());
+                            cmd.Parameters.AddWithValue("@foto", (object)fotoUrl ?? DBNull.Value);
 
-                            cmd.Parameters.AddWithValue("@nome", NpgsqlDbType.Varchar, nome);
-                            cmd.Parameters.AddWithValue("@descricao", NpgsqlDbType.Text, (object)descricao ?? DBNull.Value);
-                            cmd.Parameters.AddWithValue("@preco_compra", NpgsqlDbType.Numeric, precoCompra);
-                            cmd.Parameters.AddWithValue("@preco_venda", NpgsqlDbType.Numeric, precoVenda);
-                            cmd.Parameters.AddWithValue("@localizacao", NpgsqlDbType.Varchar, (object)localizacao ?? DBNull.Value);
-                            cmd.Parameters.AddWithValue("@estoque", NpgsqlDbType.Numeric, estoque);
-                            cmd.Parameters.AddWithValue("@estoque_min", NpgsqlDbType.Integer, estoqueMin);
-                            cmd.Parameters.AddWithValue("@unidade", NpgsqlDbType.Varchar, unidade);
-                            cmd.Parameters.AddWithValue("@id_categoria", NpgsqlDbType.Bigint, (object)idCategoria ?? DBNull.Value);
-                            cmd.Parameters.AddWithValue("@id_fornecedor", NpgsqlDbType.Bigint, (object)idFornecedor ?? DBNull.Value);
-                            cmd.Parameters.AddWithValue("@ativo", NpgsqlDbType.Boolean, statusAtivo);
-                            cmd.Parameters.AddWithValue("@foto_url", NpgsqlDbType.Text, (object)fotoUrl ?? DBNull.Value);
-
-                            if (ProdutoIdEmEdicao.HasValue)
+                            using (var r = await cmd.ExecuteReaderAsync())
                             {
-                                await cmd.ExecuteNonQueryAsync();
-                                return ProdutoIdEmEdicao.Value;
+                                await r.ReadAsync();
+                                return (Convert.ToInt32(r["id_product"]), r["updated_at"] != DBNull.Value ? Convert.ToDateTime(r["updated_at"]) : (DateTime?)null);
                             }
-
-                            return Convert.ToInt32(await cmd.ExecuteScalarAsync());
                         }
                     }
                 });
 
+                AtualizarDataAtualizacao(res.Item2);
+
                 if (_produtoRef != null)
                 {
-                    _produtoRef.Id = idFinal;
+                    _produtoRef.Id = res.Item1;
                     _produtoRef.Nome = nome;
                     _produtoRef.Descricao = descricao ?? string.Empty;
-                    _produtoRef.PrecoCompra = precoCompra;
-                    _produtoRef.PrecoVenda = precoVenda;
+                    _produtoRef.PrecoCompra = numPrecoCompra.Value;
+                    _produtoRef.PrecoVenda = numPrecoVenda.Value;
                     _produtoRef.Localizacao = localizacao ?? string.Empty;
-                    _produtoRef.Estoque = (int)estoque;
-                    _produtoRef.EstoqueMinimo = estoqueMin;
-                    _produtoRef.Unidade = unidade;
-                    _produtoRef.Categoria = textoCategoria;
-                    _produtoRef.Fornecedor = textoFornecedor;
-                    _produtoRef.Ativo = statusAtivo;
+                    _produtoRef.Estoque = (int)numEstoque.Value;
+                    _produtoRef.EstoqueMinimo = (int)numEstoqueMinimo.Value;
+                    _produtoRef.Unidade = cboUnidade.Text.Trim();
+                    _produtoRef.Categoria = cboCategoria.Text;
+                    _produtoRef.Fornecedor = cboFornecedor.Text;
+                    _produtoRef.Ativo = ObterStatusProduto();
                     _produtoRef.FotoUrl = fotoUrl;
                 }
 
-                string msg = ProdutoIdEmEdicao.HasValue
-                    ? "Produto atualizado com sucesso!"
-                    : $"Produto cadastrado com sucesso! (Código: {idFinal})";
+                MessageBox.Show(ehEdicao ? "Produto atualizado com sucesso!" : $"Produto cadastrado! (Código: {res.Item1})", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                MessageBox.Show(msg, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                if (!ProdutoIdEmEdicao.HasValue)
-                    await LimparCamposAsync();
-
+                if (!ehEdicao) await LimparCamposAsync();
                 AoConcluirOperacao?.Invoke();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao salvar no banco de dados:\n{ex.Message}", "Erro de Operação", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Erro ao salvar:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                if (!IsDisposed)
-                {
-                    btnSalvar.Enabled = true;
-                    Cursor.Current = Cursors.Default;
-                }
+                if (!IsDisposed) { btnSalvar.Enabled = true; Cursor.Current = Cursors.Default; }
             }
         }
 
@@ -503,130 +459,79 @@ namespace ProjetoExtensionista2026_2
         public async Task LimparCamposAsync()
         {
             SuspendLayout();
+            _atualizandoValores = true;
+            try
+            {
+                _produtoRef = null;
+                ProdutoIdEmEdicao = null;
+                _margemManual = false;
 
-            _produtoRef = null;
-            ProdutoIdEmEdicao = null;
+                txtCodigo.Text = "...";
+                txtNome.Clear();
+                txtDescricao.Clear();
+                txtLocalizacao.Clear();
+                txtFotoUrl.Clear();
+                txtMargem.Text = "0,00%";
 
-            txtCodigo.Text = "...";
-            txtNome.Clear();
-            txtDescricao.Clear();
-            txtLocalizacao.Clear();
-            txtFotoUrl.Clear();
-            txtMargem.Text = "0,00%";
+                numPrecoCompra.Value = numPrecoVenda.Value = numEstoque.Value = numEstoqueMinimo.Value = 0;
+                if (cboUnidade.Items.Count > 0) cboUnidade.SelectedIndex = 0;
+                cboCategoria.SelectedIndex = cboFornecedor.SelectedIndex = -1;
 
-            numPrecoCompra.Value = 0;
-            numPrecoVenda.Value = 0;
-            numEstoque.Value = 0;
-            numEstoqueMinimo.Value = 0;
-
-            if (cboUnidade.Items.Count > 0) cboUnidade.SelectedIndex = 0;
-            cboCategoria.SelectedIndex = -1;
-            cboFornecedor.SelectedIndex = -1;
-
-            DefinirStatusProduto(true);
-            DefinirImagemPreview(Properties.Resources.produto_ausente);
-            btnSalvar.Text = "Salvar";
+                DefinirStatusProduto(true);
+                DefinirImagemPreview(Properties.Resources.produto_ausente);
+                btnSalvar.Text = "Salvar";
+                AtualizarDataAtualizacao(null);
+            }
+            finally { _atualizandoValores = false; }
 
             ResumeLayout();
             txtNome.Focus();
-
             await GerarProximoCodigoAsync();
         }
 
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            FindForm()?.Close();
-            AoConcluirOperacao?.Invoke();
-        }
-
-        private void btnExcluirFoto_Click(object sender, EventArgs e)
-        {
-            DefinirImagemPreview(Properties.Resources.produto_ausente);
-            txtFotoUrl.Clear();
-        }
+        private void btnCancelar_Click(object sender, EventArgs e) { FindForm()?.Close(); AoConcluirOperacao?.Invoke(); }
+        private void btnExcluirFoto_Click(object sender, EventArgs e) { DefinirImagemPreview(Properties.Resources.produto_ausente); txtFotoUrl.Clear(); }
 
         private void btnEscolherArquivo_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog())
+            using (var ofd = new OpenFileDialog { Title = "Selecione a imagem", Filter = "Imagens (*.jpg;*.jpeg;*.png;*.webp)|*.jpg;*.jpeg;*.png;*.webp" })
             {
-                ofd.Title = "Selecione a imagem do produto";
-                ofd.Filter = "Imagens (*.jpg;*.jpeg;*.png;*.webp)|*.jpg;*.jpeg;*.png;*.webp|Todos os arquivos (*.*)|*.*";
+                if (ofd.ShowDialog() != DialogResult.OK) return;
+                using (var ms = new MemoryStream(File.ReadAllBytes(ofd.FileName)))
+                using (var img = Image.FromStream(ms))
+                    DefinirImagemPreview(new Bitmap(img));
 
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        byte[] bytes = File.ReadAllBytes(ofd.FileName);
-                        using (var ms = new MemoryStream(bytes))
-                        using (var tempImg = Image.FromStream(ms))
-                        {
-                            DefinirImagemPreview(new Bitmap(tempImg));
-                        }
-                        txtFotoUrl.Text = ofd.FileName;
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show($"Erro ao carregar a imagem selecionada: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
+                txtFotoUrl.Text = ofd.FileName;
             }
         }
 
-        private async void btnCarregarFoto_Click(object sender, EventArgs e) =>
-            await CarregarImagemPorUrlAsync(txtFotoUrl.Text.Trim(), exibirErros: true);
+        private async void btnCarregarFoto_Click(object sender, EventArgs e) => await CarregarImagemPorUrlAsync(txtFotoUrl.Text.Trim(), true);
 
         private async void txtFotoUrl_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                await CarregarImagemPorUrlAsync(txtFotoUrl.Text.Trim(), exibirErros: true);
-            }
+            if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; await CarregarImagemPorUrlAsync(txtFotoUrl.Text.Trim(), true); }
         }
 
-        private async Task CarregarImagemPorUrlAsync(string url, bool exibirErros = true)
+        private async Task CarregarImagemPorUrlAsync(string url, bool exibirErros)
         {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                if (exibirErros)
-                {
-                    MessageBox.Show("Por favor, informe a URL da imagem.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    txtFotoUrl.Focus();
-                }
-                return;
-            }
+            if (string.IsNullOrWhiteSpace(url)) return;
 
             try
             {
-                if (!_imageBytesCache.TryGetValue(url, out byte[] dadosImagem))
+                if (!_imageBytesCache.TryGetValue(url, out byte[] bytes))
                 {
-                    if (File.Exists(url))
-                    {
-                        dadosImagem = await Task.Run(() => File.ReadAllBytes(url));
-                    }
-                    else if (Uri.TryCreate(url, UriKind.Absolute, out Uri uriResult) &&
-                            (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-                    {
-                        dadosImagem = await _httpClient.GetByteArrayAsync(uriResult);
-                    }
-                    else
-                    {
-                        if (exibirErros)
-                            MessageBox.Show("Informe uma URL válida iniciada por http:// ou https://", "URL Inválida", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return;
-                    }
+                    bytes = File.Exists(url)
+                        ? await Task.Run(() => File.ReadAllBytes(url))
+                        : await _httpClient.GetByteArrayAsync(url);
 
-                    if (dadosImagem != null && dadosImagem.Length > 0)
-                        _imageBytesCache.TryAdd(url, dadosImagem);
+                    if (bytes?.Length > 0) _imageBytesCache.TryAdd(url, bytes);
                 }
 
-                if (dadosImagem != null && !IsDisposed)
+                if (bytes != null && !IsDisposed)
                 {
-                    using (var ms = new MemoryStream(dadosImagem))
-                    using (var imgOriginal = Image.FromStream(ms))
-                    {
-                        DefinirImagemPreview(new Bitmap(imgOriginal));
-                    }
+                    using (var ms = new MemoryStream(bytes))
+                    using (var img = Image.FromStream(ms))
+                        DefinirImagemPreview(new Bitmap(img));
                 }
             }
             catch (Exception ex)
@@ -634,96 +539,103 @@ namespace ProjetoExtensionista2026_2
                 if (!IsDisposed)
                 {
                     DefinirImagemPreview(Properties.Resources.produto_ausente);
-                    if (exibirErros)
-                    {
-                        MessageBox.Show($"Não foi possível carregar a imagem do link informado.\n\nDetalhes: {ex.Message}",
-                                        "Falha ao Carregar Imagem", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
+                    if (exibirErros) MessageBox.Show($"Falha ao carregar imagem:\n{ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private void DefinirImagemPreview(Image novaImagem)
+        private void DefinirImagemPreview(Image nova)
         {
             if (picFotoPreview.Image != null && !ReferenceEquals(picFotoPreview.Image, Properties.Resources.produto_ausente))
                 picFotoPreview.Image.Dispose();
-
-            picFotoPreview.Image = novaImagem;
+            picFotoPreview.Image = nova;
         }
     }
 
     public static class PromptDialog
     {
-        public static string Mostrar(string texto, string titulo)
+        public static string Mostrar(string texto, string titulo, int maxLength = 150)
         {
-            using (Form formPrompt = new Form
+            using (var form = new Form { ClientSize = new Size(370, 130), FormBorderStyle = FormBorderStyle.FixedDialog, Text = titulo, StartPosition = FormStartPosition.CenterParent, MaximizeBox = false, MinimizeBox = false })
             {
-                Width = 380,
-                Height = 160,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                Text = titulo,
-                StartPosition = FormStartPosition.CenterParent,
-                MaximizeBox = false,
-                MinimizeBox = false
-            })
-            {
-                Label lblTexto = new Label { Left = 16, Top = 16, Width = 330, Text = texto };
-                TextBox txtInput = new TextBox { Left = 16, Top = 40, Width = 330 };
-                Button btnOk = new Button { Text = "Salvar", Left = 180, Width = 80, Top = 75, DialogResult = DialogResult.OK };
-                Button btnCancel = new Button { Text = "Cancelar", Left = 266, Width = 80, Top = 75, DialogResult = DialogResult.Cancel };
+                var lbl = new Label { Left = 16, Top = 16, Width = 338, Text = texto };
+                var txt = new TextBox { Left = 16, Top = 40, Width = 338, MaxLength = maxLength, Tag = "obrigatorio" };
+                var btnOk = new Button { Text = "Salvar", Left = 180, Width = 84, Top = 82, Tag = "sucesso", DialogResult = DialogResult.OK };
+                var btnCancel = new Button { Text = "Cancelar", Left = 270, Width = 84, Top = 82, DialogResult = DialogResult.Cancel };
 
-                formPrompt.Controls.AddRange(new Control[] { lblTexto, txtInput, btnOk, btnCancel });
-                formPrompt.AcceptButton = btnOk;
-                formPrompt.CancelButton = btnCancel;
+                form.Controls.AddRange(new Control[] { lbl, txt, btnOk, btnCancel });
+                form.AcceptButton = btnOk;
+                form.CancelButton = btnCancel;
+                GerenciadorTema.AplicarTema(form);
 
-                return formPrompt.ShowDialog() == DialogResult.OK ? txtInput.Text : string.Empty;
+                return form.ShowDialog() == DialogResult.OK ? txt.Text : string.Empty;
             }
         }
 
         public static (bool Confirmado, string Nome, string Documento, string Telefone) MostrarFornecedor()
         {
-            using (Form formPrompt = new Form
+            using (var form = new Form { ClientSize = new Size(390, 235), FormBorderStyle = FormBorderStyle.FixedDialog, Text = "Novo Fornecedor", StartPosition = FormStartPosition.CenterParent, MaximizeBox = false, MinimizeBox = false })
             {
-                Width = 400,
-                Height = 270,
-                FormBorderStyle = FormBorderStyle.FixedDialog,
-                Text = "Novo Fornecedor",
-                StartPosition = FormStartPosition.CenterParent,
-                MaximizeBox = false,
-                MinimizeBox = false
-            })
-            {
-                Label lblNome = new Label { Left = 16, Top = 16, Width = 350, Text = "Nome / Razão Social *:" };
-                TextBox txtNome = new TextBox { Left = 16, Top = 38, Width = 350 };
+                var lblNome = new Label { Left = 16, Top = 16, Width = 358, Text = "Nome / Razão Social *:" };
+                var txtNome = new TextBox { Left = 16, Top = 38, Width = 358, MaxLength = 150, Tag = "obrigatorio" };
+                var lblDoc = new Label { Left = 16, Top = 72, Width = 358, Text = "Documento (CPF / CNPJ):" };
+                var txtDoc = new TextBox { Left = 16, Top = 94, Width = 358, MaxLength = 18 };
+                var lblTel = new Label { Left = 16, Top = 128, Width = 358, Text = "Telefone:" };
+                var txtTel = new TextBox { Left = 16, Top = 150, Width = 358, MaxLength = 15 };
+                var btnOk = new Button { Text = "Salvar", Left = 200, Width = 84, Top = 190, Tag = "sucesso" };
+                var btnCancel = new Button { Text = "Cancelar", Left = 290, Width = 84, Top = 190, DialogResult = DialogResult.Cancel };
 
-                Label lblDoc = new Label { Left = 16, Top = 72, Width = 350, Text = "Documento (CPF / CNPJ):" };
-                TextBox txtDoc = new TextBox { Left = 16, Top = 94, Width = 350, MaxLength = 20 };
-
-                Label lblTel = new Label { Left = 16, Top = 128, Width = 350, Text = "Telefone:" };
-                TextBox txtTel = new TextBox { Left = 16, Top = 150, Width = 350, MaxLength = 20 };
-
-                Button btnOk = new Button { Text = "Salvar", Left = 200, Width = 80, Top = 190 };
-                Button btnCancel = new Button { Text = "Cancelar", Left = 286, Width = 80, Top = 190, DialogResult = DialogResult.Cancel };
+                AplicarMascara(txtDoc, 14, FormatarDocumento);
+                AplicarMascara(txtTel, 11, FormatarTelefone);
 
                 btnOk.Click += (s, e) =>
                 {
-                    if (string.IsNullOrWhiteSpace(txtNome.Text))
-                    {
-                        MessageBox.Show("O nome do fornecedor é obrigatório.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        txtNome.Focus();
-                        return;
-                    }
-                    formPrompt.DialogResult = DialogResult.OK;
-                    formPrompt.Close();
+                    string doc = Digitos(txtDoc.Text), tel = Digitos(txtTel.Text);
+                    if (string.IsNullOrWhiteSpace(txtNome.Text)) { MessageBox.Show("O nome do fornecedor é obrigatório.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtNome.Focus(); return; }
+                    if (doc.Length > 0 && doc.Length != 11 && doc.Length != 14) { MessageBox.Show("CPF ou CNPJ inválido.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtDoc.Focus(); return; }
+                    if (tel.Length > 0 && (tel.Length < 10 || tel.Length > 11)) { MessageBox.Show("Telefone inválido.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning); txtTel.Focus(); return; }
+                    form.DialogResult = DialogResult.OK;
+                    form.Close();
                 };
 
-                formPrompt.Controls.AddRange(new Control[] { lblNome, txtNome, lblDoc, txtDoc, lblTel, txtTel, btnOk, btnCancel });
-                formPrompt.AcceptButton = btnOk;
-                formPrompt.CancelButton = btnCancel;
+                form.Controls.AddRange(new Control[] { lblNome, txtNome, lblDoc, txtDoc, lblTel, txtTel, btnOk, btnCancel });
+                form.AcceptButton = btnOk;
+                form.CancelButton = btnCancel;
+                GerenciadorTema.AplicarTema(form);
 
-                bool ok = formPrompt.ShowDialog() == DialogResult.OK;
-                return (ok, txtNome.Text, txtDoc.Text, txtTel.Text);
+                bool ok = form.ShowDialog() == DialogResult.OK;
+                return (ok, txtNome.Text, Digitos(txtDoc.Text), Digitos(txtTel.Text));
             }
         }
+
+        private static string Digitos(string s) => string.IsNullOrEmpty(s) ? string.Empty : new string(s.Where(char.IsDigit).ToArray());
+
+        private static void AplicarMascara(TextBox txt, int max, Func<string, string> fmt)
+        {
+            bool travado = false;
+            txt.KeyPress += (s, e) => { if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) e.Handled = true; };
+            txt.TextChanged += (s, e) =>
+            {
+                if (travado) return;
+                travado = true;
+                string d = Digitos(txt.Text);
+                txt.Text = fmt(d.Length > max ? d.Substring(0, max) : d);
+                txt.SelectionStart = txt.Text.Length;
+                travado = false;
+            };
+        }
+
+        private static string FormatarDocumento(string d) => d.Length <= 11
+            ? (d.Length > 9 ? $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6, 3)}-{d.Substring(9)}"
+             : d.Length > 6 ? $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6)}"
+             : d.Length > 3 ? $"{d.Substring(0, 3)}.{d.Substring(3)}" : d)
+            : (d.Length > 12 ? $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8, 4)}-{d.Substring(12)}"
+             : $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8)}");
+
+        private static string FormatarTelefone(string d) => d.Length > 10
+            ? $"({d.Substring(0, 2)}) {d.Substring(2, 5)}-{d.Substring(7)}"
+            : d.Length > 6 ? $"({d.Substring(0, 2)}) {d.Substring(2, 4)}-{d.Substring(6)}"
+            : d.Length > 2 ? $"({d.Substring(0, 2)}) {d.Substring(2)}"
+            : d.Length > 0 ? $"({d}" : string.Empty;
     }
 }

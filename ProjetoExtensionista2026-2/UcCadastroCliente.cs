@@ -3,8 +3,8 @@ using NpgsqlTypes;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
-using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -16,15 +16,7 @@ namespace ProjetoExtensionista2026_2
 {
     public partial class UcCadastroCliente : UserControl
     {
-        private static readonly HttpClient ClienteHttp = new HttpClient
-        {
-            Timeout = TimeSpan.FromSeconds(10)
-        };
-
-        private static readonly Color FundoObrigatorioClaro = Color.FromArgb(239, 246, 255);
-        private static readonly Color FundoObrigatorioEscuro = Color.FromArgb(30, 43, 69);
-
-        private bool _formatandoCampo = false;
+        private static readonly HttpClient ClienteHttp = new HttpClient { Timeout = TimeSpan.FromSeconds(10) };
 
         public long? ClienteIdEmEdicao { get; private set; }
         public event Action AoConcluirOperacao;
@@ -32,133 +24,67 @@ namespace ProjetoExtensionista2026_2
         public UcCadastroCliente()
         {
             InitializeComponent();
-            ConfigurarMascarasECamposObrigatorios();
+
+            DoubleBuffered = true;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
+
+            ConfigurarCampos();
+            AtualizarDataAtualizacao(null);
+            _ = GerarProximoCodigoAsync();
         }
 
-        private void ConfigurarMascarasECamposObrigatorios()
+        private void ConfigurarCampos()
         {
-            ConfigurarCampoObrigatorio(txtNome);
-            ConfigurarCampoObrigatorio(txtCpfCnpj);
-            ConfigurarCampoObrigatorio(txtTelefone);
+            // Destaque azul suave via GerenciadorTema
+            txtNome.Tag = txtCpfCnpj.Tag = txtTelefone.Tag = "obrigatorio";
 
-            if (txtCpfCnpj != null)
+            // Limites alinhados com a tabela customer
+            txtNome.MaxLength = 150;
+            txtApelido.MaxLength = 150;
+            txtCpfCnpj.MaxLength = 18;
+            txtRgIe.MaxLength = 20;
+            txtTelefone.MaxLength = 15;
+            txtEmail.MaxLength = 150;
+            txtCep.MaxLength = 9;
+            txtRua.MaxLength = 150;
+            txtNumero.MaxLength = 10;
+            txtBairro.MaxLength = 60;
+            txtCidade.MaxLength = 80;
+            txtDescricao.MaxLength = 1000;
+
+            AplicarMascara(txtCpfCnpj, 14, FormatarDocumento);
+            AplicarMascara(txtTelefone, 11, FormatarTelefone);
+            AplicarMascara(txtCep, 8, FormatarCep);
+
+            txtNumero.KeyPress += (s, e) =>
             {
-                txtCpfCnpj.KeyPress += ApenasNumeros_KeyPress;
-                txtCpfCnpj.TextChanged += (s, e) => AplicarMascaraDinamica(txtCpfCnpj, 14, FormatarCpfCnpjProgressivo);
-            }
-
-            if (txtTelefone != null)
-            {
-                txtTelefone.KeyPress += ApenasNumeros_KeyPress;
-                txtTelefone.TextChanged += (s, e) => AplicarMascaraDinamica(txtTelefone, 11, FormatarTelefoneProgressivo);
-            }
-
-            if (txtCep != null)
-            {
-                txtCep.KeyPress += ApenasNumeros_KeyPress;
-                txtCep.TextChanged += (s, e) => AplicarMascaraDinamica(txtCep, 8, FormatarCepProgressivo);
-            }
-
-            if (txtNumero != null)
-            {
-                txtNumero.KeyPress += (s, e) =>
-                {
-                    if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '-' && e.KeyChar != '/')
-                        e.Handled = true;
-                };
-            }
-
-            this.Load += (s, e) => AplicarDestaqueObrigatorios();
-            this.VisibleChanged += (s, e) => { if (this.Visible) AplicarDestaqueObrigatorios(); };
-        }
-
-        private void ConfigurarCampoObrigatorio(TextBox txt)
-        {
-            if (txt == null) return;
-
-            txt.BackColor = ObterCorObrigatoria();
-            txt.Leave += (s, e) => txt.BackColor = ObterCorObrigatoria();
-            txt.BackColorChanged += (s, e) =>
-            {
-                Color desejada = ObterCorObrigatoria();
-                if (txt.BackColor != desejada)
-                    txt.BackColor = desejada;
+                if (!char.IsControl(e.KeyChar) && !char.IsLetterOrDigit(e.KeyChar) && e.KeyChar != '-' && e.KeyChar != '/')
+                    e.Handled = true;
             };
         }
 
-        private void AplicarDestaqueObrigatorios()
+        public async Task GerarProximoCodigoAsync()
         {
-            Color cor = ObterCorObrigatoria();
-            if (txtNome != null) txtNome.BackColor = cor;
-            if (txtCpfCnpj != null) txtCpfCnpj.BackColor = cor;
-            if (txtTelefone != null) txtTelefone.BackColor = cor;
-        }
-
-        private static Color ObterCorObrigatoria() =>
-            GerenciadorTema.ModoEscuro ? FundoObrigatorioEscuro : FundoObrigatorioClaro;
-
-        private static void ApenasNumeros_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
-                e.Handled = true;
-        }
-
-        private void AplicarMascaraDinamica(TextBox txt, int maxDigitos, Func<string, string> formatador)
-        {
-            if (_formatandoCampo || txt == null) return;
-            _formatandoCampo = true;
-
             try
             {
-                string digitos = ExtrairDigitos(txt.Text);
-                if (digitos.Length > maxDigitos)
-                    digitos = digitos.Substring(0, maxDigitos);
-
-                string formatado = formatador(digitos);
-                if (txt.Text != formatado)
+                object res = await Task.Run(async () =>
                 {
-                    txt.Text = formatado;
-                    txt.SelectionStart = txt.Text.Length;
-                }
+                    using (var db = new Connection())
+                    {
+                        db.IniciarConexao();
+                        using (var cmd = new NpgsqlCommand("SELECT COALESCE(MAX(id_customer), 0) + 1 FROM public.customer;", db.Conexao))
+                            return await cmd.ExecuteScalarAsync();
+                    }
+                });
+
+                if (!IsDisposed && !ClienteIdEmEdicao.HasValue)
+                    txtCodigo.Text = res?.ToString() ?? "1";
             }
-            finally
+            catch
             {
-                _formatandoCampo = false;
+                if (!IsDisposed && !ClienteIdEmEdicao.HasValue)
+                    txtCodigo.Text = "1";
             }
-        }
-
-        private static string FormatarCpfCnpjProgressivo(string d)
-        {
-            if (string.IsNullOrEmpty(d)) return string.Empty;
-
-            if (d.Length <= 11)
-            {
-                if (d.Length <= 3) return d;
-                if (d.Length <= 6) return $"{d.Substring(0, 3)}.{d.Substring(3)}";
-                if (d.Length <= 9) return $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6)}";
-                return $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6, 3)}-{d.Substring(9)}";
-            }
-
-            if (d.Length <= 12)
-                return $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8)}";
-
-            return $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8, 4)}-{d.Substring(12)}";
-        }
-
-        private static string FormatarTelefoneProgressivo(string d)
-        {
-            if (string.IsNullOrEmpty(d)) return string.Empty;
-            if (d.Length <= 2) return $"({d}";
-            if (d.Length <= 6) return $"({d.Substring(0, 2)}) {d.Substring(2)}";
-            if (d.Length <= 10) return $"({d.Substring(0, 2)}) {d.Substring(2, 4)}-{d.Substring(6)}";
-            return $"({d.Substring(0, 2)}) {d.Substring(2, 5)}-{d.Substring(7)}";
-        }
-
-        private static string FormatarCepProgressivo(string d)
-        {
-            if (string.IsNullOrEmpty(d)) return string.Empty;
-            if (d.Length <= 5) return d;
-            return $"{d.Substring(0, 5)}-{d.Substring(5)}";
         }
 
         public void CarregarDadosParaEdicao(ClienteDTO c)
@@ -170,11 +96,11 @@ namespace ProjetoExtensionista2026_2
             txtCodigo.Text = c.Id.ToString();
             txtNome.Text = c.Nome ?? string.Empty;
             txtApelido.Text = c.Apelido ?? string.Empty;
-            txtCpfCnpj.Text = ExtrairDigitos(c.CpfCnpj);
+            txtCpfCnpj.Text = Digitos(c.CpfCnpj);
             txtRgIe.Text = c.RgIe ?? string.Empty;
-            txtTelefone.Text = ExtrairDigitos(c.Telefone);
+            txtTelefone.Text = Digitos(c.Telefone);
             txtEmail.Text = c.Email ?? string.Empty;
-            txtCep.Text = ExtrairDigitos(c.Cep);
+            txtCep.Text = Digitos(c.Cep);
             txtRua.Text = c.Rua ?? string.Empty;
             txtNumero.Text = c.Numero ?? string.Empty;
             txtBairro.Text = c.Bairro ?? string.Empty;
@@ -188,10 +114,43 @@ namespace ProjetoExtensionista2026_2
 
             rbAtivo.Checked = c.Ativo;
             btnSalvar.Text = "Atualizar";
-            AplicarDestaqueObrigatorios();
+
+            _ = CarregarDataAtualizacaoAsync(c.Id);
         }
 
-        private void btnSalvar_Click(object sender, EventArgs e)
+        private async Task CarregarDataAtualizacaoAsync(long idCliente)
+        {
+            try
+            {
+                DateTime? atualizado = await Task.Run(async () =>
+                {
+                    using (var db = new Connection())
+                    {
+                        db.IniciarConexao();
+                        using (var cmd = new NpgsqlCommand("SELECT updated_at FROM public.customer WHERE id_customer = @id;", db.Conexao))
+                        {
+                            cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, idCliente);
+                            object res = await cmd.ExecuteScalarAsync();
+                            return res != null && res != DBNull.Value ? Convert.ToDateTime(res) : (DateTime?)null;
+                        }
+                    }
+                });
+
+                if (!IsDisposed && ClienteIdEmEdicao == idCliente)
+                    AtualizarDataAtualizacao(atualizado);
+            }
+            catch { }
+        }
+
+        private void AtualizarDataAtualizacao(DateTime? atualizado)
+        {
+            if (lblAtualizado != null)
+                lblAtualizado.Text = atualizado.HasValue
+                    ? $"Atualizado em: {atualizado.Value.ToLocalTime():dd/MM/yyyy HH:mm}"
+                    : "Atualizado em: -";
+        }
+
+        private async void btnSalvar_Click(object sender, EventArgs e)
         {
             string nome = txtNome.Text.Trim();
             if (string.IsNullOrWhiteSpace(nome))
@@ -201,7 +160,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            string docDigitos = ExtrairDigitos(txtCpfCnpj.Text);
+            string docDigitos = Digitos(txtCpfCnpj.Text);
             if (docDigitos.Length != 11 && docDigitos.Length != 14)
             {
                 MessageBox.Show("Informe um CPF (11 dígitos) ou CNPJ (14 dígitos) válido.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -209,7 +168,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            string foneDigitos = ExtrairDigitos(txtTelefone.Text);
+            string foneDigitos = Digitos(txtTelefone.Text);
             if (foneDigitos.Length < 10 || foneDigitos.Length > 11)
             {
                 MessageBox.Show("Informe um telefone válido com DDD (10 ou 11 dígitos).", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -217,7 +176,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            string cepDigitos = ExtrairDigitos(txtCep.Text);
+            string cepDigitos = Digitos(txtCep.Text);
             if (cepDigitos.Length > 0 && cepDigitos.Length != 8)
             {
                 MessageBox.Show("O CEP deve conter 8 dígitos ou ficar em branco.", "Validação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -225,81 +184,89 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
+            btnSalvar.Enabled = false;
+            Cursor.Current = Cursors.WaitCursor;
+
+            bool ehEdicao = ClienteIdEmEdicao.HasValue;
+            object apelido = ValorOuNulo(txtApelido.Text);
+            object rgIe = ValorOuNulo(txtRgIe.Text);
+            object email = ValorOuNulo(txtEmail.Text);
+            object cep = ValorOuNulo(cepDigitos);
+            object rua = ValorOuNulo(txtRua.Text);
+            object numero = ValorOuNulo(txtNumero.Text);
+            object bairro = ValorOuNulo(txtBairro.Text);
+            object cidade = ValorOuNulo(txtCidade.Text);
+            object uf = ValorOuNulo(cboUf.Text);
+            object notas = ValorOuNulo(txtDescricao.Text);
+            bool ativo = rbAtivo.Checked;
+
             try
             {
-                using (var conexaoDb = new Connection())
+                var res = await Task.Run(async () =>
                 {
-                    conexaoDb.IniciarConexao();
-
-                    string sql = ClienteIdEmEdicao.HasValue
-                        ? @"UPDATE public.customer SET
-                                name = @name,
-                                nickname = @nickname,
-                                cpf_cnpj = @cpf_cnpj,
-                                rg_ie = @rg_ie,
-                                phone = @phone,
-                                email = @email,
-                                cep = @cep,
-                                street = @street,
-                                number_address = @number_address,
-                                neighborhood = @neighborhood,
-                                city = @city,
-                                uf = @uf,
-                                notes = @notes,
-                                is_active = @is_active,
-                                updated_at = NOW()
-                            WHERE id_customer = @id;"
-                        : @"INSERT INTO public.customer
-                            (
-                                name, nickname, cpf_cnpj, rg_ie, phone, email, cep,
-                                street, number_address, neighborhood, complement, city,
-                                uf, notes, is_active
-                            )
-                            VALUES
-                            (
-                                @name, @nickname, @cpf_cnpj, @rg_ie, @phone, @email, @cep,
-                                @street, @number_address, @neighborhood, @complement, @city,
-                                @uf, @notes, @is_active
-                            )
-                            RETURNING id_customer;";
-
-                    using (var comando = new NpgsqlCommand(sql, conexaoDb.Conexao))
+                    using (var db = new Connection())
                     {
-                        if (ClienteIdEmEdicao.HasValue)
-                            comando.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, ClienteIdEmEdicao.Value);
-                        else
-                            comando.Parameters.AddWithValue("@complement", DBNull.Value);
+                        db.IniciarConexao();
 
-                        comando.Parameters.AddWithValue("@name", nome);
-                        comando.Parameters.AddWithValue("@nickname", ValorOuNulo(txtApelido.Text));
-                        comando.Parameters.AddWithValue("@cpf_cnpj", docDigitos);
-                        comando.Parameters.AddWithValue("@rg_ie", ValorOuNulo(txtRgIe.Text));
-                        comando.Parameters.AddWithValue("@phone", foneDigitos);
-                        comando.Parameters.AddWithValue("@email", ValorOuNulo(txtEmail.Text));
-                        comando.Parameters.AddWithValue("@cep", ValorOuNulo(cepDigitos));
-                        comando.Parameters.AddWithValue("@street", ValorOuNulo(txtRua.Text));
-                        comando.Parameters.AddWithValue("@number_address", ValorOuNulo(txtNumero.Text));
-                        comando.Parameters.AddWithValue("@neighborhood", ValorOuNulo(txtBairro.Text));
-                        comando.Parameters.AddWithValue("@city", ValorOuNulo(txtCidade.Text));
-                        comando.Parameters.AddWithValue("@uf", ValorOuNulo(cboUf.Text));
-                        comando.Parameters.AddWithValue("@notes", ValorOuNulo(txtDescricao.Text));
-                        comando.Parameters.AddWithValue("@is_active", rbAtivo.Checked);
+                        string sql = ehEdicao
+                            ? @"UPDATE public.customer SET
+                                    name = @name, nickname = @nickname, cpf_cnpj = @cpf_cnpj, rg_ie = @rg_ie,
+                                    phone = @phone, email = @email, cep = @cep, street = @street,
+                                    number_address = @number_address, neighborhood = @neighborhood, city = @city,
+                                    uf = @uf, notes = @notes, is_active = @is_active, updated_at = NOW()
+                                WHERE id_customer = @id
+                                RETURNING id_customer, updated_at;"
+                            : @"INSERT INTO public.customer (
+                                    name, nickname, cpf_cnpj, rg_ie, phone, email, cep,
+                                    street, number_address, neighborhood, complement, city,
+                                    uf, notes, is_active
+                                ) VALUES (
+                                    @name, @nickname, @cpf_cnpj, @rg_ie, @phone, @email, @cep,
+                                    @street, @number_address, @neighborhood, NULL, @city,
+                                    @uf, @notes, @is_active
+                                )
+                                RETURNING id_customer, updated_at;";
 
-                        if (ClienteIdEmEdicao.HasValue)
+                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
                         {
-                            comando.ExecuteNonQuery();
-                        }
-                        else
-                        {
-                            long idCliente = Convert.ToInt64(comando.ExecuteScalar());
-                            txtCodigo.Text = idCliente.ToString();
+                            if (ehEdicao)
+                                cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, ClienteIdEmEdicao.Value);
+
+                            cmd.Parameters.AddWithValue("@name", nome);
+                            cmd.Parameters.AddWithValue("@nickname", apelido);
+                            cmd.Parameters.AddWithValue("@cpf_cnpj", docDigitos);
+                            cmd.Parameters.AddWithValue("@rg_ie", rgIe);
+                            cmd.Parameters.AddWithValue("@phone", foneDigitos);
+                            cmd.Parameters.AddWithValue("@email", email);
+                            cmd.Parameters.AddWithValue("@cep", cep);
+                            cmd.Parameters.AddWithValue("@street", rua);
+                            cmd.Parameters.AddWithValue("@number_address", numero);
+                            cmd.Parameters.AddWithValue("@neighborhood", bairro);
+                            cmd.Parameters.AddWithValue("@city", cidade);
+                            cmd.Parameters.AddWithValue("@uf", uf);
+                            cmd.Parameters.AddWithValue("@notes", notas);
+                            cmd.Parameters.AddWithValue("@is_active", ativo);
+
+                            using (var reader = await cmd.ExecuteReaderAsync())
+                            {
+                                await reader.ReadAsync();
+                                long id = Convert.ToInt64(reader["id_customer"]);
+                                DateTime? atualizado = reader["updated_at"] != DBNull.Value
+                                    ? Convert.ToDateTime(reader["updated_at"])
+                                    : (DateTime?)null;
+
+                                return (id, atualizado);
+                            }
                         }
                     }
-                }
+                });
 
-                string mensagem = ClienteIdEmEdicao.HasValue
+                txtCodigo.Text = res.id.ToString();
+                AtualizarDataAtualizacao(res.atualizado);
+
+                string mensagem = ehEdicao
                     ? "Cliente atualizado com sucesso!"
-                    : $"Cliente cadastrado com sucesso. Código: {txtCodigo.Text}";
+                    : $"Cliente cadastrado com sucesso. Código: {res.id}";
 
                 MessageBox.Show(mensagem, "Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -320,23 +287,27 @@ namespace ProjetoExtensionista2026_2
             {
                 MessageBox.Show($"Erro ao salvar cliente: {ex.Message}", "Falha de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                if (!IsDisposed)
+                {
+                    btnSalvar.Enabled = true;
+                    Cursor.Current = Cursors.Default;
+                }
+            }
         }
 
-        private static object ValorOuNulo(string valor)
-        {
-            return string.IsNullOrWhiteSpace(valor) ? (object)DBNull.Value : valor.Trim();
-        }
+        private static object ValorOuNulo(string valor) =>
+            string.IsNullOrWhiteSpace(valor) ? (object)DBNull.Value : valor.Trim();
 
         private async void txtCep_Leave(object sender, EventArgs e)
         {
-            string cep = ExtrairDigitos(txtCep.Text);
-            if (cep.Length != 8)
-                return;
+            string cep = Digitos(txtCep.Text);
+            if (cep.Length != 8) return;
 
             try
             {
-                string url = "https://brasilapi.com.br/api/cep/v2/" + cep;
-                using (HttpResponseMessage resposta = await ClienteHttp.GetAsync(url))
+                using (HttpResponseMessage resposta = await ClienteHttp.GetAsync("https://brasilapi.com.br/api/cep/v2/" + cep))
                 {
                     if (!resposta.IsSuccessStatusCode)
                     {
@@ -346,17 +317,12 @@ namespace ProjetoExtensionista2026_2
 
                     string json = await resposta.Content.ReadAsStringAsync();
                     BrasilApiCep endereco = DesserializarCep(json);
-                    if (endereco == null)
-                        return;
+                    if (endereco == null) return;
 
-                    if (!string.IsNullOrWhiteSpace(endereco.Street))
-                        txtRua.Text = endereco.Street;
-                    if (!string.IsNullOrWhiteSpace(endereco.Neighborhood))
-                        txtBairro.Text = endereco.Neighborhood;
-                    if (!string.IsNullOrWhiteSpace(endereco.City))
-                        txtCidade.Text = endereco.City;
-                    if (!string.IsNullOrWhiteSpace(endereco.State))
-                        cboUf.SelectedItem = endereco.State.ToUpperInvariant();
+                    if (!string.IsNullOrWhiteSpace(endereco.Street)) txtRua.Text = endereco.Street;
+                    if (!string.IsNullOrWhiteSpace(endereco.Neighborhood)) txtBairro.Text = endereco.Neighborhood;
+                    if (!string.IsNullOrWhiteSpace(endereco.City)) txtCidade.Text = endereco.City;
+                    if (!string.IsNullOrWhiteSpace(endereco.State)) cboUf.SelectedItem = endereco.State.ToUpperInvariant();
                 }
             }
             catch (TaskCanceledException)
@@ -373,64 +339,81 @@ namespace ProjetoExtensionista2026_2
         {
             var serializer = new DataContractJsonSerializer(typeof(BrasilApiCep));
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
-            {
                 return serializer.ReadObject(stream) as BrasilApiCep;
-            }
         }
 
-        private static string ExtrairDigitos(string texto)
-        {
-            if (string.IsNullOrWhiteSpace(texto))
-                return string.Empty;
-
-            var resultado = new StringBuilder();
-            foreach (char caractere in texto)
-            {
-                if (char.IsDigit(caractere))
-                    resultado.Append(caractere);
-            }
-
-            return resultado.ToString();
-        }
-
-        private void btnLimpar_Click(object sender, EventArgs e) => LimparFormulario();
+        private async void btnLimpar_Click(object sender, EventArgs e) => await LimparFormularioAsync();
 
         private void btnCancelar_Click(object sender, EventArgs e) => FindForm()?.Close();
 
-        private void LimparFormulario()
+        private async Task LimparFormularioAsync()
         {
             ClienteIdEmEdicao = null;
             btnSalvar.Text = "Salvar";
+            txtCodigo.Text = "...";
 
             foreach (Control controle in Controls)
-            {
                 LimparControle(controle);
-            }
 
             rbAtivo.Checked = true;
             cboUf.SelectedIndex = -1;
-            AplicarDestaqueObrigatorios();
+            AtualizarDataAtualizacao(null);
             txtNome.Focus();
+
+            await GerarProximoCodigoAsync();
         }
 
         private void LimparControle(Control controle)
         {
             if (controle is TextBox textBox && textBox != txtCodigo)
-            {
                 textBox.Clear();
-            }
             else if (controle is ComboBox comboBox)
-            {
                 comboBox.SelectedIndex = -1;
-            }
             else if (controle.HasChildren)
-            {
                 foreach (Control filho in controle.Controls)
-                {
                     LimparControle(filho);
-                }
-            }
         }
+
+        private static string Digitos(string s) =>
+            string.IsNullOrEmpty(s) ? string.Empty : new string(s.Where(char.IsDigit).ToArray());
+
+        private static void AplicarMascara(TextBox txt, int max, Func<string, string> fmt)
+        {
+            if (txt == null) return;
+            bool travado = false;
+
+            txt.KeyPress += (s, e) =>
+            {
+                if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                    e.Handled = true;
+            };
+
+            txt.TextChanged += (s, e) =>
+            {
+                if (travado) return;
+                travado = true;
+                string d = Digitos(txt.Text);
+                txt.Text = fmt(d.Length > max ? d.Substring(0, max) : d);
+                txt.SelectionStart = txt.Text.Length;
+                travado = false;
+            };
+        }
+
+        private static string FormatarDocumento(string d) => d.Length <= 11
+            ? (d.Length > 9 ? $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6, 3)}-{d.Substring(9)}"
+             : d.Length > 6 ? $"{d.Substring(0, 3)}.{d.Substring(3, 3)}.{d.Substring(6)}"
+             : d.Length > 3 ? $"{d.Substring(0, 3)}.{d.Substring(3)}" : d)
+            : (d.Length > 12 ? $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8, 4)}-{d.Substring(12)}"
+             : $"{d.Substring(0, 2)}.{d.Substring(2, 3)}.{d.Substring(5, 3)}/{d.Substring(8)}");
+
+        private static string FormatarTelefone(string d) => d.Length > 10
+            ? $"({d.Substring(0, 2)}) {d.Substring(2, 5)}-{d.Substring(7)}"
+            : d.Length > 6 ? $"({d.Substring(0, 2)}) {d.Substring(2, 4)}-{d.Substring(6)}"
+            : d.Length > 2 ? $"({d.Substring(0, 2)}) {d.Substring(2)}"
+            : d.Length > 0 ? $"({d}" : string.Empty;
+
+        private static string FormatarCep(string d) =>
+            d.Length > 5 ? $"{d.Substring(0, 5)}-{d.Substring(5)}" : d;
 
         [DataContract]
         private sealed class BrasilApiCep
