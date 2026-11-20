@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Drawing;
-using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -10,8 +7,6 @@ namespace ProjetoExtensionista2026_2
 {
     public partial class UcCardVenda : UserControl
     {
-        private static readonly ConcurrentDictionary<string, Image> _imageCache = new ConcurrentDictionary<string, Image>();
-
         public int ProdutoId { get; private set; }
         public string NomeProduto { get; private set; }
         public decimal PrecoUnitario { get; private set; }
@@ -19,19 +14,17 @@ namespace ProjetoExtensionista2026_2
         public int EstoqueMaximo { get; private set; } = 999;
         public string FotoOrigem { get; private set; }
         public decimal PrecoTotal => PrecoUnitario * Quantidade;
-
-        // Eventos para comunicação com o formVenda
         public event Action<int, int, decimal> AoAlterarQuantidade;
         public event Action<int, UcCardVenda> AoRemoverItem;
 
         public UcCardVenda()
         {
             InitializeComponent();
+            DoubleBuffered = true;
 
             if (picFoto != null)
                 picFoto.SizeMode = PictureBoxSizeMode.Zoom;
 
-            // Vinculação programática dos botões para evitar falhas de evento no Designer
             if (btnAumentar != null)
             {
                 btnAumentar.Click -= btnAumentar_Click;
@@ -49,6 +42,12 @@ namespace ProjetoExtensionista2026_2
                 btnExcluir.Click -= btnExcluir_Click;
                 btnExcluir.Click += btnExcluir_Click;
             }
+
+            Disposed += (s, e) =>
+            {
+                if (picFoto != null)
+                    picFoto.Image = null;
+            };
         }
 
         /// <summary>
@@ -56,6 +55,10 @@ namespace ProjetoExtensionista2026_2
         /// </summary>
         public void CarregarItem(int id, string nome, decimal precoUnitario, int quantidadeInicial = 1, int estoqueDisponivel = 999, string fotoUrl = null)
         {
+            bool mesmaImagemJaCarregada = picFoto != null &&
+                                          picFoto.Image != null &&
+                                          string.Equals(FotoOrigem, fotoUrl, StringComparison.Ordinal);
+
             ProdutoId = id;
             NomeProduto = string.IsNullOrWhiteSpace(nome) ? $"Item #{id}" : nome;
             PrecoUnitario = precoUnitario;
@@ -64,7 +67,9 @@ namespace ProjetoExtensionista2026_2
             FotoOrigem = fotoUrl;
 
             AtualizarInterface();
-            _ = CarregarImagemAsync(FotoOrigem);
+
+            if (!mesmaImagemJaCarregada)
+                _ = CarregarImagemAsync(FotoOrigem);
         }
 
         /// <summary>
@@ -120,65 +125,17 @@ namespace ProjetoExtensionista2026_2
         }
 
         /// <summary>
-        /// Baixa e faz cache da imagem para exibir no picFoto.
+        /// Obtém a miniatura diretamente do cache compartilhado de produtos.
         /// </summary>
         private async Task CarregarImagemAsync(string fotoOrigem)
         {
             if (picFoto == null) return;
 
-            try
+            Image miniatura = await UcCardProduto.ObterMiniaturaCompartilhadaAsync(fotoOrigem);
+
+            if (!IsDisposed && picFoto != null && string.Equals(FotoOrigem, fotoOrigem, StringComparison.Ordinal))
             {
-                if (string.IsNullOrWhiteSpace(fotoOrigem))
-                {
-                    picFoto.Image = Properties.Resources.produto_ausente;
-                    return;
-                }
-
-                if (_imageCache.TryGetValue(fotoOrigem, out Image imagemCached))
-                {
-                    picFoto.Image = imagemCached;
-                    return;
-                }
-
-                Image imgOriginal = null;
-
-                if (fotoOrigem.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
-                    fotoOrigem.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-                {
-                    using (var clienteWeb = new WebClient())
-                    {
-                        clienteWeb.Headers.Add("User-Agent", "Mozilla/5.0");
-                        byte[] dados = await clienteWeb.DownloadDataTaskAsync(new Uri(fotoOrigem));
-                        using (var ms = new MemoryStream(dados))
-                        {
-                            imgOriginal = Image.FromStream(ms);
-                        }
-                    }
-                }
-                else if (File.Exists(fotoOrigem))
-                {
-                    using (var stream = new FileStream(fotoOrigem, FileMode.Open, FileAccess.Read, FileShare.Read))
-                    {
-                        using (var temp = Image.FromStream(stream))
-                        {
-                            imgOriginal = new Bitmap(temp);
-                        }
-                    }
-                }
-
-                if (imgOriginal != null)
-                {
-                    _imageCache.TryAdd(fotoOrigem, imgOriginal);
-                    picFoto.Image = imgOriginal;
-                }
-                else
-                {
-                    picFoto.Image = Properties.Resources.produto_ausente;
-                }
-            }
-            catch
-            {
-                picFoto.Image = Properties.Resources.produto_ausente;
+                picFoto.Image = miniatura;
             }
         }
     }

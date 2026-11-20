@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Printing;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ProjetoExtensionista2026_2
@@ -11,6 +12,10 @@ namespace ProjetoExtensionista2026_2
         public bool EmitirCupomFiscal => chkCupom.Checked && !_dados.EhOrcamento;
         public bool EmitirNotaPromissoria => chkPromissoria.Checked;
         public string ImpressoraSelecionada => cmbImpressoras.SelectedItem?.ToString() ?? string.Empty;
+
+        private static readonly SolidBrush BrushSombraMiniatura = new SolidBrush(Color.FromArgb(45, 0, 0, 0));
+        private static readonly Pen PenBordaMiniatura = new Pen(Color.FromArgb(170, 175, 185), 1f);
+        private static readonly Color CorFundoMiniatura = Color.FromArgb(228, 232, 238);
 
         private readonly DadosDocumentoVenda _dados;
         private List<Bitmap> _paginasCupom = new List<Bitmap>();
@@ -22,14 +27,16 @@ namespace ProjetoExtensionista2026_2
         public formDocumentosFiscais(DadosDocumentoVenda dados, bool vendaAPrazo = false)
         {
             InitializeComponent();
+            DoubleBuffered = true;
 
             _dados = dados ?? new DadosDocumentoVenda();
 
             GerarPaginasEmMemoria();
-            CarregarImpressoras();
             VincularEventosDosControles(vendaAPrazo);
             GerenciadorTema.AplicarTema(this);
             AtualizarEstadoTela();
+
+            Load += async (s, e) => await CarregarImpressorasAsync();
         }
 
         private void GerarPaginasEmMemoria()
@@ -79,7 +86,7 @@ namespace ProjetoExtensionista2026_2
             Bitmap bmp = lista[indice];
             Graphics g = e.Graphics;
 
-            g.Clear(Color.FromArgb(228, 232, 238));
+            g.Clear(CorFundoMiniatura);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
@@ -99,13 +106,9 @@ namespace ProjetoExtensionista2026_2
             int destX = (pic.ClientSize.Width - destW) / 2;
             int destY = cupomComprido ? margem : (pic.ClientSize.Height - destH) / 2;
 
-            using (var brushSombra = new SolidBrush(Color.FromArgb(45, 0, 0, 0)))
-            using (var penBorda = new Pen(Color.FromArgb(170, 175, 185), 1f))
-            {
-                g.FillRectangle(brushSombra, destX + 3, destY + 3, destW, destH);
-                g.DrawImage(bmp, new Rectangle(destX, destY, destW, destH));
-                g.DrawRectangle(penBorda, destX, destY, destW, destH);
-            }
+            g.FillRectangle(BrushSombraMiniatura, destX + 3, destY + 3, destW, destH);
+            g.DrawImage(bmp, new Rectangle(destX, destY, destW, destH));
+            g.DrawRectangle(PenBordaMiniatura, destX, destY, destW, destH);
         }
 
         private void TrocarPaginaMiniatura(bool ehCupom, int delta)
@@ -197,36 +200,59 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        private void CarregarImpressoras()
+        private async Task CarregarImpressorasAsync()
         {
             cmbImpressoras.Items.Clear();
-            _possuiImpressora = false;
-
-            try
-            {
-                if (PrinterSettings.InstalledPrinters.Count > 0)
-                {
-                    string padrao = new PrinterSettings().PrinterName;
-
-                    foreach (string impressora in PrinterSettings.InstalledPrinters)
-                        cmbImpressoras.Items.Add(impressora);
-
-                    int idxPadrao = cmbImpressoras.Items.IndexOf(padrao);
-                    cmbImpressoras.SelectedIndex = idxPadrao >= 0 ? idxPadrao : 0;
-                    cmbImpressoras.Enabled = true;
-                    _possuiImpressora = true;
-                    return;
-                }
-            }
-            catch
-            {
-                // Spooler parado ou sem impressoras instaladas
-            }
-
-            cmbImpressoras.Items.Add("Nenhuma impressora instalada");
+            cmbImpressoras.Items.Add("Buscando impressoras...");
             cmbImpressoras.SelectedIndex = 0;
             cmbImpressoras.Enabled = false;
             _possuiImpressora = false;
+
+            var resultado = await Task.Run(() =>
+            {
+                var lista = new List<string>();
+                string padrao = string.Empty;
+
+                try
+                {
+                    if (PrinterSettings.InstalledPrinters.Count > 0)
+                    {
+                        padrao = new PrinterSettings().PrinterName;
+                        foreach (string impressora in PrinterSettings.InstalledPrinters)
+                            lista.Add(impressora);
+                    }
+                }
+                catch
+                {
+                    // Spooler parado ou sem impressoras instaladas
+                }
+
+                return (Lista: lista, Padrao: padrao);
+            });
+
+            if (IsDisposed) return;
+
+            cmbImpressoras.Items.Clear();
+
+            if (resultado.Lista.Count > 0)
+            {
+                foreach (string impressora in resultado.Lista)
+                    cmbImpressoras.Items.Add(impressora);
+
+                int idxPadrao = cmbImpressoras.Items.IndexOf(resultado.Padrao);
+                cmbImpressoras.SelectedIndex = idxPadrao >= 0 ? idxPadrao : 0;
+                cmbImpressoras.Enabled = true;
+                _possuiImpressora = true;
+            }
+            else
+            {
+                cmbImpressoras.Items.Add("Nenhuma impressora instalada");
+                cmbImpressoras.SelectedIndex = 0;
+                cmbImpressoras.Enabled = false;
+                _possuiImpressora = false;
+            }
+
+            AtualizarEstadoTela();
         }
 
         private void AtualizarEstadoTela()
@@ -333,13 +359,21 @@ namespace ProjetoExtensionista2026_2
 
                 try
                 {
+                    Cursor = Cursors.WaitCursor;
+                    if (btnSalvarPdf != null) btnSalvarPdf.Enabled = false;
+                    if (btnImprimir != null) btnImprimir.Enabled = false;
+
                     ImpressorDocumentos.SalvarComoPdf(sfd.FileName, paginasParaSalvar);
+
+                    Cursor = Cursors.Default;
                     MessageBox.Show("Documento(s) salvo(s) em PDF com sucesso!", "Arquivo Salvo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     DialogResult = DialogResult.OK;
                     Close();
                 }
                 catch (Exception ex)
                 {
+                    Cursor = Cursors.Default;
+                    AtualizarEstadoTela();
                     MessageBox.Show($"Erro ao salvar o arquivo PDF:\n{ex.Message}", "Erro ao Salvar", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
@@ -365,6 +399,10 @@ namespace ProjetoExtensionista2026_2
 
             try
             {
+                Cursor = Cursors.WaitCursor;
+                if (btnImprimir != null) btnImprimir.Enabled = false;
+                if (btnSalvarPdf != null) btnSalvarPdf.Enabled = false;
+
                 if (imprimirCupom)
                     ImpressorDocumentos.ImprimirPaginasNaImpressora(_paginasCupom, ImpressoraSelecionada, $"Cupom_{_dados.NumeroVenda:D6}", true);
 
@@ -376,11 +414,14 @@ namespace ProjetoExtensionista2026_2
                     ImpressorDocumentos.ImprimirPaginasNaImpressora(_paginasPromissoria, ImpressoraSelecionada, nomeDoc, false);
                 }
 
+                Cursor = Cursors.Default;
                 DialogResult = DialogResult.OK;
                 Close();
             }
             catch (Exception ex)
             {
+                Cursor = Cursors.Default;
+                AtualizarEstadoTela();
                 MessageBox.Show($"Erro ao enviar para a impressora:\n{ex.Message}", "Erro de Impressão", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -388,7 +429,11 @@ namespace ProjetoExtensionista2026_2
         protected override void OnFormClosed(FormClosedEventArgs e)
         {
             foreach (var bmp in _paginasCupom) bmp?.Dispose();
+            _paginasCupom.Clear();
+
             foreach (var bmp in _paginasPromissoria) bmp?.Dispose();
+            _paginasPromissoria.Clear();
+
             base.OnFormClosed(e);
         }
     }

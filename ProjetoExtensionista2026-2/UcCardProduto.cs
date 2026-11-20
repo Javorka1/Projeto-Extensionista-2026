@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -10,7 +11,8 @@ namespace ProjetoExtensionista2026_2
 {
     public partial class UcCardProduto : UserControl
     {
-        private static readonly ConcurrentDictionary<string, Image> _imageCache = new ConcurrentDictionary<string, Image>();
+        private static readonly ConcurrentDictionary<string, Bitmap> _imageCache = new ConcurrentDictionary<string, Bitmap>();
+        private static Bitmap _fallbackAjustado;
 
         public ProdutoDTO DadosProduto { get; private set; }
 
@@ -32,15 +34,25 @@ namespace ProjetoExtensionista2026_2
         public UcCardProduto()
         {
             InitializeComponent();
+            DoubleBuffered = true;
 
             UpDownProduto.Minimum = 1;
             UpDownProduto.Maximum = 999;
             UpDownProduto.Value = 1;
 
-            picFoto.SizeMode = PictureBoxSizeMode.Zoom;
+            picFoto.SizeMode = PictureBoxSizeMode.Normal;
 
             VincularCliquesDeEdicao(this);
             VincularEfeitoHover(this);
+
+            Disposed += (s, e) =>
+            {
+                if (picFoto != null && picFoto.Image != null && !ReferenceEquals(picFoto.Image, _fallbackAjustado))
+                {
+                    picFoto.Image.Dispose();
+                    picFoto.Image = null;
+                }
+            };
         }
 
         private void VincularEfeitoHover(Control container)
@@ -218,103 +230,233 @@ namespace ProjetoExtensionista2026_2
             UpDownProduto.Value = 1;
         }
 
+        private static readonly Image _imagemPadrao = Properties.Resources.produto_ausente;
+
+        public static async Task<Image> ObterMiniaturaCompartilhadaAsync(string fotoOrigem)
+        {
+            if (string.IsNullOrWhiteSpace(fotoOrigem))
+                return _imagemPadrao;
+
+            if (_imageCache.TryGetValue(fotoOrigem, out Bitmap miniaturaCached))
+                return miniaturaCached;
+
+            try
+            {
+                Bitmap miniaturaGerada = null;
+
+                if (fotoOrigem.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                    fotoOrigem.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    byte[] dados;
+                    using (var clienteWeb = new WebClient())
+                    {
+                        clienteWeb.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+                        dados = await clienteWeb.DownloadDataTaskAsync(new Uri(fotoOrigem));
+                    }
+
+                    miniaturaGerada = await Task.Run(() => CriarMiniaturaDeBytes(dados));
+                }
+                else if (File.Exists(fotoOrigem))
+                {
+                    miniaturaGerada = await Task.Run(() =>
+                    {
+                        using (var stream = new FileStream(fotoOrigem, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        using (var imgBruta = Image.FromStream(stream))
+                        {
+                            return RedimensionarMiniatura(imgBruta, 180);
+                        }
+                    });
+                }
+                else
+                {
+                    miniaturaGerada = await Task.Run(() =>
+                    {
+                        byte[] imageBytes = Convert.FromBase64String(fotoOrigem);
+                        return CriarMiniaturaDeBytes(imageBytes);
+                    });
+                }
+
+                if (miniaturaGerada != null)
+                {
+                    Bitmap miniaturaFinal = _imageCache.GetOrAdd(fotoOrigem, miniaturaGerada);
+                    if (!ReferenceEquals(miniaturaFinal, miniaturaGerada))
+                        miniaturaGerada.Dispose();
+
+                    return miniaturaFinal;
+                }
+            }
+            catch
+            {
+                // Retorna imagem padrão em caso de falha de rede, arquivo ou Base64
+            }
+
+            return _imagemPadrao;
+        }
+
         private async Task CarregarImagemAsync(string fotoOrigem)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(fotoOrigem))
                 {
-                    AplicarImagemAjustada(Properties.Resources.produto_ausente);
+                    AplicarImagemFallback();
                     return;
                 }
 
-                if (_imageCache.TryGetValue(fotoOrigem, out Image imagemCached))
+                if (_imageCache.TryGetValue(fotoOrigem, out Bitmap miniaturaCached))
                 {
-                    AplicarImagemAjustada(imagemCached);
+                    AplicarImagemAjustada(miniaturaCached);
                     return;
                 }
 
-                Image imgOriginal = null;
+                Bitmap miniaturaGerada = null;
 
                 if (fotoOrigem.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                     fotoOrigem.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 {
+                    byte[] dados;
                     using (var clienteWeb = new WebClient())
                     {
                         clienteWeb.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
-                        byte[] dados = await clienteWeb.DownloadDataTaskAsync(new Uri(fotoOrigem));
-
-                        using (var ms = new MemoryStream(dados))
-                        {
-                            imgOriginal = Image.FromStream(ms);
-                        }
+                        dados = await clienteWeb.DownloadDataTaskAsync(new Uri(fotoOrigem));
                     }
+
+                    miniaturaGerada = await Task.Run(() => CriarMiniaturaDeBytes(dados));
                 }
                 else if (File.Exists(fotoOrigem))
                 {
-                    using (var stream = new FileStream(fotoOrigem, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    miniaturaGerada = await Task.Run(() =>
                     {
-                        using (var tempImg = Image.FromStream(stream))
+                        using (var stream = new FileStream(fotoOrigem, FileMode.Open, FileAccess.Read, FileShare.Read))
+                        using (var imgBruta = Image.FromStream(stream))
                         {
-                            imgOriginal = new Bitmap(tempImg);
+                            return RedimensionarMiniatura(imgBruta, 180);
                         }
-                    }
+                    });
                 }
                 else
                 {
-                    byte[] imageBytes = Convert.FromBase64String(fotoOrigem);
-                    using (var ms = new MemoryStream(imageBytes))
+                    miniaturaGerada = await Task.Run(() =>
                     {
-                        imgOriginal = Image.FromStream(ms);
-                    }
+                        byte[] imageBytes = Convert.FromBase64String(fotoOrigem);
+                        return CriarMiniaturaDeBytes(imageBytes);
+                    });
                 }
 
-                if (imgOriginal != null)
+                if (miniaturaGerada != null)
                 {
-                    _imageCache.TryAdd(fotoOrigem, imgOriginal);
-                    AplicarImagemAjustada(imgOriginal);
+                    Bitmap miniaturaFinal = _imageCache.GetOrAdd(fotoOrigem, miniaturaGerada);
+                    if (!ReferenceEquals(miniaturaFinal, miniaturaGerada))
+                    {
+                        miniaturaGerada.Dispose();
+                    }
+
+                    if (!IsDisposed && string.Equals(FotoOrigem, fotoOrigem, StringComparison.Ordinal))
+                    {
+                        AplicarImagemAjustada(miniaturaFinal);
+                    }
                 }
-                else
+                else if (!IsDisposed && string.Equals(FotoOrigem, fotoOrigem, StringComparison.Ordinal))
                 {
-                    AplicarImagemAjustada(Properties.Resources.produto_ausente);
+                    AplicarImagemFallback();
                 }
             }
             catch
             {
-                AplicarImagemAjustada(Properties.Resources.produto_ausente);
+                if (!IsDisposed && string.Equals(FotoOrigem, fotoOrigem, StringComparison.Ordinal))
+                {
+                    AplicarImagemFallback();
+                }
             }
         }
 
-        private void AplicarImagemAjustada(Image imgOriginal)
+        private static Bitmap CriarMiniaturaDeBytes(byte[] dados)
         {
-            if (imgOriginal == null || picFoto.Width <= 0 || picFoto.Height <= 0)
+            if (dados == null || dados.Length == 0) return null;
+
+            using (var ms = new MemoryStream(dados))
+            using (var imgBruta = Image.FromStream(ms))
+            {
+                return RedimensionarMiniatura(imgBruta, 180);
+            }
+        }
+
+        private static Bitmap RedimensionarMiniatura(Image origem, int maxLado)
+        {
+            if (origem == null) return null;
+
+            float escala = Math.Min((float)maxLado / origem.Width, (float)maxLado / origem.Height);
+            int largura = escala >= 1f ? origem.Width : Math.Max(1, (int)(origem.Width * escala));
+            int altura = escala >= 1f ? origem.Height : Math.Max(1, (int)(origem.Height * escala));
+
+            var miniatura = new Bitmap(largura, altura);
+            using (var g = Graphics.FromImage(miniatura))
+            {
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.SmoothingMode = SmoothingMode.HighQuality;
+                g.DrawImage(origem, 0, 0, largura, altura);
+            }
+
+            return miniatura;
+        }
+
+        private void AplicarImagemFallback()
+        {
+            if (picFoto == null || picFoto.Width <= 0 || picFoto.Height <= 0)
                 return;
 
-            int alvoW = picFoto.Width;
-            int alvoH = picFoto.Height;
+            if (_fallbackAjustado == null || _fallbackAjustado.Width != picFoto.Width || _fallbackAjustado.Height != picFoto.Height)
+            {
+                _fallbackAjustado?.Dispose();
+                _fallbackAjustado = GerarBitmapRecortado(Properties.Resources.produto_ausente, picFoto.Width, picFoto.Height);
+            }
 
+            if (picFoto.Image != null && !ReferenceEquals(picFoto.Image, _fallbackAjustado))
+            {
+                picFoto.Image.Dispose();
+            }
+
+            picFoto.Image = _fallbackAjustado;
+        }
+
+        private void AplicarImagemAjustada(Image imgMiniatura)
+        {
+            if (imgMiniatura == null || picFoto == null || picFoto.Width <= 0 || picFoto.Height <= 0)
+                return;
+
+            Bitmap bmpCortado = GerarBitmapRecortado(imgMiniatura, picFoto.Width, picFoto.Height);
+
+            if (picFoto.Image != null && !ReferenceEquals(picFoto.Image, _fallbackAjustado))
+            {
+                picFoto.Image.Dispose();
+            }
+
+            picFoto.Image = bmpCortado;
+        }
+
+        private static Bitmap GerarBitmapRecortado(Image origem, int alvoW, int alvoH)
+        {
             Bitmap bmpCortado = new Bitmap(alvoW, alvoH);
 
             using (Graphics g = Graphics.FromImage(bmpCortado))
             {
-                g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-                g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
-                g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.SmoothingMode = SmoothingMode.HighQuality;
 
-                float ratio = Math.Max((float)alvoW / imgOriginal.Width, (float)alvoH / imgOriginal.Height);
+                float ratio = Math.Max((float)alvoW / origem.Width, (float)alvoH / origem.Height);
 
-                int larguraFinal = (int)(imgOriginal.Width * ratio);
-                int alturaFinal = (int)(imgOriginal.Height * ratio);
+                int larguraFinal = (int)(origem.Width * ratio);
+                int alturaFinal = (int)(origem.Height * ratio);
 
                 int posX = (alvoW - larguraFinal) / 2;
                 int posY = (alvoH - alturaFinal) / 2;
 
-                g.DrawImage(imgOriginal, posX, posY, larguraFinal, alturaFinal);
+                g.DrawImage(origem, posX, posY, larguraFinal, alturaFinal);
             }
 
-            picFoto.Image?.Dispose();
-            picFoto.SizeMode = PictureBoxSizeMode.Normal;
-            picFoto.Image = bmpCortado;
+            return bmpCortado;
         }
     }
 }

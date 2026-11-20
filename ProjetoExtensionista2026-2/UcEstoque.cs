@@ -1,11 +1,8 @@
 using Npgsql;
-using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -19,12 +16,52 @@ namespace ProjetoExtensionista2026_2
         private bool _podeVerOcultos = true;
         private string _filtroAtual = "";
         private CancellationTokenSource _ctsBusca;
+        private bool _precisaAtualizar;
 
         public UcEstoque()
         {
             InitializeComponent();
             ConfigurarPainelFlutuante();
             ConfigurarEventosBusca();
+            ConfigurarSincronizacaoEventos();
+        }
+
+        private void ConfigurarSincronizacaoEventos()
+        {
+            Action aoMudarDados = () =>
+            {
+                if (IsDisposed) return;
+
+                if (Visible)
+                {
+                    _precisaAtualizar = false;
+                    BuscarProdutosNoSupabase(_filtroAtual);
+                }
+                else
+                {
+                    _precisaAtualizar = true;
+                }
+            };
+
+            EventosSistema.VendaConcluida += aoMudarDados;
+            EventosSistema.EstoqueAtualizado += aoMudarDados;
+
+            VisibleChanged += (s, e) =>
+            {
+                if (Visible && _precisaAtualizar && !IsDisposed)
+                {
+                    _precisaAtualizar = false;
+                    BuscarProdutosNoSupabase(_filtroAtual);
+                }
+            };
+
+            HandleDestroyed += (s, e) =>
+            {
+                EventosSistema.VendaConcluida -= aoMudarDados;
+                EventosSistema.EstoqueAtualizado -= aoMudarDados;
+                _ctsBusca?.Cancel();
+                _ctsBusca?.Dispose();
+            };
         }
 
         private async void UcEstoque_Load(object sender, EventArgs e)
@@ -232,7 +269,7 @@ namespace ProjetoExtensionista2026_2
                     return produtos;
                 }, token);
 
-                if (token.IsCancellationRequested || flowLayoutPanelProdutos == null) return;
+                if (token.IsCancellationRequested || flowLayoutPanelProdutos == null || IsDisposed) return;
 
                 RenderizarCards(listaProdutos);
             }
@@ -242,48 +279,63 @@ namespace ProjetoExtensionista2026_2
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao consultar produtos: {ex.Message}", "Erro de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!IsDisposed)
+                    MessageBox.Show($"Erro ao consultar produtos: {ex.Message}", "Erro de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         /// <summary>
-        /// Descarta os controles antigos da memória e monta os novos cards em lote.
+        /// Reaproveita os cards já instanciados no painel e apenas oculta os excedentes para evitar recriação de controles.
         /// </summary>
         private void RenderizarCards(List<ProdutoDTO> produtos)
         {
             flowLayoutPanelProdutos.SuspendLayout();
             try
             {
-                while (flowLayoutPanelProdutos.Controls.Count > 0)
-                {
-                    Control controleAntigo = flowLayoutPanelProdutos.Controls[0];
-                    flowLayoutPanelProdutos.Controls.RemoveAt(0);
-                    controleAntigo.Dispose();
-                }
+                int existentes = flowLayoutPanelProdutos.Controls.Count;
 
-                foreach (var prod in produtos)
+                for (int i = 0; i < produtos.Count; i++)
                 {
-                    var card = new UcCardProduto
+                    var prod = produtos[i];
+                    UcCardProduto card;
+
+                    if (i < existentes)
                     {
-                        Margin = new Padding(8)
-                    };
+                        card = (UcCardProduto)flowLayoutPanelProdutos.Controls[i];
+                        if (!card.Visible)
+                            card.Visible = true;
+                    }
+                    else
+                    {
+                        card = new UcCardProduto
+                        {
+                            Margin = new Padding(8)
+                        };
+                        card.AoClicarParaEditar += (produtoClicado) =>
+                        {
+                            if (_podeVerOcultos && produtoClicado != null)
+                                AbrirModalProduto(produtoClicado);
+                        };
+
+                        card.AoAdicionarProduto += (prodId, preco, qtd) =>
+                        {
+                            var p = card.DadosProduto;
+                            if (p != null)
+                                AoAdicionarAoCarrinho?.Invoke(p.Id, p.Nome, p.PrecoVenda, qtd, p.FotoUrl, p.Estoque);
+                        };
+
+                        GerenciadorTema.AplicarTema(card);
+                        flowLayoutPanelProdutos.Controls.Add(card);
+                    }
 
                     card.CarregarDados(prod);
-                    GerenciadorTema.AplicarTema(card);
                     AplicarPermissoesAoCard(card);
+                }
 
-                    card.AoClicarParaEditar += (produtoClicado) =>
-                    {
-                        if (_podeVerOcultos)
-                            AbrirModalProduto(produtoClicado);
-                    };
-
-                    card.AoAdicionarProduto += (prodId, preco, qtd) =>
-                    {
-                        AoAdicionarAoCarrinho?.Invoke(prod.Id, prod.Nome, prod.PrecoVenda, qtd, prod.FotoUrl, prod.Estoque);
-                    };
-
-                    flowLayoutPanelProdutos.Controls.Add(card);
+                for (int i = produtos.Count; i < existentes; i++)
+                {
+                    if (flowLayoutPanelProdutos.Controls[i].Visible)
+                        flowLayoutPanelProdutos.Controls[i].Visible = false;
                 }
             }
             finally
@@ -329,7 +381,7 @@ namespace ProjetoExtensionista2026_2
 
                 if (formModal.ShowDialog(this) == DialogResult.OK)
                 {
-                    BuscarProdutosNoSupabase(_filtroAtual);
+                    EventosSistema.NotificarEstoqueAtualizado();
                 }
             }
         }
@@ -344,17 +396,27 @@ namespace ProjetoExtensionista2026_2
             if (flowLayoutPanelProdutos == null || flowLayoutPanelProdutos.Controls.Count == 0)
                 return;
 
+            var cardsVisiveis = new List<Control>();
+            foreach (Control c in flowLayoutPanelProdutos.Controls)
+            {
+                if (c.Visible)
+                    cardsVisiveis.Add(c);
+            }
+
+            if (cardsVisiveis.Count == 0)
+                return;
+
             flowLayoutPanelProdutos.SuspendLayout();
             try
             {
-                Control primeiroCard = flowLayoutPanelProdutos.Controls[0];
+                Control primeiroCard = cardsVisiveis[0];
                 int larguraCard = primeiroCard.Width;
                 int margemPadrao = 15;
                 int larguraDisponivel = flowLayoutPanelProdutos.ClientSize.Width - flowLayoutPanelProdutos.Padding.Horizontal - 2;
                 int colunas = (larguraDisponivel + margemPadrao) / (larguraCard + margemPadrao);
                 if (colunas < 1) colunas = 1;
 
-                int totalCards = flowLayoutPanelProdutos.Controls.Count;
+                int totalCards = cardsVisiveis.Count;
 
                 if (totalCards == 1)
                 {
@@ -366,7 +428,7 @@ namespace ProjetoExtensionista2026_2
                 {
                     for (int i = 0; i < totalCards; i++)
                     {
-                        Control card = flowLayoutPanelProdutos.Controls[i];
+                        Control card = cardsVisiveis[i];
                         int marginDir = (i == totalCards - 1) ? 0 : margemPadrao;
                         card.Margin = new Padding(0, card.Margin.Top, marginDir, card.Margin.Bottom);
                     }
@@ -378,7 +440,7 @@ namespace ProjetoExtensionista2026_2
 
                 for (int i = 0; i < totalCards; i++)
                 {
-                    Control card = flowLayoutPanelProdutos.Controls[i];
+                    Control card = cardsVisiveis[i];
                     int colunaAtual = i % colunas;
                     bool ehUltimoDaLinha = (colunaAtual == colunas - 1);
                     int marginDir = ehUltimoDaLinha ? 0 : gap;

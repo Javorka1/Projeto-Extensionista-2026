@@ -51,6 +51,7 @@ namespace ProjetoExtensionista2026_2
             this.lblLogoIcone = new System.Windows.Forms.Label();
             this.listBoxSidebar = new System.Windows.Forms.ListBox();
             this.panelWorkspace = new System.Windows.Forms.Panel();
+            this.panelBarraAbas = new System.Windows.Forms.Panel();
             this.panelSidebar.SuspendLayout();
             this.pnlNav.SuspendLayout();
             this.pnlUserFooter.SuspendLayout();
@@ -358,10 +359,18 @@ namespace ProjetoExtensionista2026_2
             // panelWorkspace
             // 
             this.panelWorkspace.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelWorkspace.Location = new System.Drawing.Point(240, 0);
+            this.panelWorkspace.Location = new System.Drawing.Point(240, 38);
             this.panelWorkspace.Name = "panelWorkspace";
-            this.panelWorkspace.Size = new System.Drawing.Size(1024, 681);
+            this.panelWorkspace.Size = new System.Drawing.Size(1024, 643);
             this.panelWorkspace.TabIndex = 1;
+            // 
+            // panelBarraAbas
+            // 
+            this.panelBarraAbas.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelBarraAbas.Location = new System.Drawing.Point(240, 0);
+            this.panelBarraAbas.Name = "panelBarraAbas";
+            this.panelBarraAbas.Size = new System.Drawing.Size(1024, 38);
+            this.panelBarraAbas.TabIndex = 0;
             // 
             // formPrincipal
             // 
@@ -369,6 +378,7 @@ namespace ProjetoExtensionista2026_2
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
             this.Controls.Add(this.panelWorkspace);
+            this.Controls.Add(this.panelBarraAbas);
             this.Controls.Add(this.panelSidebar);
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "formPrincipal";
@@ -412,5 +422,6 @@ namespace ProjetoExtensionista2026_2
         public System.Windows.Forms.ListBox listBoxSidebar;
         private System.Windows.Forms.Panel panelWorkspace;
         public System.Windows.Forms.Button btnNavAdmin;
+        private System.Windows.Forms.Panel panelBarraAbas;
     }
 }
