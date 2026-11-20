@@ -13,10 +13,31 @@ namespace ProjetoExtensionista2026_2
         private GerenciadorAbas _abas;
         private Panel _panelBarraAbas;
         private int _contadorCaixa = 0;
+        private NotifyIcon _notificacaoEstoque;
+        private Timer _timerEstoque;
 
         public formPrincipal()
         {
             InitializeComponent();
+            _notificacaoEstoque = new NotifyIcon
+            {
+                Icon = SystemIcons.Warning,
+                Visible = true,
+                Text = "NexStore - Estoque"
+            };
+            _timerEstoque = new Timer
+            {
+                Interval = 60000
+            };
+            _timerEstoque.Tick += (s, e) => AuditLogSQL.NotifyLowStock(_notificacaoEstoque);
+            FormClosed += (s, e) =>
+            {
+                _timerEstoque.Stop();
+                _timerEstoque.Dispose();
+                AuditLogSQL.StopLowStockNotifications();
+                _notificacaoEstoque.Visible = false;
+                _notificacaoEstoque.Dispose();
+            };
             InicializarSistemaAbas();
             GerenciadorTema.AplicarTema(this);
         }
@@ -41,6 +62,10 @@ namespace ProjetoExtensionista2026_2
 
         private void formPrincipal_Load(object sender, EventArgs e)
         {
+            AuditLogSQL.EnsureSchema();
+            AuditLogSQL.NotifyLowStock(_notificacaoEstoque);
+            _timerEstoque.Start();
+
             using (var sql = new LoginSQL())
             {
                 string nomeUsuario = LoginSQL.SessaoUsuario.Nome;

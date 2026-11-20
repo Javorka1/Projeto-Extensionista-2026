@@ -425,3 +425,50 @@ SELECT
     ), 0.00) AS total_pago
 FROM sale
 INNER JOIN customer ON sale.id_client = customer.id_customer;
+
+-- ==========================================================
+-- 7. NOTIFICAÇÕES DE ESTOQUE BAIXO
+-- ==========================================================
+
+CREATE TABLE IF NOT EXISTS low_stock_notifications (
+    id BIGSERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL,
+    product_name VARCHAR(200) NOT NULL,
+    stock_quantity NUMERIC(12,3) NOT NULL,
+    min_stock NUMERIC(12,3) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    displayed_at TIMESTAMP WITH TIME ZONE NULL
+);
+
+DROP TRIGGER IF EXISTS trg_product_stock_alert ON public.product;
+DROP FUNCTION IF EXISTS fn_product_stock_alert();
+
+CREATE OR REPLACE FUNCTION fn_product_stock_alert()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        IF NEW.is_active = TRUE AND NEW.stock_quantity <= NEW.min_stock THEN
+            INSERT INTO low_stock_notifications
+                (product_id, product_name, stock_quantity, min_stock)
+            VALUES
+                (NEW.id_product, NEW.name, NEW.stock_quantity, NEW.min_stock);
+        END IF;
+    ELSIF NEW.is_active = TRUE
+          AND NEW.stock_quantity <= NEW.min_stock
+          AND (OLD.is_active = FALSE
+               OR OLD.stock_quantity > OLD.min_stock
+               OR OLD.min_stock <> NEW.min_stock) THEN
+        INSERT INTO low_stock_notifications
+            (product_id, product_name, stock_quantity, min_stock)
+        VALUES
+            (NEW.id_product, NEW.name, NEW.stock_quantity, NEW.min_stock);
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_product_stock_alert
+AFTER INSERT OR UPDATE OF name, stock_quantity, min_stock, is_active ON public.product
+FOR EACH ROW
+EXECUTE FUNCTION fn_product_stock_alert();
