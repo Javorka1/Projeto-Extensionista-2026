@@ -15,45 +15,45 @@ namespace ProjetoExtensionista2026_2
 
         public static bool ModoEscuro { get; set; } = false;
 
-        // =========================================================
-        // PALETA SLATE & INDIGO (MODO ESCURO)
-        // =========================================================
-        public static readonly Color FundoEscuro = Color.FromArgb(24, 26, 32);              // #181A20 - Fundo principal
-        public static readonly Color FundoCardEscuro = Color.FromArgb(34, 37, 46);          // #22252E - Cards, Painéis, GroupBoxes
-        public static readonly Color FundoCardHoverEscuro = Color.FromArgb(40, 44, 55);     // #282C37 - Card em Hover
-        public static readonly Color FundoSidebarEscuro = Color.FromArgb(31, 34, 43);       // #1F222B - Sidebar dedicada
-        public static readonly Color FundoControleEscuro = Color.FromArgb(42, 46, 57);      // #2A2E39 - Botões secundários
-        public static readonly Color InputEscuro = Color.FromArgb(30, 33, 41);              // #1E2129 - TextBox, ComboBox, Linhas tabela
-        public static readonly Color InputFocoEscuro = Color.FromArgb(36, 41, 54);          // #242936 - Input focado
-        public static readonly Color LinhaAlternadaEscura = Color.FromArgb(36, 40, 50);     // #242832 - Zebra DataGridView
-        public static readonly Color BordaEscura = Color.FromArgb(56, 61, 76);              // #383D4C - Bordas sutis
-        public static readonly Color TextoEscuro = Color.FromArgb(236, 239, 244);           // #ECEFF4 - Texto principal branco gelo
-        public static readonly Color TextoSecundarioEscuro = Color.FromArgb(160, 174, 192); // #A0AEC0 - Subtítulos
-        public static readonly Color BarraSuperiorEscura = Color.FromArgb(18, 20, 24);      // #121418 - Barra de título/status
 
-        // =========================================================
-        // PALETA SLATE & INDIGO (MODO CLARO REFINADO)
-        // =========================================================
-        public static readonly Color FundoClaro = Color.FromArgb(248, 250, 252);            // #F8FAFC - Fundo gelo moderno
-        public static readonly Color FundoCardClaro = Color.FromArgb(255, 255, 255);        // #FFFFFF - Cards brancos puros
-        public static readonly Color FundoCardHoverClaro = Color.FromArgb(241, 245, 249);   // #F1F5F9 - Card em Hover
-        public static readonly Color FundoSidebarClaro = Color.FromArgb(255, 255, 255);     // #FFFFFF - Sidebar branca limpa
-        public static readonly Color FundoControleClaro = Color.FromArgb(241, 245, 249);    // #F1F5F9 - Botões secundários claros
-        public static readonly Color InputClaro = Color.FromArgb(255, 255, 255);            // #FFFFFF - Inputs brancos
-        public static readonly Color InputFocoClaro = Color.FromArgb(239, 246, 255);        // #EFF6FF - Input focado
-        public static readonly Color LinhaAlternadaClara = Color.FromArgb(248, 250, 252);   // #F8FAFC - Zebra DataGridView
-        public static readonly Color BordaClara = Color.FromArgb(226, 232, 240);            // #E2E8F0 - Bordas limpas
-        public static readonly Color TextoClaro = Color.FromArgb(15, 23, 42);               // #0F172A - Texto chumbo/preto legível
-        public static readonly Color TextoSecundarioClaro = Color.FromArgb(100, 116, 139);  // #64748B - Subtítulos neutros
-        public static readonly Color BarraSuperiorClara = Color.FromArgb(226, 232, 240);    // #E2E8F0 - Barra de título/status
 
-        // Cores Semânticas e de Destaque
-        public static Color CorDestaque => ModoEscuro ? Color.FromArgb(59, 130, 246) : Color.FromArgb(37, 99, 235);     // Indigo/Blue
-        public static Color CorSucesso => ModoEscuro ? Color.FromArgb(16, 185, 129) : Color.FromArgb(5, 150, 105);      // Emerald
-        public static Color CorAviso => ModoEscuro ? Color.FromArgb(245, 158, 11) : Color.FromArgb(217, 119, 6);        // Amber
-        public static Color CorPerigo => ModoEscuro ? Color.FromArgb(239, 68, 68) : Color.FromArgb(220, 38, 38);        // Rose
-        public static Color CorRoxo => ModoEscuro ? Color.FromArgb(168, 85, 247) : Color.FromArgb(126, 34, 206);        // Purple
-                                                                                                                        // Adicione junto às cores semânticas do GerenciadorTema.cs:
+
+        public static readonly Color FundoEscuro = Color.FromArgb(24, 26, 32);
+        public static readonly Color FundoCardEscuro = Color.FromArgb(34, 37, 46);
+        public static readonly Color FundoCardHoverEscuro = Color.FromArgb(40, 44, 55);
+        public static readonly Color FundoSidebarEscuro = Color.FromArgb(31, 34, 43);
+        public static readonly Color FundoControleEscuro = Color.FromArgb(42, 46, 57);
+        public static readonly Color InputEscuro = Color.FromArgb(30, 33, 41);
+        public static readonly Color InputFocoEscuro = Color.FromArgb(36, 41, 54);
+        public static readonly Color LinhaAlternadaEscura = Color.FromArgb(36, 40, 50);
+        public static readonly Color BordaEscura = Color.FromArgb(56, 61, 76);
+        public static readonly Color TextoEscuro = Color.FromArgb(236, 239, 244);
+        public static readonly Color TextoSecundarioEscuro = Color.FromArgb(160, 174, 192);
+        public static readonly Color BarraSuperiorEscura = Color.FromArgb(18, 20, 24);
+
+
+
+
+        public static readonly Color FundoClaro = Color.FromArgb(248, 250, 252);
+        public static readonly Color FundoCardClaro = Color.FromArgb(255, 255, 255);
+        public static readonly Color FundoCardHoverClaro = Color.FromArgb(241, 245, 249);
+        public static readonly Color FundoSidebarClaro = Color.FromArgb(255, 255, 255);
+        public static readonly Color FundoControleClaro = Color.FromArgb(241, 245, 249);
+        public static readonly Color InputClaro = Color.FromArgb(255, 255, 255);
+        public static readonly Color InputFocoClaro = Color.FromArgb(239, 246, 255);
+        public static readonly Color LinhaAlternadaClara = Color.FromArgb(248, 250, 252);
+        public static readonly Color BordaClara = Color.FromArgb(226, 232, 240);
+        public static readonly Color TextoClaro = Color.FromArgb(15, 23, 42);
+        public static readonly Color TextoSecundarioClaro = Color.FromArgb(100, 116, 139);
+        public static readonly Color BarraSuperiorClara = Color.FromArgb(226, 232, 240);
+
+
+        public static Color CorDestaque => ModoEscuro ? Color.FromArgb(59, 130, 246) : Color.FromArgb(37, 99, 235);
+        public static Color CorSucesso => ModoEscuro ? Color.FromArgb(16, 185, 129) : Color.FromArgb(5, 150, 105);
+        public static Color CorAviso => ModoEscuro ? Color.FromArgb(245, 158, 11) : Color.FromArgb(217, 119, 6);
+        public static Color CorPerigo => ModoEscuro ? Color.FromArgb(239, 68, 68) : Color.FromArgb(220, 38, 38);
+        public static Color CorRoxo => ModoEscuro ? Color.FromArgb(168, 85, 247) : Color.FromArgb(126, 34, 206);
+
         public static Color FundoObrigatorio => ModoEscuro ? Color.FromArgb(30, 43, 69) : InputFocoClaro;
 
         public static void CarregarTemaSalvo()
@@ -89,10 +89,10 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        /// <summary>
-        /// Aplica o tema na tela e em todos os seus controles filhos recursivamente,
-        /// aplicando Segoe UI, ícones vetoriais, cantos arredondados e bordas suaves.
-        /// </summary>
+
+
+
+
         public static void AplicarTema(Control controle)
         {
             if (controle == null) return;
@@ -107,7 +107,7 @@ namespace ProjetoExtensionista2026_2
             PadronizarFonte(controle);
             MonitorarControlesDinamicos(controle);
 
-            // 1. SplitContainer
+
             if (controle is SplitContainer split)
             {
                 split.BackColor = corBorda;
@@ -117,7 +117,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 2. Containers / Formulários
+
             if (controle is Form || controle is FlowLayoutPanel || controle is TableLayoutPanel || controle is SplitterPanel)
             {
                 controle.BackColor = corFundo;
@@ -161,7 +161,7 @@ namespace ProjetoExtensionista2026_2
                 }
                 else if (pnl.Height <= 2)
                 {
-                    // Linha divisória horizontal fina
+
                     pnl.BackColor = corBorda;
                 }
                 else
@@ -186,10 +186,10 @@ namespace ProjetoExtensionista2026_2
                 EstilizarTabControl(tab);
             }
 
-            // 3. Estiliza controles individuais
+
             EstilizarControleIndividual(controle, corFundo, corCard, corTexto, corInput, corBotao, corBorda);
 
-            // 4. Aplica recursivamente nos filhos
+
             foreach (Control filho in controle.Controls)
             {
                 AplicarTema(filho);
@@ -233,7 +233,7 @@ namespace ProjetoExtensionista2026_2
                     return;
                 }
 
-                // Soft Badges modernos de estoque
+
                 string badgeTag = lbl.Tag?.ToString() ?? "";
                 if (lbl.Name == "lblEstoque" || badgeTag.StartsWith("badge_") ||
                     lbl.BackColor == Color.PaleGreen || lbl.BackColor == Color.LightCoral || lbl.BackColor == Color.LightSalmon)
@@ -532,7 +532,7 @@ namespace ProjetoExtensionista2026_2
                     e.Graphics.DrawPath(pen, path);
                 }
 
-                // Accent Bar superior nos cards de KPI do Financeiro
+
                 Color? corAccent = ObterCorAccentGroupBox(grp.Name);
                 if (corAccent.HasValue)
                 {
@@ -559,7 +559,7 @@ namespace ProjetoExtensionista2026_2
         {
             if (string.IsNullOrEmpty(nome)) return null;
             if (nome.Contains("Custo")) return CorDestaque;
-            if (nome.Contains("Receita")) return Color.FromArgb(99, 102, 241); // Indigo
+            if (nome.Contains("Receita")) return Color.FromArgb(99, 102, 241);
             if (nome.Contains("Lucro")) return CorSucesso;
             if (nome.Contains("Margem")) return CorRoxo;
             return null;
@@ -573,10 +573,10 @@ namespace ProjetoExtensionista2026_2
 
             btn.Cursor = Cursors.Hand;
 
-            // Aplica ícone vetorial se aplicável
+
             AtribuirIconeBotao(btn, tag, nome, texto, corTexto);
 
-            // 1. Botão de navegação ativa da sidebar ou aba ativa
+
             if (tag == "nav_ativa" || tag == "aba_ativa")
             {
                 btn.BackColor = CorDestaque;
@@ -589,7 +589,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 2. Botão de navegação inativa da sidebar
+
             if (tag == "nav_item")
             {
                 Color fg = ModoEscuro ? Color.FromArgb(203, 213, 225) : Color.FromArgb(51, 65, 85);
@@ -603,7 +603,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 3. Tiles de forma de pagamento (selecionado vs normal)
+
             if (tag == "pagamento_ativo")
             {
                 btn.BackColor = ModoEscuro ? Color.FromArgb(30, 58, 138) : Color.FromArgb(219, 234, 254);
@@ -628,7 +628,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 4. Botão de Sucesso / Pagamento / Salvar / Adicionar
+
             if (tag == "sucesso" || texto.Contains("avançar") || texto.Contains("finalizar") ||
                 texto.Contains("salvar") || texto.Contains("confirmar") || nome == "btnAdicionar" || nome == "btnAdicionarPagamento")
             {
@@ -642,7 +642,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 5. Botão Primário (Login / Pesquisar / Novo / Atualizar / Cadastrar)
+
             if (tag == "primary" || texto == "login" || texto == "entrar" || texto.Contains("pesquisar") ||
                 texto.Contains("buscar") || texto.Contains("atualizar") || texto.Contains("filtrar") ||
                 nome == "btnCadastrar" || nome == "btnAdicionarCategoria" || nome == "btnAdicionarFornecedor")
@@ -656,7 +656,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 6. Botão de Perigo / Excluir / Limpar / Sair
+
             if (tag == "danger" || texto.Contains("excluir") || texto.Contains("limpar") ||
                 texto.Contains("sair") || texto.Contains("encerrar") || nome == "btnExcluir")
             {
@@ -671,7 +671,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 7. Botão Neutro / Padrão Flat
+
             btn.BackColor = corBotao;
             btn.ForeColor = corTexto;
             btn.FlatStyle = FlatStyle.Flat;
@@ -698,9 +698,9 @@ namespace ProjetoExtensionista2026_2
             };
         }
 
-        // =========================================================
-        // GERADOR DE ÍCONES VETORIAIS GDI+ (SEM EMOJIS)
-        // =========================================================
+
+
+
         private static void AtribuirIconeBotao(Button btn, string tag, string nome, string texto, Color corIcone)
         {
             string tipoIcone = IdentificarTipoIcone(nome, texto, tag);
@@ -936,12 +936,12 @@ namespace ProjetoExtensionista2026_2
             dgv.EnableHeadersVisualStyles = false;
             dgv.RowHeadersVisible = false;
 
-            // Mais espaçamento vertical (respiro estilo Dashboard)
+
             dgv.RowTemplate.Height = 36;
             dgv.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgv.ColumnHeadersHeight = 40;
 
-            // Cabeçalho
+
             dgv.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.Single;
             dgv.ColumnHeadersDefaultCellStyle.BackColor = corBotao;
             dgv.ColumnHeadersDefaultCellStyle.ForeColor = corTexto;
@@ -950,7 +950,7 @@ namespace ProjetoExtensionista2026_2
             dgv.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 9.5F, FontStyle.Bold);
             dgv.ColumnHeadersDefaultCellStyle.Padding = new Padding(8, 4, 8, 4);
 
-            // Linhas normais
+
             dgv.DefaultCellStyle.BackColor = corInput;
             dgv.DefaultCellStyle.ForeColor = corTexto;
             dgv.DefaultCellStyle.SelectionBackColor = ModoEscuro ? Color.FromArgb(30, 58, 138) : Color.FromArgb(219, 234, 254);
@@ -958,7 +958,7 @@ namespace ProjetoExtensionista2026_2
             dgv.DefaultCellStyle.Font = new Font("Segoe UI", 9.25F, FontStyle.Regular);
             dgv.DefaultCellStyle.Padding = new Padding(8, 2, 8, 2);
 
-            // Linhas alternadas (Zebra)
+
             dgv.AlternatingRowsDefaultCellStyle.BackColor = corZebra;
             dgv.AlternatingRowsDefaultCellStyle.ForeColor = corTexto;
             dgv.AlternatingRowsDefaultCellStyle.SelectionBackColor = ModoEscuro ? Color.FromArgb(30, 58, 138) : Color.FromArgb(219, 234, 254);

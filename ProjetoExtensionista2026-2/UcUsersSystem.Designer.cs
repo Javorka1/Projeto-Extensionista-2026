@@ -1,16 +1,16 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class UcUsersSystem
     {
-        /// <summary> 
-        /// Variável de designer necessária.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@
 
         #region Código gerado pelo Designer de Componentes
 
-        /// <summary> 
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             this.imgUser = new System.Windows.Forms.PictureBox();
@@ -33,17 +33,17 @@
             this.lblRole = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.imgUser)).BeginInit();
             this.SuspendLayout();
-            // 
-            // imgUser
-            // 
+
+
+
             this.imgUser.Location = new System.Drawing.Point(10, 10);
             this.imgUser.Name = "imgUser";
             this.imgUser.Size = new System.Drawing.Size(60, 60);
             this.imgUser.TabIndex = 0;
             this.imgUser.TabStop = false;
-            // 
-            // userName
-            // 
+
+
+
             this.userName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.userName.Location = new System.Drawing.Point(90, 28);
             this.userName.Name = "userName";
@@ -51,9 +51,9 @@
             this.userName.TabIndex = 1;
             this.userName.Text = "Placheholder";
             this.userName.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblRole
-            // 
+
+
+
             this.lblRole.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRole.Location = new System.Drawing.Point(321, 28);
             this.lblRole.Name = "lblRole";
@@ -61,9 +61,9 @@
             this.lblRole.TabIndex = 2;
             this.lblRole.Text = "Placheholder";
             this.lblRole.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // UcUsersSystem
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lblRole);

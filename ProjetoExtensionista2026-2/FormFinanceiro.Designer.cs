@@ -2,10 +2,10 @@ namespace ProjetoExtensionista2026_2
 {
     partial class FormFinanceiro
     {
-        /// <summary>Required designer variable.</summary>
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>Clean up any resources being used.</summary>
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -17,7 +17,7 @@ namespace ProjetoExtensionista2026_2
 
         #region Windows Form Designer generated code
 
-        /// <summary>Required method for Designer support.</summary>
+
         private void InitializeComponent()
         {
             this.pnlTopo = new System.Windows.Forms.Panel();
@@ -76,9 +76,9 @@ namespace ProjetoExtensionista2026_2
             ((System.ComponentModel.ISupportInitialize)(this.dgvResumoFornecedor)).BeginInit();
             this.SuspendLayout();
 
-            // 
-            // pnlTopo
-            // 
+
+
+
             this.pnlTopo.Controls.Add(this.lblTituloPrincipal);
             this.pnlTopo.Controls.Add(this.btnAtualizar);
             this.pnlTopo.Controls.Add(this.btnExportarCsv);
@@ -88,9 +88,9 @@ namespace ProjetoExtensionista2026_2
             this.pnlTopo.Size = new System.Drawing.Size(960, 60);
             this.pnlTopo.TabIndex = 0;
 
-            // 
-            // lblTituloPrincipal
-            // 
+
+
+
             this.lblTituloPrincipal.AutoSize = true;
             this.lblTituloPrincipal.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloPrincipal.Location = new System.Drawing.Point(20, 18);
@@ -99,9 +99,9 @@ namespace ProjetoExtensionista2026_2
             this.lblTituloPrincipal.TabIndex = 0;
             this.lblTituloPrincipal.Text = "Gestão Financeira e Estoque";
 
-            // 
-            // btnAtualizar
-            // 
+
+
+
             this.btnAtualizar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAtualizar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAtualizar.Location = new System.Drawing.Point(640, 14);
@@ -112,9 +112,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAtualizar.UseVisualStyleBackColor = true;
             this.btnAtualizar.Click += new System.EventHandler(this.btnAtualizar_Click);
 
-            // 
-            // btnExportarCsv
-            // 
+
+
+
             this.btnExportarCsv.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExportarCsv.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExportarCsv.Location = new System.Drawing.Point(795, 14);
@@ -125,9 +125,9 @@ namespace ProjetoExtensionista2026_2
             this.btnExportarCsv.UseVisualStyleBackColor = true;
             this.btnExportarCsv.Click += new System.EventHandler(this.btnExportarCsv_Click);
 
-            // 
-            // pnlIndicadores
-            // 
+
+
+
             this.pnlIndicadores.Controls.Add(this.tblKpi);
             this.pnlIndicadores.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlIndicadores.Location = new System.Drawing.Point(0, 60);
@@ -135,9 +135,9 @@ namespace ProjetoExtensionista2026_2
             this.pnlIndicadores.Padding = new System.Windows.Forms.Padding(16, 4, 16, 4);
             this.pnlIndicadores.Size = new System.Drawing.Size(960, 115);
             this.pnlIndicadores.TabIndex = 1;
-            // 
-            // tblKpi
-            // 
+
+
+
             this.tblKpi.ColumnCount = 4;
             this.tblKpi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblKpi.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -154,9 +154,9 @@ namespace ProjetoExtensionista2026_2
             this.tblKpi.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tblKpi.Size = new System.Drawing.Size(928, 107);
             this.tblKpi.TabIndex = 0;
-            // 
-            // grpCustoEstoque
-            // 
+
+
+
             this.grpCustoEstoque.Controls.Add(this.lblValorCustoEstoque);
             this.grpCustoEstoque.Controls.Add(this.lblDescCustoEstoque);
             this.grpCustoEstoque.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -168,9 +168,9 @@ namespace ProjetoExtensionista2026_2
             this.grpCustoEstoque.TabIndex = 0;
             this.grpCustoEstoque.TabStop = false;
             this.grpCustoEstoque.Text = "Custo em Estoque";
-            // 
-            // lblValorCustoEstoque
-            // 
+
+
+
             this.lblValorCustoEstoque.AutoSize = true;
             this.lblValorCustoEstoque.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorCustoEstoque.Location = new System.Drawing.Point(15, 30);
@@ -178,9 +178,9 @@ namespace ProjetoExtensionista2026_2
             this.lblValorCustoEstoque.Size = new System.Drawing.Size(78, 25);
             this.lblValorCustoEstoque.TabIndex = 0;
             this.lblValorCustoEstoque.Text = "R$ 0,00";
-            // 
-            // lblDescCustoEstoque
-            // 
+
+
+
             this.lblDescCustoEstoque.AutoSize = true;
             this.lblDescCustoEstoque.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescCustoEstoque.Location = new System.Drawing.Point(15, 62);
@@ -188,9 +188,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescCustoEstoque.Size = new System.Drawing.Size(167, 15);
             this.lblDescCustoEstoque.TabIndex = 1;
             this.lblDescCustoEstoque.Text = "Total investido em mercadorias";
-            // 
-            // grpReceitaPotencial
-            // 
+
+
+
             this.grpReceitaPotencial.Controls.Add(this.lblValorReceitaPotencial);
             this.grpReceitaPotencial.Controls.Add(this.lblDescReceitaPotencial);
             this.grpReceitaPotencial.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -202,9 +202,9 @@ namespace ProjetoExtensionista2026_2
             this.grpReceitaPotencial.TabIndex = 1;
             this.grpReceitaPotencial.TabStop = false;
             this.grpReceitaPotencial.Text = "Receita Potencial";
-            // 
-            // lblValorReceitaPotencial
-            // 
+
+
+
             this.lblValorReceitaPotencial.AutoSize = true;
             this.lblValorReceitaPotencial.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorReceitaPotencial.Location = new System.Drawing.Point(15, 30);
@@ -212,9 +212,9 @@ namespace ProjetoExtensionista2026_2
             this.lblValorReceitaPotencial.Size = new System.Drawing.Size(78, 25);
             this.lblValorReceitaPotencial.TabIndex = 0;
             this.lblValorReceitaPotencial.Text = "R$ 0,00";
-            // 
-            // lblDescReceitaPotencial
-            // 
+
+
+
             this.lblDescReceitaPotencial.AutoSize = true;
             this.lblDescReceitaPotencial.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescReceitaPotencial.Location = new System.Drawing.Point(15, 62);
@@ -222,9 +222,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescReceitaPotencial.Size = new System.Drawing.Size(142, 15);
             this.lblDescReceitaPotencial.TabIndex = 1;
             this.lblDescReceitaPotencial.Text = "Valor bruto de venda total";
-            // 
-            // grpLucroEstimado
-            // 
+
+
+
             this.grpLucroEstimado.Controls.Add(this.lblValorLucroEstimado);
             this.grpLucroEstimado.Controls.Add(this.lblDescLucroEstimado);
             this.grpLucroEstimado.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -236,9 +236,9 @@ namespace ProjetoExtensionista2026_2
             this.grpLucroEstimado.TabIndex = 2;
             this.grpLucroEstimado.TabStop = false;
             this.grpLucroEstimado.Text = "Lucro Projetado";
-            // 
-            // lblValorLucroEstimado
-            // 
+
+
+
             this.lblValorLucroEstimado.AutoSize = true;
             this.lblValorLucroEstimado.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorLucroEstimado.Location = new System.Drawing.Point(15, 30);
@@ -246,9 +246,9 @@ namespace ProjetoExtensionista2026_2
             this.lblValorLucroEstimado.Size = new System.Drawing.Size(78, 25);
             this.lblValorLucroEstimado.TabIndex = 0;
             this.lblValorLucroEstimado.Text = "R$ 0,00";
-            // 
-            // lblDescLucroEstimado
-            // 
+
+
+
             this.lblDescLucroEstimado.AutoSize = true;
             this.lblDescLucroEstimado.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescLucroEstimado.Location = new System.Drawing.Point(15, 62);
@@ -256,9 +256,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescLucroEstimado.Size = new System.Drawing.Size(166, 15);
             this.lblDescLucroEstimado.TabIndex = 1;
             this.lblDescLucroEstimado.Text = "Receita potencial menos custo";
-            // 
-            // grpMargemMedia
-            // 
+
+
+
             this.grpMargemMedia.Controls.Add(this.lblValorMargemMedia);
             this.grpMargemMedia.Controls.Add(this.lblDescMargemMedia);
             this.grpMargemMedia.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -270,9 +270,9 @@ namespace ProjetoExtensionista2026_2
             this.grpMargemMedia.TabIndex = 3;
             this.grpMargemMedia.TabStop = false;
             this.grpMargemMedia.Text = "Margem Média";
-            // 
-            // lblValorMargemMedia
-            // 
+
+
+
             this.lblValorMargemMedia.AutoSize = true;
             this.lblValorMargemMedia.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblValorMargemMedia.Location = new System.Drawing.Point(15, 30);
@@ -280,9 +280,9 @@ namespace ProjetoExtensionista2026_2
             this.lblValorMargemMedia.Size = new System.Drawing.Size(59, 25);
             this.lblValorMargemMedia.TabIndex = 0;
             this.lblValorMargemMedia.Text = "0,0%";
-            // 
-            // lblDescMargemMedia
-            // 
+
+
+
             this.lblDescMargemMedia.AutoSize = true;
             this.lblDescMargemMedia.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescMargemMedia.Location = new System.Drawing.Point(15, 62);
@@ -291,9 +291,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescMargemMedia.TabIndex = 1;
             this.lblDescMargemMedia.Text = "Rentabilidade média sobre custo";
 
-            // 
-            // pnlFiltros
-            // 
+
+
+
             this.pnlFiltros.Controls.Add(this.lblFiltroCategoria);
             this.pnlFiltros.Controls.Add(this.cmbCategoria);
             this.pnlFiltros.Controls.Add(this.lblBusca);
@@ -306,9 +306,9 @@ namespace ProjetoExtensionista2026_2
             this.pnlFiltros.Size = new System.Drawing.Size(960, 50);
             this.pnlFiltros.TabIndex = 2;
 
-            // 
-            // lblFiltroCategoria
-            // 
+
+
+
             this.lblFiltroCategoria.AutoSize = true;
             this.lblFiltroCategoria.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblFiltroCategoria.Location = new System.Drawing.Point(20, 15);
@@ -317,9 +317,9 @@ namespace ProjetoExtensionista2026_2
             this.lblFiltroCategoria.TabIndex = 0;
             this.lblFiltroCategoria.Text = "Categoria:";
 
-            // 
-            // cmbCategoria
-            // 
+
+
+
             this.cmbCategoria.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategoria.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbCategoria.FormattingEnabled = true;
@@ -328,9 +328,9 @@ namespace ProjetoExtensionista2026_2
             this.cmbCategoria.Size = new System.Drawing.Size(180, 24);
             this.cmbCategoria.TabIndex = 1;
 
-            // 
-            // lblBusca
-            // 
+
+
+
             this.lblBusca.AutoSize = true;
             this.lblBusca.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblBusca.Location = new System.Drawing.Point(294, 15);
@@ -339,18 +339,18 @@ namespace ProjetoExtensionista2026_2
             this.lblBusca.TabIndex = 2;
             this.lblBusca.Text = "Produto:";
 
-            // 
-            // txtBuscaProduto
-            // 
+
+
+
             this.txtBuscaProduto.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBuscaProduto.Location = new System.Drawing.Point(356, 12);
             this.txtBuscaProduto.Name = "txtBuscaProduto";
             this.txtBuscaProduto.Size = new System.Drawing.Size(230, 25);
             this.txtBuscaProduto.TabIndex = 3;
 
-            // 
-            // btnFiltrar
-            // 
+
+
+
             this.btnFiltrar.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFiltrar.Location = new System.Drawing.Point(600, 10);
             this.btnFiltrar.Name = "btnFiltrar";
@@ -360,9 +360,9 @@ namespace ProjetoExtensionista2026_2
             this.btnFiltrar.UseVisualStyleBackColor = true;
             this.btnFiltrar.Click += new System.EventHandler(this.btnFiltrar_Click);
 
-            // 
-            // btnLimparFiltros
-            // 
+
+
+
             this.btnLimparFiltros.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLimparFiltros.Location = new System.Drawing.Point(714, 10);
             this.btnLimparFiltros.Name = "btnLimparFiltros";
@@ -372,9 +372,9 @@ namespace ProjetoExtensionista2026_2
             this.btnLimparFiltros.UseVisualStyleBackColor = true;
             this.btnLimparFiltros.Click += new System.EventHandler(this.btnLimparFiltros_Click);
 
-            // 
-            // pnlAbas
-            // 
+
+
+
             this.pnlAbas.Controls.Add(this.btnAbaProdutos);
             this.pnlAbas.Controls.Add(this.btnAbaCategorias);
             this.pnlAbas.Controls.Add(this.btnAbaFornecedores);
@@ -384,9 +384,9 @@ namespace ProjetoExtensionista2026_2
             this.pnlAbas.Size = new System.Drawing.Size(960, 42);
             this.pnlAbas.TabIndex = 3;
 
-            // 
-            // btnAbaProdutos
-            // 
+
+
+
             this.btnAbaProdutos.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAbaProdutos.Location = new System.Drawing.Point(20, 4);
             this.btnAbaProdutos.Name = "btnAbaProdutos";
@@ -397,9 +397,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAbaProdutos.UseVisualStyleBackColor = true;
             this.btnAbaProdutos.Click += new System.EventHandler(this.btnAbaProdutos_Click);
 
-            // 
-            // btnAbaCategorias
-            // 
+
+
+
             this.btnAbaCategorias.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAbaCategorias.Location = new System.Drawing.Point(186, 4);
             this.btnAbaCategorias.Name = "btnAbaCategorias";
@@ -409,9 +409,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAbaCategorias.UseVisualStyleBackColor = true;
             this.btnAbaCategorias.Click += new System.EventHandler(this.btnAbaCategorias_Click);
 
-            // 
-            // btnAbaFornecedores
-            // 
+
+
+
             this.btnAbaFornecedores.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAbaFornecedores.Location = new System.Drawing.Point(352, 4);
             this.btnAbaFornecedores.Name = "btnAbaFornecedores";
@@ -421,9 +421,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAbaFornecedores.UseVisualStyleBackColor = true;
             this.btnAbaFornecedores.Click += new System.EventHandler(this.btnAbaFornecedores_Click);
 
-            // 
-            // pnlConteudoTabelas
-            // 
+
+
+
             this.pnlConteudoTabelas.Controls.Add(this.dgvProdutosFinanceiro);
             this.pnlConteudoTabelas.Controls.Add(this.dgvResumoCategoria);
             this.pnlConteudoTabelas.Controls.Add(this.dgvResumoFornecedor);
@@ -434,9 +434,9 @@ namespace ProjetoExtensionista2026_2
             this.pnlConteudoTabelas.Size = new System.Drawing.Size(960, 383);
             this.pnlConteudoTabelas.TabIndex = 4;
 
-            // 
-            // dgvProdutosFinanceiro
-            // 
+
+
+
             this.dgvProdutosFinanceiro.AllowUserToAddRows = false;
             this.dgvProdutosFinanceiro.AllowUserToDeleteRows = false;
             this.dgvProdutosFinanceiro.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -450,9 +450,9 @@ namespace ProjetoExtensionista2026_2
             this.dgvProdutosFinanceiro.Size = new System.Drawing.Size(920, 363);
             this.dgvProdutosFinanceiro.TabIndex = 0;
 
-            // 
-            // dgvResumoCategoria
-            // 
+
+
+
             this.dgvResumoCategoria.AllowUserToAddRows = false;
             this.dgvResumoCategoria.AllowUserToDeleteRows = false;
             this.dgvResumoCategoria.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -467,9 +467,9 @@ namespace ProjetoExtensionista2026_2
             this.dgvResumoCategoria.TabIndex = 1;
             this.dgvResumoCategoria.Visible = false;
 
-            // 
-            // dgvResumoFornecedor
-            // 
+
+
+
             this.dgvResumoFornecedor.AllowUserToAddRows = false;
             this.dgvResumoFornecedor.AllowUserToDeleteRows = false;
             this.dgvResumoFornecedor.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
@@ -484,9 +484,9 @@ namespace ProjetoExtensionista2026_2
             this.dgvResumoFornecedor.TabIndex = 2;
             this.dgvResumoFornecedor.Visible = false;
 
-            // 
-            // FormFinanceiro
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(960, 650);

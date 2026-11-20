@@ -2,15 +2,15 @@ namespace ProjetoExtensionista2026_2
 {
     partial class formDocumentosFiscais
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@ namespace ProjetoExtensionista2026_2
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -46,9 +46,9 @@ namespace ProjetoExtensionista2026_2
             ((System.ComponentModel.ISupportInitialize)(this.picPromissoria)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picCupom)).BeginInit();
             this.SuspendLayout();
-            // 
-            // groupBox1
-            // 
+
+
+
             this.groupBox1.Controls.Add(this.chkCupom);
             this.groupBox1.Controls.Add(this.chkPromissoria);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -58,9 +58,9 @@ namespace ProjetoExtensionista2026_2
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Documentos Fiscais";
-            // 
-            // chkCupom
-            // 
+
+
+
             this.chkCupom.AutoSize = true;
             this.chkCupom.Location = new System.Drawing.Point(480, 31);
             this.chkCupom.Name = "chkCupom";
@@ -68,9 +68,9 @@ namespace ProjetoExtensionista2026_2
             this.chkCupom.TabIndex = 1;
             this.chkCupom.Text = "Cupom Fiscal";
             this.chkCupom.UseVisualStyleBackColor = true;
-            // 
-            // chkPromissoria
-            // 
+
+
+
             this.chkPromissoria.AutoSize = true;
             this.chkPromissoria.Location = new System.Drawing.Point(54, 31);
             this.chkPromissoria.Name = "chkPromissoria";
@@ -78,9 +78,9 @@ namespace ProjetoExtensionista2026_2
             this.chkPromissoria.TabIndex = 0;
             this.chkPromissoria.Text = "Nota Promissoria";
             this.chkPromissoria.UseVisualStyleBackColor = true;
-            // 
-            // lblAviso
-            // 
+
+
+
             this.lblAviso.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAviso.Location = new System.Drawing.Point(12, 328);
             this.lblAviso.Name = "lblAviso";
@@ -88,9 +88,9 @@ namespace ProjetoExtensionista2026_2
             this.lblAviso.TabIndex = 1;
             this.lblAviso.Text = "Aviso:";
             this.lblAviso.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // cmbImpressoras
-            // 
+
+
+
             this.cmbImpressoras.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbImpressoras.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbImpressoras.FormattingEnabled = true;
@@ -98,9 +98,9 @@ namespace ProjetoExtensionista2026_2
             this.cmbImpressoras.Name = "cmbImpressoras";
             this.cmbImpressoras.Size = new System.Drawing.Size(471, 25);
             this.cmbImpressoras.TabIndex = 2;
-            // 
-            // label1
-            // 
+
+
+
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 15);
@@ -108,9 +108,9 @@ namespace ProjetoExtensionista2026_2
             this.label1.Size = new System.Drawing.Size(77, 17);
             this.label1.TabIndex = 3;
             this.label1.Text = "Impressora:";
-            // 
-            // btnAtualizarImpressoras
-            // 
+
+
+
             this.btnAtualizarImpressoras.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAtualizarImpressoras.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAtualizarImpressoras.Location = new System.Drawing.Point(572, 12);
@@ -119,9 +119,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAtualizarImpressoras.TabIndex = 4;
             this.btnAtualizarImpressoras.Text = "Atualizar";
             this.btnAtualizarImpressoras.UseVisualStyleBackColor = true;
-            // 
-            // btnVerPromissoria
-            // 
+
+
+
             this.btnVerPromissoria.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnVerPromissoria.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVerPromissoria.Location = new System.Drawing.Point(175, 285);
@@ -130,9 +130,9 @@ namespace ProjetoExtensionista2026_2
             this.btnVerPromissoria.TabIndex = 7;
             this.btnVerPromissoria.Text = "";
             this.btnVerPromissoria.UseVisualStyleBackColor = true;
-            // 
-            // btnVerCupom
-            // 
+
+
+
             this.btnVerCupom.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnVerCupom.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnVerCupom.Location = new System.Drawing.Point(586, 285);
@@ -141,9 +141,9 @@ namespace ProjetoExtensionista2026_2
             this.btnVerCupom.TabIndex = 8;
             this.btnVerCupom.Text = "";
             this.btnVerCupom.UseVisualStyleBackColor = true;
-            // 
-            // btnImprimir
-            // 
+
+
+
             this.btnImprimir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnImprimir.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnImprimir.Location = new System.Drawing.Point(492, 389);
@@ -152,9 +152,9 @@ namespace ProjetoExtensionista2026_2
             this.btnImprimir.TabIndex = 9;
             this.btnImprimir.Text = "Imprimir";
             this.btnImprimir.UseVisualStyleBackColor = true;
-            // 
-            // btnCancelar
-            // 
+
+
+
             this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelar.Location = new System.Drawing.Point(15, 389);
@@ -163,9 +163,9 @@ namespace ProjetoExtensionista2026_2
             this.btnCancelar.TabIndex = 10;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
-            // 
-            // btnSalvarPdf
-            // 
+
+
+
             this.btnSalvarPdf.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSalvarPdf.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalvarPdf.Location = new System.Drawing.Point(359, 389);
@@ -174,25 +174,25 @@ namespace ProjetoExtensionista2026_2
             this.btnSalvarPdf.TabIndex = 11;
             this.btnSalvarPdf.Text = "Salvar";
             this.btnSalvarPdf.UseVisualStyleBackColor = true;
-            // 
-            // picPromissoria
-            // 
+
+
+
             this.picPromissoria.Location = new System.Drawing.Point(41, 119);
             this.picPromissoria.Name = "picPromissoria";
             this.picPromissoria.Size = new System.Drawing.Size(174, 206);
             this.picPromissoria.TabIndex = 12;
             this.picPromissoria.TabStop = false;
-            // 
-            // picCupom
-            // 
+
+
+
             this.picCupom.Location = new System.Drawing.Point(455, 119);
             this.picCupom.Name = "picCupom";
             this.picCupom.Size = new System.Drawing.Size(174, 206);
             this.picCupom.TabIndex = 13;
             this.picCupom.TabStop = false;
-            // 
-            // formDocumentosFiscais
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(684, 431);

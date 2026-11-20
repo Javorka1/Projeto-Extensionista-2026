@@ -116,7 +116,7 @@ namespace ProjetoExtensionista2026_2
             }
             catch (TaskCanceledException)
             {
-                // Cancelamento esperado enquanto o operador digita
+
             }
         }
 
@@ -172,18 +172,18 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        /// <summary>
-        /// Sobrecarga síncrona mantida para compatibilidade com chamadas externas (ex: formVenda).
-        /// </summary>
+
+
+
         public void BuscarProdutosNoSupabase(string filtroTexto)
         {
             _ctsBusca?.Cancel();
             _ = BuscarProdutosNoSupabaseAsync(filtroTexto);
         }
 
-        /// <summary>
-        /// Busca assíncrona otimizada para alto volume de dados, com ordenação por relevância e limite estrito.
-        /// </summary>
+
+
+
         public async Task BuscarProdutosNoSupabaseAsync(string filtroTexto, CancellationToken token = default)
         {
             _filtroAtual = filtroTexto?.Trim() ?? "";
@@ -199,7 +199,7 @@ namespace ProjetoExtensionista2026_2
                         db.IniciarConexao();
 
                         const string sql = @"
-                            SELECT 
+                            SELECT
                                 p.id_product,
                                 p.name AS name_product,
                                 p.description AS description_product,
@@ -218,15 +218,15 @@ namespace ProjetoExtensionista2026_2
                             LEFT JOIN public.supplier s ON s.id_supplier = p.id_supplier
                             WHERE p.is_active = TRUE
                               AND (
-                                  @filtro = '' 
+                                  @filtro = ''
                                   OR p.id_product::TEXT = @filtro
-                                  OR p.name ILIKE @filtro_like 
+                                  OR p.name ILIKE @filtro_like
                                   OR p.description ILIKE @filtro_like
                                   OR p.location ILIKE @filtro_like
                                   OR c.name_category ILIKE @filtro_like
                               )
-                            ORDER BY 
-                                CASE 
+                            ORDER BY
+                                CASE
                                     WHEN p.id_product::TEXT = @filtro THEN 1
                                     WHEN p.name ILIKE @filtro_prefix THEN 2
                                     WHEN c.name_category ILIKE @filtro_prefix THEN 3
@@ -275,7 +275,7 @@ namespace ProjetoExtensionista2026_2
             }
             catch (OperationCanceledException)
             {
-                // Operação cancelada por nova digitação
+
             }
             catch (Exception ex)
             {
@@ -284,9 +284,9 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        /// <summary>
-        /// Reaproveita os cards já instanciados no painel e apenas oculta os excedentes para evitar recriação de controles.
-        /// </summary>
+
+
+
         private void RenderizarCards(List<ProdutoDTO> produtos)
         {
             flowLayoutPanelProdutos.SuspendLayout();

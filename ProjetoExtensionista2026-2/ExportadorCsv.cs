@@ -7,9 +7,9 @@ namespace ProjetoExtensionista2026_2
 {
     internal static class ExportadorCsv
     {
-        /// <summary>
-        /// Exporta o conteúdo visível de um DataGridView para CSV (UTF-8 com BOM, separador ';').
-        /// </summary>
+
+
+
         public static void ExportarDataGridView(DataGridView dgv, string nomeArquivoSugerido, string tituloDialogo = "Exportar Relatório CSV")
         {
             if (dgv == null || dgv.Rows.Count == 0)
@@ -31,7 +31,7 @@ namespace ProjetoExtensionista2026_2
                 {
                     var sb = new StringBuilder();
 
-                    // Cabeçalhos
+
                     var headers = new string[dgv.Columns.Count];
                     for (int i = 0; i < dgv.Columns.Count; i++)
                     {
@@ -39,7 +39,7 @@ namespace ProjetoExtensionista2026_2
                     }
                     sb.AppendLine(string.Join(";", headers));
 
-                    // Linhas formatadas conforme exibidas na grade
+
                     foreach (DataGridViewRow row in dgv.Rows)
                     {
                         if (row.IsNewRow || !row.Visible) continue;
@@ -57,7 +57,7 @@ namespace ProjetoExtensionista2026_2
                         sb.AppendLine(string.Join(";", cells));
                     }
 
-                    // UTF-8 com BOM para abertura correta de acentos no Excel/LibreOffice/Kate
+
                     File.WriteAllText(sfd.FileName, sb.ToString(), new UTF8Encoding(encoderShouldEmitUTF8Identifier: true));
                     MessageBox.Show("Relatório exportado com sucesso!", "Exportação Concluída", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

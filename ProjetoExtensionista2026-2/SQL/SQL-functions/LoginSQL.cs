@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,7 +35,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                 return passwordHash = BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
             }
         }
-        
+
         public string RolePicker(string username)
         {
             if (!string.IsNullOrWhiteSpace(username))
@@ -70,7 +70,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                 return null;
             }
         }
-        
+
 
         public int VerificarUsuario(string username, string passwordHash)
         {
@@ -123,7 +123,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                             cmd.Parameters.AddWithValue("u", username);
                             cmd.Parameters.AddWithValue("p", passwordHash);
                             cmd.ExecuteNonQuery();
-                            return 1; // Sucesso
+                            return 1;
                         }
                     }
                     catch (Exception ex)

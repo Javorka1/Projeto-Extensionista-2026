@@ -2,15 +2,15 @@ namespace ProjetoExtensionista2026_2
 {
     partial class UcPagamento
     {
-        /// <summary> 
-        /// Variável de designer necessária.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@ namespace ProjetoExtensionista2026_2
 
         #region Código gerado pelo Designer de Componentes
 
-        /// <summary> 
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             this.btnDinheiro = new System.Windows.Forms.Button();
@@ -45,9 +45,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAdicionarPagamento = new System.Windows.Forms.Button();
             this.gpbLancamentoValores.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnDinheiro
-            // 
+
+
+
             this.btnDinheiro.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDinheiro.Location = new System.Drawing.Point(0, 19);
             this.btnDinheiro.Name = "btnDinheiro";
@@ -56,9 +56,9 @@ namespace ProjetoExtensionista2026_2
             this.btnDinheiro.Tag = "pagamento_item";
             this.btnDinheiro.Text = "  Dinheiro";
             this.btnDinheiro.UseVisualStyleBackColor = true;
-            // 
-            // btnDebito
-            // 
+
+
+
             this.btnDebito.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDebito.Location = new System.Drawing.Point(0, 85);
             this.btnDebito.Name = "btnDebito";
@@ -67,9 +67,9 @@ namespace ProjetoExtensionista2026_2
             this.btnDebito.Tag = "pagamento_item";
             this.btnDebito.Text = "  Débito";
             this.btnDebito.UseVisualStyleBackColor = true;
-            // 
-            // btnCredito
-            // 
+
+
+
             this.btnCredito.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnCredito.Location = new System.Drawing.Point(0, 283);
             this.btnCredito.Name = "btnCredito";
@@ -78,9 +78,9 @@ namespace ProjetoExtensionista2026_2
             this.btnCredito.Tag = "pagamento_item";
             this.btnCredito.Text = "  Crédito";
             this.btnCredito.UseVisualStyleBackColor = true;
-            // 
-            // btnPix
-            // 
+
+
+
             this.btnPix.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnPix.Location = new System.Drawing.Point(0, 151);
             this.btnPix.Name = "btnPix";
@@ -89,9 +89,9 @@ namespace ProjetoExtensionista2026_2
             this.btnPix.Tag = "pagamento_item";
             this.btnPix.Text = "  Pix";
             this.btnPix.UseVisualStyleBackColor = true;
-            // 
-            // btnCarne
-            // 
+
+
+
             this.btnCarne.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.btnCarne.Location = new System.Drawing.Point(0, 217);
             this.btnCarne.Name = "btnCarne";
@@ -100,9 +100,9 @@ namespace ProjetoExtensionista2026_2
             this.btnCarne.Tag = "pagamento_item";
             this.btnCarne.Text = "  Carnê";
             this.btnCarne.UseVisualStyleBackColor = true;
-            // 
-            // gpbLancamentoValores
-            // 
+
+
+
             this.gpbLancamentoValores.Controls.Add(this.btnAdicionarPagamento);
             this.gpbLancamentoValores.Controls.Add(this.cmbParcelas);
             this.gpbLancamentoValores.Controls.Add(this.lblParcelas);
@@ -119,9 +119,9 @@ namespace ProjetoExtensionista2026_2
             this.gpbLancamentoValores.TabIndex = 5;
             this.gpbLancamentoValores.TabStop = false;
             this.gpbLancamentoValores.Text = "Lançamento de Valores";
-            // 
-            // btn1000
-            // 
+
+
+
             this.btn1000.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn1000.Location = new System.Drawing.Point(229, 103);
             this.btn1000.Name = "btn1000";
@@ -130,9 +130,9 @@ namespace ProjetoExtensionista2026_2
             this.btn1000.Tag = "1000";
             this.btn1000.Text = "+ 1000";
             this.btn1000.UseVisualStyleBackColor = true;
-            // 
-            // btn100
-            // 
+
+
+
             this.btn100.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn100.Location = new System.Drawing.Point(163, 103);
             this.btn100.Name = "btn100";
@@ -141,9 +141,9 @@ namespace ProjetoExtensionista2026_2
             this.btn100.Tag = "100";
             this.btn100.Text = "+ 100";
             this.btn100.UseVisualStyleBackColor = true;
-            // 
-            // btn10
-            // 
+
+
+
             this.btn10.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btn10.Location = new System.Drawing.Point(104, 103);
             this.btn10.Name = "btn10";
@@ -152,9 +152,9 @@ namespace ProjetoExtensionista2026_2
             this.btn10.Tag = "10";
             this.btn10.Text = "+ 10";
             this.btn10.UseVisualStyleBackColor = true;
-            // 
-            // btnExato
-            // 
+
+
+
             this.btnExato.Font = new System.Drawing.Font("Segoe UI", 8.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExato.Location = new System.Drawing.Point(10, 103);
             this.btnExato.Name = "btnExato";
@@ -162,9 +162,9 @@ namespace ProjetoExtensionista2026_2
             this.btnExato.TabIndex = 2;
             this.btnExato.Text = "Valor Exato";
             this.btnExato.UseVisualStyleBackColor = true;
-            // 
-            // txtPagamento
-            // 
+
+
+
             this.txtPagamento.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPagamento.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPagamento.Location = new System.Drawing.Point(10, 66);
@@ -173,9 +173,9 @@ namespace ProjetoExtensionista2026_2
             this.txtPagamento.Size = new System.Drawing.Size(285, 29);
             this.txtPagamento.TabIndex = 1;
             this.txtPagamento.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label1
-            // 
+
+
+
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(6, 39);
@@ -183,9 +183,9 @@ namespace ProjetoExtensionista2026_2
             this.label1.Size = new System.Drawing.Size(120, 21);
             this.label1.TabIndex = 0;
             this.label1.Text = "Valor Pago (R$):";
-            // 
-            // lblParcelas
-            // 
+
+
+
             this.lblParcelas.AutoSize = true;
             this.lblParcelas.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblParcelas.Location = new System.Drawing.Point(6, 152);
@@ -193,9 +193,9 @@ namespace ProjetoExtensionista2026_2
             this.lblParcelas.Size = new System.Drawing.Size(69, 21);
             this.lblParcelas.TabIndex = 8;
             this.lblParcelas.Text = "Parcelas:";
-            // 
-            // cmbParcelas
-            // 
+
+
+
             this.cmbParcelas.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbParcelas.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.cmbParcelas.FormattingEnabled = true;
@@ -216,9 +216,9 @@ namespace ProjetoExtensionista2026_2
             this.cmbParcelas.Name = "cmbParcelas";
             this.cmbParcelas.Size = new System.Drawing.Size(96, 29);
             this.cmbParcelas.TabIndex = 9;
-            // 
-            // btnAdicionarPagamento
-            // 
+
+
+
             this.btnAdicionarPagamento.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAdicionarPagamento.BackColor = System.Drawing.SystemColors.ControlDark;
             this.btnAdicionarPagamento.FlatAppearance.BorderSize = 0;
@@ -231,9 +231,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAdicionarPagamento.TabIndex = 10;
             this.btnAdicionarPagamento.Text = "Adicionar [Enter]";
             this.btnAdicionarPagamento.UseVisualStyleBackColor = false;
-            // 
-            // UcPagamento
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.gpbLancamentoValores);

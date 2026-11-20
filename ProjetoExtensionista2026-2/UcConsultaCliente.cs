@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
@@ -482,7 +482,7 @@ namespace ProjetoExtensionista2026_2
             }
             catch (TaskCanceledException)
             {
-                // Ignorado intencionalmente durante digitação rápida
+
             }
         }
 
@@ -502,7 +502,7 @@ namespace ProjetoExtensionista2026_2
                         string digitos = ExtrairDigitos(termoOriginal);
 
                         const string sql = @"
-                            SELECT 
+                            SELECT
                                 customer.id_customer,
                                 customer.name,
                                 customer.nickname,
@@ -531,8 +531,8 @@ namespace ProjetoExtensionista2026_2
                                 OR customer.phone ILIKE @apenasDigitos
                                 OR customer.id_customer::TEXT = @termoOriginal
                             )
-                            ORDER BY 
-                                CASE 
+                            ORDER BY
+                                CASE
                                     WHEN @termoOriginal = '' THEN 0
                                     WHEN customer.id_customer::TEXT = @termoOriginal THEN 1
                                     WHEN customer.name ILIKE @termoComeca THEN 2
@@ -589,7 +589,7 @@ namespace ProjetoExtensionista2026_2
             }
             catch (OperationCanceledException)
             {
-                // Cancelamento esperado
+
             }
             catch (Exception ex)
             {

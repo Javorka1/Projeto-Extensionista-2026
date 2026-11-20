@@ -27,9 +27,9 @@ namespace ProjetoExtensionista2026_2
             this.btnSalvar = new System.Windows.Forms.Button();
             this.btnCancelar = new System.Windows.Forms.Button();
             this.SuspendLayout();
-            // 
-            // lblTitulo
-            // 
+
+
+
             this.lblTitulo.AutoSize = true;
             this.lblTitulo.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.Location = new System.Drawing.Point(30, 20);
@@ -37,9 +37,9 @@ namespace ProjetoExtensionista2026_2
             this.lblTitulo.Size = new System.Drawing.Size(155, 19);
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "Alteração de Senha";
-            // 
-            // lblSenhaAtual
-            // 
+
+
+
             this.lblSenhaAtual.AutoSize = true;
             this.lblSenhaAtual.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSenhaAtual.Location = new System.Drawing.Point(30, 60);
@@ -47,18 +47,18 @@ namespace ProjetoExtensionista2026_2
             this.lblSenhaAtual.Size = new System.Drawing.Size(81, 16);
             this.lblSenhaAtual.TabIndex = 1;
             this.lblSenhaAtual.Text = "Senha Atual:";
-            // 
-            // txtSenhaAtual
-            // 
+
+
+
             this.txtSenhaAtual.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSenhaAtual.Location = new System.Drawing.Point(33, 80);
             this.txtSenhaAtual.Name = "txtSenhaAtual";
             this.txtSenhaAtual.Size = new System.Drawing.Size(280, 23);
             this.txtSenhaAtual.TabIndex = 2;
             this.txtSenhaAtual.UseSystemPasswordChar = true;
-            // 
-            // lblNovaSenha
-            // 
+
+
+
             this.lblNovaSenha.AutoSize = true;
             this.lblNovaSenha.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNovaSenha.Location = new System.Drawing.Point(30, 115);
@@ -66,18 +66,18 @@ namespace ProjetoExtensionista2026_2
             this.lblNovaSenha.Size = new System.Drawing.Size(81, 16);
             this.lblNovaSenha.TabIndex = 3;
             this.lblNovaSenha.Text = "Nova Senha:";
-            // 
-            // txtNovaSenha
-            // 
+
+
+
             this.txtNovaSenha.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNovaSenha.Location = new System.Drawing.Point(33, 135);
             this.txtNovaSenha.Name = "txtNovaSenha";
             this.txtNovaSenha.Size = new System.Drawing.Size(280, 23);
             this.txtNovaSenha.TabIndex = 4;
             this.txtNovaSenha.UseSystemPasswordChar = true;
-            // 
-            // lblConfirmaSenha
-            // 
+
+
+
             this.lblConfirmaSenha.AutoSize = true;
             this.lblConfirmaSenha.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblConfirmaSenha.Location = new System.Drawing.Point(30, 170);
@@ -85,18 +85,18 @@ namespace ProjetoExtensionista2026_2
             this.lblConfirmaSenha.Size = new System.Drawing.Size(143, 16);
             this.lblConfirmaSenha.TabIndex = 5;
             this.lblConfirmaSenha.Text = "Confirmar Nova Senha:";
-            // 
-            // txtConfirmaSenha
-            // 
+
+
+
             this.txtConfirmaSenha.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtConfirmaSenha.Location = new System.Drawing.Point(33, 190);
             this.txtConfirmaSenha.Name = "txtConfirmaSenha";
             this.txtConfirmaSenha.Size = new System.Drawing.Size(280, 23);
             this.txtConfirmaSenha.TabIndex = 6;
             this.txtConfirmaSenha.UseSystemPasswordChar = true;
-            // 
-            // btnSalvar
-            // 
+
+
+
             this.btnSalvar.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalvar.Location = new System.Drawing.Point(33, 235);
             this.btnSalvar.Name = "btnSalvar";
@@ -105,9 +105,9 @@ namespace ProjetoExtensionista2026_2
             this.btnSalvar.Text = "Salvar";
             this.btnSalvar.UseVisualStyleBackColor = true;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
-            // 
-            // btnCancelar
-            // 
+
+
+
             this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancelar.Font = new System.Drawing.Font("Arial", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelar.Location = new System.Drawing.Point(183, 235);
@@ -117,9 +117,9 @@ namespace ProjetoExtensionista2026_2
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
-            // 
-            // FormAlterarSenha
-            // 
+
+
+
             this.AcceptButton = this.btnSalvar;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

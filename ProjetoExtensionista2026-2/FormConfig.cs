@@ -19,19 +19,19 @@ namespace ProjetoExtensionista2026_2
 
         private void btnAlternarTema_Click(object sender, EventArgs e)
         {
-            // 1. Inverte o tema atual
+
             GerenciadorTema.ModoEscuro = !GerenciadorTema.ModoEscuro;
 
-            // 2. Salva a preferência
+
             GerenciadorTema.SalvarTemaAtual();
 
-            // 3. Aplica o novo tema nesta tela e em todas as outras telas abertas
+
             foreach (Form formAberto in Application.OpenForms)
             {
                 GerenciadorTema.AplicarTema(formAberto);
             }
 
-            // 4. Atualiza o texto do botão
+
             AtualizarTextoBotao();
         }
 

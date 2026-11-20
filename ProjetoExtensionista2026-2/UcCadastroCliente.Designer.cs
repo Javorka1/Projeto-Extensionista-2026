@@ -1,16 +1,16 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class UcCadastroCliente
     {
-        /// <summary> 
-        /// Variável de designer necessária.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@
 
         #region Código gerado pelo Designer de Componentes
 
-        /// <summary> 
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             this.btnCarregarFoto = new System.Windows.Forms.Button();
@@ -79,9 +79,9 @@
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnCarregarFoto
-            // 
+
+
+
             this.btnCarregarFoto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCarregarFoto.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCarregarFoto.Location = new System.Drawing.Point(250, 137);
@@ -91,17 +91,17 @@
             this.btnCarregarFoto.Text = "Carregar";
             this.btnCarregarFoto.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnCarregarFoto.UseVisualStyleBackColor = true;
-            // 
-            // txtFotoUrl
-            // 
+
+
+
             this.txtFotoUrl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtFotoUrl.Location = new System.Drawing.Point(14, 137);
             this.txtFotoUrl.Name = "txtFotoUrl";
             this.txtFotoUrl.Size = new System.Drawing.Size(230, 27);
             this.txtFotoUrl.TabIndex = 69;
-            // 
-            // btnRemoverFoto
-            // 
+
+
+
             this.btnRemoverFoto.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnRemoverFoto.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRemoverFoto.Location = new System.Drawing.Point(250, 95);
@@ -110,9 +110,9 @@
             this.btnRemoverFoto.TabIndex = 68;
             this.btnRemoverFoto.Text = "Excluir";
             this.btnRemoverFoto.UseVisualStyleBackColor = true;
-            // 
-            // btnEscolherArquivo
-            // 
+
+
+
             this.btnEscolherArquivo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEscolherArquivo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEscolherArquivo.Location = new System.Drawing.Point(140, 95);
@@ -121,9 +121,9 @@
             this.btnEscolherArquivo.TabIndex = 67;
             this.btnEscolherArquivo.Text = "Selecionar";
             this.btnEscolherArquivo.UseVisualStyleBackColor = true;
-            // 
-            // picFotoPreview
-            // 
+
+
+
             this.picFotoPreview.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picFotoPreview.Location = new System.Drawing.Point(14, 31);
             this.picFotoPreview.Name = "picFotoPreview";
@@ -131,9 +131,9 @@
             this.picFotoPreview.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picFotoPreview.TabIndex = 66;
             this.picFotoPreview.TabStop = false;
-            // 
-            // btnSalvar
-            // 
+
+
+
             this.btnSalvar.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSalvar.Location = new System.Drawing.Point(719, 496);
             this.btnSalvar.Name = "btnSalvar";
@@ -142,9 +142,9 @@
             this.btnSalvar.Text = "Cadastrar Cliente";
             this.btnSalvar.UseVisualStyleBackColor = true;
             this.btnSalvar.Click += new System.EventHandler(this.btnSalvar_Click);
-            // 
-            // btnLimpar
-            // 
+
+
+
             this.btnLimpar.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLimpar.Location = new System.Drawing.Point(548, 496);
             this.btnLimpar.Name = "btnLimpar";
@@ -153,9 +153,9 @@
             this.btnLimpar.Text = "Limpar";
             this.btnLimpar.UseVisualStyleBackColor = true;
             this.btnLimpar.Click += new System.EventHandler(this.btnLimpar_Click);
-            // 
-            // btnCancelar
-            // 
+
+
+
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancelar.Location = new System.Drawing.Point(21, 496);
             this.btnCancelar.Name = "btnCancelar";
@@ -164,9 +164,9 @@
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
-            // 
-            // groupBox1
-            // 
+
+
+
             this.groupBox1.Controls.Add(this.rbInativo);
             this.groupBox1.Controls.Add(this.rbAtivo);
             this.groupBox1.Controls.Add(this.textBox9);
@@ -177,9 +177,9 @@
             this.groupBox1.TabIndex = 59;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Status";
-            // 
-            // rbInativo
-            // 
+
+
+
             this.rbInativo.AutoSize = true;
             this.rbInativo.Location = new System.Drawing.Point(79, 25);
             this.rbInativo.Name = "rbInativo";
@@ -187,9 +187,9 @@
             this.rbInativo.TabIndex = 24;
             this.rbInativo.Text = "Inativo";
             this.rbInativo.UseVisualStyleBackColor = true;
-            // 
-            // rbAtivo
-            // 
+
+
+
             this.rbAtivo.AutoSize = true;
             this.rbAtivo.Checked = true;
             this.rbAtivo.Location = new System.Drawing.Point(14, 25);
@@ -199,9 +199,9 @@
             this.rbAtivo.TabStop = true;
             this.rbAtivo.Text = "Ativo";
             this.rbAtivo.UseVisualStyleBackColor = true;
-            // 
-            // textBox9
-            // 
+
+
+
             this.textBox9.BackColor = System.Drawing.SystemColors.Control;
             this.textBox9.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBox9.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -213,9 +213,9 @@
             this.textBox9.Size = new System.Drawing.Size(310, 38);
             this.textBox9.TabIndex = 22;
             this.textBox9.Text = "Atenção: Esta ação não excluirá nada do sistema, apenas bloqueará seu uso.";
-            // 
-            // txtCodigo
-            // 
+
+
+
             this.txtCodigo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCodigo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCodigo.Location = new System.Drawing.Point(16, 50);
@@ -223,9 +223,9 @@
             this.txtCodigo.ReadOnly = true;
             this.txtCodigo.Size = new System.Drawing.Size(104, 25);
             this.txtCodigo.TabIndex = 49;
-            // 
-            // label4
-            // 
+
+
+
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.Location = new System.Drawing.Point(13, 30);
@@ -233,9 +233,9 @@
             this.label4.Size = new System.Drawing.Size(114, 17);
             this.label4.TabIndex = 48;
             this.label4.Text = "Código(Opcional):";
-            // 
-            // txtDescricao
-            // 
+
+
+
             this.txtDescricao.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtDescricao.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDescricao.Location = new System.Drawing.Point(14, 32);
@@ -243,9 +243,9 @@
             this.txtDescricao.Name = "txtDescricao";
             this.txtDescricao.Size = new System.Drawing.Size(310, 109);
             this.txtDescricao.TabIndex = 47;
-            // 
-            // txtNome
-            // 
+
+
+
             this.txtNome.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNome.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNome.Location = new System.Drawing.Point(147, 50);
@@ -253,9 +253,9 @@
             this.txtNome.Size = new System.Drawing.Size(375, 25);
             this.txtNome.TabIndex = 43;
             this.txtNome.Tag = "obrigatorio";
-            // 
-            // label1
-            // 
+
+
+
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(147, 30);
@@ -263,18 +263,18 @@
             this.label1.Size = new System.Drawing.Size(90, 17);
             this.label1.TabIndex = 42;
             this.label1.Text = "Nome Cliente:";
-            // 
-            // txtApelido
-            // 
+
+
+
             this.txtApelido.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtApelido.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtApelido.Location = new System.Drawing.Point(147, 98);
             this.txtApelido.Name = "txtApelido";
             this.txtApelido.Size = new System.Drawing.Size(375, 25);
             this.txtApelido.TabIndex = 79;
-            // 
-            // label5
-            // 
+
+
+
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label5.Location = new System.Drawing.Point(147, 78);
@@ -282,18 +282,18 @@
             this.label5.Size = new System.Drawing.Size(85, 17);
             this.label5.TabIndex = 78;
             this.label5.Text = "Nome Social:";
-            // 
-            // txtCpfCnpj
-            // 
+
+
+
             this.txtCpfCnpj.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCpfCnpj.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCpfCnpj.Location = new System.Drawing.Point(16, 146);
             this.txtCpfCnpj.Name = "txtCpfCnpj";
             this.txtCpfCnpj.Size = new System.Drawing.Size(242, 25);
             this.txtCpfCnpj.TabIndex = 81;
-            // 
-            // label6
-            // 
+
+
+
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.Location = new System.Drawing.Point(13, 126);
@@ -301,18 +301,18 @@
             this.label6.Size = new System.Drawing.Size(84, 17);
             this.label6.TabIndex = 80;
             this.label6.Text = "CPF ou CNPJ:";
-            // 
-            // txtRgIe
-            // 
+
+
+
             this.txtRgIe.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtRgIe.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtRgIe.Location = new System.Drawing.Point(274, 146);
             this.txtRgIe.Name = "txtRgIe";
             this.txtRgIe.Size = new System.Drawing.Size(248, 25);
             this.txtRgIe.TabIndex = 86;
-            // 
-            // label9
-            // 
+
+
+
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label9.Location = new System.Drawing.Point(275, 126);
@@ -320,18 +320,18 @@
             this.label9.Size = new System.Drawing.Size(28, 17);
             this.label9.TabIndex = 85;
             this.label9.Text = "RG:";
-            // 
-            // txtEmail
-            // 
+
+
+
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.Location = new System.Drawing.Point(246, 55);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(276, 25);
             this.txtEmail.TabIndex = 90;
-            // 
-            // label7
-            // 
+
+
+
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(243, 35);
@@ -339,18 +339,18 @@
             this.label7.Size = new System.Drawing.Size(42, 17);
             this.label7.TabIndex = 89;
             this.label7.Text = "Email:";
-            // 
-            // txtTelefone
-            // 
+
+
+
             this.txtTelefone.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtTelefone.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTelefone.Location = new System.Drawing.Point(16, 55);
             this.txtTelefone.Name = "txtTelefone";
             this.txtTelefone.Size = new System.Drawing.Size(212, 25);
             this.txtTelefone.TabIndex = 88;
-            // 
-            // label10
-            // 
+
+
+
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(13, 35);
@@ -358,18 +358,18 @@
             this.label10.Size = new System.Drawing.Size(60, 17);
             this.label10.TabIndex = 87;
             this.label10.Text = "Telefone:";
-            // 
-            // txtBairro
-            // 
+
+
+
             this.txtBairro.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBairro.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtBairro.Location = new System.Drawing.Point(246, 106);
             this.txtBairro.Name = "txtBairro";
             this.txtBairro.Size = new System.Drawing.Size(276, 25);
             this.txtBairro.TabIndex = 94;
-            // 
-            // label11
-            // 
+
+
+
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label11.Location = new System.Drawing.Point(243, 86);
@@ -377,18 +377,18 @@
             this.label11.Size = new System.Drawing.Size(46, 17);
             this.label11.TabIndex = 93;
             this.label11.Text = "Bairro:";
-            // 
-            // txtCep
-            // 
+
+
+
             this.txtCep.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCep.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCep.Location = new System.Drawing.Point(16, 106);
             this.txtCep.Name = "txtCep";
             this.txtCep.Size = new System.Drawing.Size(212, 25);
             this.txtCep.TabIndex = 92;
-            // 
-            // label13
-            // 
+
+
+
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label13.Location = new System.Drawing.Point(13, 86);
@@ -396,18 +396,18 @@
             this.label13.Size = new System.Drawing.Size(33, 17);
             this.label13.TabIndex = 91;
             this.label13.Text = "CEP:";
-            // 
-            // txtNumero
-            // 
+
+
+
             this.txtNumero.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtNumero.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNumero.Location = new System.Drawing.Point(398, 164);
             this.txtNumero.Name = "txtNumero";
             this.txtNumero.Size = new System.Drawing.Size(124, 25);
             this.txtNumero.TabIndex = 98;
-            // 
-            // label2
-            // 
+
+
+
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(395, 144);
@@ -415,18 +415,18 @@
             this.label2.Size = new System.Drawing.Size(59, 17);
             this.label2.TabIndex = 97;
             this.label2.Text = "Numero:";
-            // 
-            // txtRua
-            // 
+
+
+
             this.txtRua.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtRua.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtRua.Location = new System.Drawing.Point(16, 164);
             this.txtRua.Name = "txtRua";
             this.txtRua.Size = new System.Drawing.Size(371, 25);
             this.txtRua.TabIndex = 96;
-            // 
-            // label12
-            // 
+
+
+
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.Location = new System.Drawing.Point(13, 144);
@@ -434,9 +434,9 @@
             this.label12.Size = new System.Drawing.Size(33, 17);
             this.label12.TabIndex = 95;
             this.label12.Text = "Rua:";
-            // 
-            // label14
-            // 
+
+
+
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label14.Location = new System.Drawing.Point(395, 201);
@@ -444,18 +444,18 @@
             this.label14.Size = new System.Drawing.Size(26, 17);
             this.label14.TabIndex = 101;
             this.label14.Text = "UF:";
-            // 
-            // txtCidade
-            // 
+
+
+
             this.txtCidade.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtCidade.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCidade.Location = new System.Drawing.Point(16, 221);
             this.txtCidade.Name = "txtCidade";
             this.txtCidade.Size = new System.Drawing.Size(212, 25);
             this.txtCidade.TabIndex = 100;
-            // 
-            // label15
-            // 
+
+
+
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label15.Location = new System.Drawing.Point(13, 201);
@@ -463,9 +463,9 @@
             this.label15.Size = new System.Drawing.Size(52, 17);
             this.label15.TabIndex = 99;
             this.label15.Text = "Cidade:";
-            // 
-            // cboUf
-            // 
+
+
+
             this.cboUf.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboUf.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboUf.FormattingEnabled = true;
@@ -501,9 +501,9 @@
             this.cboUf.Name = "cboUf";
             this.cboUf.Size = new System.Drawing.Size(124, 23);
             this.cboUf.TabIndex = 102;
-            // 
-            // groupBox2
-            // 
+
+
+
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.label9);
@@ -521,9 +521,9 @@
             this.groupBox2.TabIndex = 103;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Dados Pessoais";
-            // 
-            // groupBox3
-            // 
+
+
+
             this.groupBox3.Controls.Add(this.label10);
             this.groupBox3.Controls.Add(this.label7);
             this.groupBox3.Controls.Add(this.cboUf);
@@ -547,9 +547,9 @@
             this.groupBox3.TabIndex = 104;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Contato e Endereço";
-            // 
-            // groupBox4
-            // 
+
+
+
             this.groupBox4.Controls.Add(this.picFotoPreview);
             this.groupBox4.Controls.Add(this.txtFotoUrl);
             this.groupBox4.Controls.Add(this.btnRemoverFoto);
@@ -562,9 +562,9 @@
             this.groupBox4.TabIndex = 105;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Foto do Cliente";
-            // 
-            // groupBox5
-            // 
+
+
+
             this.groupBox5.Controls.Add(this.txtDescricao);
             this.groupBox5.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox5.Location = new System.Drawing.Point(586, 326);
@@ -573,9 +573,9 @@
             this.groupBox5.TabIndex = 106;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Observacoes / Notas";
-            // 
-            // lblAtualizado
-            // 
+
+
+
             this.lblAtualizado.AutoSize = true;
             this.lblAtualizado.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAtualizado.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -584,9 +584,9 @@
             this.lblAtualizado.Size = new System.Drawing.Size(68, 13);
             this.lblAtualizado.TabIndex = 110;
             this.lblAtualizado.Text = "Atualizado: ";
-            // 
-            // UcCadastroCliente
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.lblAtualizado);

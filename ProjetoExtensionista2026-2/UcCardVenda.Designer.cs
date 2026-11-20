@@ -2,15 +2,15 @@ namespace ProjetoExtensionista2026_2
 {
     partial class UcCardVenda
     {
-        /// <summary> 
-        /// Variável de designer necessária.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@ namespace ProjetoExtensionista2026_2
 
         #region Código gerado pelo Designer de Componentes
 
-        /// <summary> 
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
@@ -42,10 +42,10 @@ namespace ProjetoExtensionista2026_2
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFoto)).BeginInit();
             this.SuspendLayout();
-            // 
-            // panel1
-            // 
-            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+
+
+
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Controls.Add(this.btnDiminuir);
@@ -62,18 +62,18 @@ namespace ProjetoExtensionista2026_2
             this.panel1.Padding = new System.Windows.Forms.Padding(5, 5, 5, 0);
             this.panel1.Size = new System.Drawing.Size(546, 60);
             this.panel1.TabIndex = 0;
-            // 
-            // panel2
-            // 
+
+
+
             this.panel2.BackColor = System.Drawing.SystemColors.ControlText;
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(5, 59);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(536, 1);
             this.panel2.TabIndex = 11;
-            // 
-            // btnDiminuir
-            // 
+
+
+
             this.btnDiminuir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnDiminuir.Location = new System.Drawing.Point(323, 27);
             this.btnDiminuir.Name = "btnDiminuir";
@@ -82,9 +82,9 @@ namespace ProjetoExtensionista2026_2
             this.btnDiminuir.Text = "-";
             this.btnDiminuir.UseVisualStyleBackColor = true;
             this.btnDiminuir.Click += new System.EventHandler(this.btnDiminuir_Click);
-            // 
-            // btnAumentar
-            // 
+
+
+
             this.btnAumentar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAumentar.Location = new System.Drawing.Point(383, 27);
             this.btnAumentar.Name = "btnAumentar";
@@ -93,9 +93,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAumentar.Text = "+";
             this.btnAumentar.UseVisualStyleBackColor = true;
             this.btnAumentar.Click += new System.EventHandler(this.btnAumentar_Click);
-            // 
-            // btnExcluir
-            // 
+
+
+
             this.btnExcluir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExcluir.FlatAppearance.BorderSize = 0;
             this.btnExcluir.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -107,9 +107,9 @@ namespace ProjetoExtensionista2026_2
             this.btnExcluir.Text = "X";
             this.btnExcluir.UseVisualStyleBackColor = true;
             this.btnExcluir.Click += new System.EventHandler(this.btnExcluir_Click);
-            // 
-            // lblCodigo
-            // 
+
+
+
             this.lblCodigo.AutoSize = true;
             this.lblCodigo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCodigo.Location = new System.Drawing.Point(63, 29);
@@ -117,10 +117,10 @@ namespace ProjetoExtensionista2026_2
             this.lblCodigo.Size = new System.Drawing.Size(51, 17);
             this.lblCodigo.TabIndex = 3;
             this.lblCodigo.Text = "Código";
-            // 
-            // lblNomeProduto
-            // 
-            this.lblNomeProduto.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+
+
+
+            this.lblNomeProduto.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblNomeProduto.AutoEllipsis = true;
             this.lblNomeProduto.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -131,9 +131,9 @@ namespace ProjetoExtensionista2026_2
             this.lblNomeProduto.Size = new System.Drawing.Size(165, 20);
             this.lblNomeProduto.TabIndex = 2;
             this.lblNomeProduto.Text = "Produto ...";
-            // 
-            // picFoto
-            // 
+
+
+
             this.picFoto.ErrorImage = null;
             this.picFoto.Location = new System.Drawing.Point(5, 5);
             this.picFoto.Name = "picFoto";
@@ -141,9 +141,9 @@ namespace ProjetoExtensionista2026_2
             this.picFoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFoto.TabIndex = 1;
             this.picFoto.TabStop = false;
-            // 
-            // lblQuantidade
-            // 
+
+
+
             this.lblQuantidade.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblQuantidade.BackColor = System.Drawing.Color.Transparent;
             this.lblQuantidade.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -153,9 +153,9 @@ namespace ProjetoExtensionista2026_2
             this.lblQuantidade.TabIndex = 10;
             this.lblQuantidade.Text = "123";
             this.lblQuantidade.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // lblPrecoTotal
-            // 
+
+
+
             this.lblPrecoTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPrecoTotal.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPrecoTotal.Location = new System.Drawing.Point(415, 27);
@@ -164,9 +164,9 @@ namespace ProjetoExtensionista2026_2
             this.lblPrecoTotal.TabIndex = 5;
             this.lblPrecoTotal.Text = "R$ 00,00";
             this.lblPrecoTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblPrecoUnitario
-            // 
+
+
+
             this.lblPrecoUnitario.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblPrecoUnitario.BackColor = System.Drawing.Color.Transparent;
             this.lblPrecoUnitario.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -176,9 +176,9 @@ namespace ProjetoExtensionista2026_2
             this.lblPrecoUnitario.TabIndex = 7;
             this.lblPrecoUnitario.Text = "R$ 00,00";
             this.lblPrecoUnitario.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // UcCardVenda
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panel1);

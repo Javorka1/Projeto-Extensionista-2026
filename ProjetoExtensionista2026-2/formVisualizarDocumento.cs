@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -21,7 +21,7 @@ namespace ProjetoExtensionista2026_2
             _paginas = paginas ?? new List<Bitmap>();
             _indiceAtual = Math.Max(0, Math.Min(paginaInicial, _paginas.Count - 1));
 
-            // Estilo popup em tela cheia sobre tudo
+
             FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             StartPosition = FormStartPosition.CenterScreen;
@@ -30,7 +30,7 @@ namespace ProjetoExtensionista2026_2
             KeyPreview = true;
             Cursor = Cursors.Hand;
 
-            // Clicar no fundo escuro (fora da folha) fecha o popup
+
             Click += (s, e) => Close();
 
             _lblTopo = new Label

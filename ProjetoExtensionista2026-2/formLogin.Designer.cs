@@ -2,15 +2,15 @@ namespace ProjetoExtensionista2026_2
 {
     partial class formLogin
     {
-        /// <summary>
-        /// Variável de designer necessária.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@ namespace ProjetoExtensionista2026_2
 
         #region Código gerado pelo Windows Form Designer
 
-        /// <summary>
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(formLogin));
@@ -44,18 +44,18 @@ namespace ProjetoExtensionista2026_2
             this.pnlCardLogin.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.lockIcon)).BeginInit();
             this.SuspendLayout();
-            // 
-            // panel1
-            // 
+
+
+
             this.panel1.Controls.Add(this.pnlCardLogin);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(684, 641);
             this.panel1.TabIndex = 0;
-            // 
-            // pnlCardLogin
-            // 
+
+
+
             this.pnlCardLogin.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.pnlCardLogin.Controls.Add(this.labelSignIn);
             this.pnlCardLogin.Controls.Add(this.loginButton);
@@ -72,9 +72,9 @@ namespace ProjetoExtensionista2026_2
             this.pnlCardLogin.Size = new System.Drawing.Size(400, 520);
             this.pnlCardLogin.TabIndex = 0;
             this.pnlCardLogin.Tag = "card";
-            // 
-            // labelSignIn
-            // 
+
+
+
             this.labelSignIn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelSignIn.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelSignIn.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(130)))), ((int)(((byte)(246)))));
@@ -85,9 +85,9 @@ namespace ProjetoExtensionista2026_2
             this.labelSignIn.Text = "Nao possui cadastro? Cadastre-se aqui";
             this.labelSignIn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.labelSignIn.Click += new System.EventHandler(this.labelSignIn_Click);
-            // 
-            // loginButton
-            // 
+
+
+
             this.loginButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(130)))), ((int)(((byte)(246)))));
             this.loginButton.FlatAppearance.BorderSize = 0;
             this.loginButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -101,9 +101,9 @@ namespace ProjetoExtensionista2026_2
             this.loginButton.Text = "Entrar no Sistema";
             this.loginButton.UseVisualStyleBackColor = false;
             this.loginButton.Click += new System.EventHandler(this.AlternarCadeado);
-            // 
-            // pwdTxtBox
-            // 
+
+
+
             this.pwdTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.pwdTxtBox.Location = new System.Drawing.Point(30, 335);
             this.pwdTxtBox.Name = "pwdTxtBox";
@@ -111,9 +111,9 @@ namespace ProjetoExtensionista2026_2
             this.pwdTxtBox.TabIndex = 6;
             this.pwdTxtBox.Enter += new System.EventHandler(this.TextBox_Enter);
             this.pwdTxtBox.Leave += new System.EventHandler(this.TxtSenha_Leave);
-            // 
-            // lblSenha
-            // 
+
+
+
             this.lblSenha.AutoSize = true;
             this.lblSenha.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSenha.Location = new System.Drawing.Point(30, 315);
@@ -121,9 +121,9 @@ namespace ProjetoExtensionista2026_2
             this.lblSenha.Size = new System.Drawing.Size(99, 15);
             this.lblSenha.TabIndex = 5;
             this.lblSenha.Text = "Senha de Acesso";
-            // 
-            // userTxtBox
-            // 
+
+
+
             this.userTxtBox.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.userTxtBox.Location = new System.Drawing.Point(30, 265);
             this.userTxtBox.Name = "userTxtBox";
@@ -131,9 +131,9 @@ namespace ProjetoExtensionista2026_2
             this.userTxtBox.TabIndex = 4;
             this.userTxtBox.Enter += new System.EventHandler(this.TextBox_Enter);
             this.userTxtBox.Leave += new System.EventHandler(this.TxtSenha_Leave);
-            // 
-            // lblUsuario
-            // 
+
+
+
             this.lblUsuario.AutoSize = true;
             this.lblUsuario.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsuario.Location = new System.Drawing.Point(30, 245);
@@ -141,9 +141,9 @@ namespace ProjetoExtensionista2026_2
             this.lblUsuario.Size = new System.Drawing.Size(103, 15);
             this.lblUsuario.TabIndex = 3;
             this.lblUsuario.Text = "Nome de Usuario";
-            // 
-            // lblSubtituloLogin
-            // 
+
+
+
             this.lblSubtituloLogin.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSubtituloLogin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(140)))), ((int)(((byte)(150)))), ((int)(((byte)(165)))));
             this.lblSubtituloLogin.Location = new System.Drawing.Point(30, 195);
@@ -153,9 +153,9 @@ namespace ProjetoExtensionista2026_2
             this.lblSubtituloLogin.Tag = "subtitulo";
             this.lblSubtituloLogin.Text = "Informe suas credenciais para acessar o sistema";
             this.lblSubtituloLogin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblTituloLogin
-            // 
+
+
+
             this.lblTituloLogin.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloLogin.Location = new System.Drawing.Point(30, 160);
             this.lblTituloLogin.Name = "lblTituloLogin";
@@ -163,9 +163,9 @@ namespace ProjetoExtensionista2026_2
             this.lblTituloLogin.TabIndex = 1;
             this.lblTituloLogin.Text = "Acesso ao Sistema";
             this.lblTituloLogin.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lockIcon
-            // 
+
+
+
             this.lockIcon.InitialImage = ((System.Drawing.Image)(resources.GetObject("lockIcon.InitialImage")));
             this.lockIcon.Location = new System.Drawing.Point(160, 45);
             this.lockIcon.Name = "lockIcon";
@@ -173,9 +173,9 @@ namespace ProjetoExtensionista2026_2
             this.lockIcon.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.lockIcon.TabIndex = 0;
             this.lockIcon.TabStop = false;
-            // 
-            // formLogin
-            // 
+
+
+
             this.AcceptButton = this.loginButton;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;

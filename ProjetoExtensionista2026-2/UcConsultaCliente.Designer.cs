@@ -1,16 +1,16 @@
-﻿namespace ProjetoExtensionista2026_2
+namespace ProjetoExtensionista2026_2
 {
     partial class UcConsultaCliente
     {
-        /// <summary> 
-        /// Variável de designer necessária.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@
 
         #region Código gerado pelo Designer de Componentes
 
-        /// <summary> 
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -45,9 +45,9 @@
             this.ColStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dgwClientes)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnCancelar
-            // 
+
+
+
             this.btnCancelar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancelar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -58,10 +58,10 @@
             this.btnCancelar.Text = "Cancelar [Esc]";
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
-            // 
-            // txtPesquisa
-            // 
-            this.txtPesquisa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+
+
+
+            this.txtPesquisa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtPesquisa.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPesquisa.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -69,14 +69,14 @@
             this.txtPesquisa.Name = "txtPesquisa";
             this.txtPesquisa.Size = new System.Drawing.Size(847, 33);
             this.txtPesquisa.TabIndex = 29;
-            // 
-            // dgwClientes
-            // 
+
+
+
             this.dgwClientes.AllowUserToAddRows = false;
             this.dgwClientes.AllowUserToDeleteRows = false;
             this.dgwClientes.AllowUserToResizeRows = false;
-            this.dgwClientes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgwClientes.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgwClientes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgwClientes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -104,9 +104,9 @@
             this.dgwClientes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgwClientes.Size = new System.Drawing.Size(847, 333);
             this.dgwClientes.TabIndex = 30;
-            // 
-            // btnSelecionar
-            // 
+
+
+
             this.btnSelecionar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSelecionar.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSelecionar.Location = new System.Drawing.Point(722, 418);
@@ -116,9 +116,9 @@
             this.btnSelecionar.Text = "Selecionar [Enter]";
             this.btnSelecionar.UseVisualStyleBackColor = true;
             this.btnSelecionar.Click += new System.EventHandler(this.btnSelecionar_Click);
-            // 
-            // btnEditarCliente
-            // 
+
+
+
             this.btnEditarCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEditarCliente.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEditarCliente.Location = new System.Drawing.Point(571, 418);
@@ -128,9 +128,9 @@
             this.btnEditarCliente.Text = "Editar [F2]";
             this.btnEditarCliente.UseVisualStyleBackColor = true;
             this.btnEditarCliente.Click += new System.EventHandler(this.btnEditarCliente_Click);
-            // 
-            // btnHistorico
-            // 
+
+
+
             this.btnHistorico.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnHistorico.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnHistorico.Location = new System.Drawing.Point(420, 418);
@@ -140,49 +140,49 @@
             this.btnHistorico.Text = "Historico [F3]";
             this.btnHistorico.UseVisualStyleBackColor = true;
             this.btnHistorico.Click += new System.EventHandler(this.btnHistorico_Click);
-            // 
-            // ColId
-            // 
+
+
+
             this.ColId.DataPropertyName = "Id";
             this.ColId.FillWeight = 9F;
             this.ColId.HeaderText = "Cód.";
             this.ColId.Name = "ColId";
             this.ColId.ReadOnly = true;
-            // 
-            // ColNome
-            // 
+
+
+
             this.ColNome.DataPropertyName = "Nome";
             this.ColNome.FillWeight = 31F;
             this.ColNome.HeaderText = "Nome";
             this.ColNome.Name = "ColNome";
             this.ColNome.ReadOnly = true;
-            // 
-            // ColDocumento
-            // 
+
+
+
             this.ColDocumento.DataPropertyName = "Documento";
             this.ColDocumento.FillWeight = 15F;
             this.ColDocumento.HeaderText = "CPF/CNPJ";
             this.ColDocumento.Name = "ColDocumento";
             this.ColDocumento.ReadOnly = true;
-            // 
-            // ColEndereco
-            // 
+
+
+
             this.ColEndereco.DataPropertyName = "Endereco";
             this.ColEndereco.FillWeight = 20F;
             this.ColEndereco.HeaderText = "Endereco";
             this.ColEndereco.Name = "ColEndereco";
             this.ColEndereco.ReadOnly = true;
-            // 
-            // ColTelefone
-            // 
+
+
+
             this.ColTelefone.DataPropertyName = "Telefone";
             this.ColTelefone.FillWeight = 16F;
             this.ColTelefone.HeaderText = "Telefone";
             this.ColTelefone.Name = "ColTelefone";
             this.ColTelefone.ReadOnly = true;
-            // 
-            // ColCredito
-            // 
+
+
+
             this.ColCredito.DataPropertyName = "LimiteCredito";
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight;
             this.ColCredito.DefaultCellStyle = dataGridViewCellStyle1;
@@ -190,17 +190,17 @@
             this.ColCredito.HeaderText = "Crédito";
             this.ColCredito.Name = "ColCredito";
             this.ColCredito.ReadOnly = true;
-            // 
-            // ColStatus
-            // 
+
+
+
             this.ColStatus.DataPropertyName = "Status";
             this.ColStatus.FillWeight = 9F;
             this.ColStatus.HeaderText = "Status";
             this.ColStatus.Name = "ColStatus";
             this.ColStatus.ReadOnly = true;
-            // 
-            // UcConsultaCliente
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnHistorico);

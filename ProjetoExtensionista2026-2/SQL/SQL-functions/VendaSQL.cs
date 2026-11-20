@@ -37,9 +37,9 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
     {
         private static bool _schemaGarantido = false;
 
-        /// <summary>
-        /// Garante que a coluna seller_name exista na tabela public.sale.
-        /// </summary>
+
+
+
         public static void EnsureSchema(NpgsqlConnection conexaoExistente = null, NpgsqlTransaction transacao = null)
         {
             if (_schemaGarantido) return;

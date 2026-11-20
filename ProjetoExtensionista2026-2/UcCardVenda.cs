@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -50,9 +50,9 @@ namespace ProjetoExtensionista2026_2
             };
         }
 
-        /// <summary>
-        /// Popula todos os dados do produto no card de venda, incluindo imagem e preço.
-        /// </summary>
+
+
+
         public void CarregarItem(int id, string nome, decimal precoUnitario, int quantidadeInicial = 1, int estoqueDisponivel = 999, string fotoUrl = null)
         {
             bool mesmaImagemJaCarregada = picFoto != null &&
@@ -72,9 +72,9 @@ namespace ProjetoExtensionista2026_2
                 _ = CarregarImagemAsync(FotoOrigem);
         }
 
-        /// <summary>
-        /// Atualiza os textos e o estado dos botões de controle de quantidade.
-        /// </summary>
+
+
+
         private void AtualizarInterface()
         {
             if (lblCodigo != null)
@@ -124,9 +124,9 @@ namespace ProjetoExtensionista2026_2
             AoRemoverItem?.Invoke(ProdutoId, this);
         }
 
-        /// <summary>
-        /// Obtém a miniatura diretamente do cache compartilhado de produtos.
-        /// </summary>
+
+
+
         private async Task CarregarImagemAsync(string fotoOrigem)
         {
             if (picFoto == null) return;

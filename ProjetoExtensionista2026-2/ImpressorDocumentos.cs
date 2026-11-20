@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -65,9 +65,9 @@ namespace ProjetoExtensionista2026_2
         private const string CnpjEstabelecimento = "00.000.000/0001-00";
         private const string IeEstabelecimento = "ISENTO";
 
-        // =========================================================================
-        // 1. LAYOUT DO CUPOM TÉRMICO (80 mm)
-        // =========================================================================
+
+
+
         private static bool DesenharPaginaCupom(Graphics g, float limiteAltura, DadosDocumentoVenda d, ref int indiceItem, out float yFinal)
         {
             var doc = new CursorDocumento(g, 10f, 12f, 290f);
@@ -151,9 +151,9 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        // =========================================================================
-        // 2. LAYOUT DA NOTA PROMISSÓRIA / ORÇAMENTO ENXUTO
-        // =========================================================================
+
+
+
         private static float DesenharPromissoriaEnxuta(Graphics g, DadosDocumentoVenda d, ParcelaPromissoria parcela, float x, float y, float w)
         {
             bool ehOrcamento = d.EhOrcamento;
@@ -262,9 +262,9 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        // =========================================================================
-        // 3. MOTOR DE RENDERIZAÇÃO, PDF E IMPRESSÃO
-        // =========================================================================
+
+
+
         public static List<Bitmap> RenderizarPaginasCupom(DadosDocumentoVenda dados)
         {
             var paginas = new List<Bitmap>();

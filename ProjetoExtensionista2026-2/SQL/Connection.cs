@@ -11,7 +11,7 @@ namespace ProjetoExtensionista2026_2.SQL
         private static string _cachedConnectionString;
         private static readonly object _lock = new object();
         public NpgsqlConnection Conexao { get; private set; }
-        //public NpgsqlConnection Conexao => _conexao;
+
         public static bool TestConnection()
         {
             try
@@ -67,23 +67,23 @@ namespace ProjetoExtensionista2026_2.SQL
             if (string.IsNullOrWhiteSpace(rawConn))
                 throw new InvalidOperationException("Connection string is not set in the environment variables.");
 
-            // Corrige sintaxe se vier com Server=
+
             rawConn = Regex.Replace(rawConn, @"\bServer=", "Host=", RegexOptions.IgnoreCase);
 
             var builder = new NpgsqlConnectionStringBuilder(rawConn);
             if (string.IsNullOrWhiteSpace(builder.Host))
                 throw new InvalidOperationException("Invalid connection string: Host is missing.");
 
-            // Parâmetros cruciais para evitar "Exception while reading from stream" no Supabase:
+
             builder.SslMode = SslMode.Require;
             builder.TrustServerCertificate = true;
-            builder.KeepAlive = 30;              // Envia sinal periódico para o firewall/Supabase não derrubar o socket
-            builder.Timeout = 15;                // Tempo máximo para negociar a abertura da conexão
-            builder.CommandTimeout = 30;         // Tempo limite padrão para execução dos comandos
+            builder.KeepAlive = 30;
+            builder.Timeout = 15;
+            builder.CommandTimeout = 30;
 
-            // Se estiveres a usar a porta de Transaction Pooling do Supabase (porta 6543 / PgBouncer):
-            // É recomendável desativar ou gerir pooling local para evitar descompasso de sockets
-            // builder.Pooling = false; 
+
+
+
 
             return builder.ConnectionString;
         }
@@ -114,7 +114,7 @@ namespace ProjetoExtensionista2026_2.SQL
         }
         public void IniciarConexao()
         {
-            // 1. Garante que a connection string seja lida do disco e resolvida apenas uma vez
+
             if (string.IsNullOrEmpty(_cachedConnectionString))
             {
                 lock (_lock)
@@ -127,7 +127,7 @@ namespace ProjetoExtensionista2026_2.SQL
                 }
             }
 
-            // 2. Abre a conexão usando a string otimizada
+
             Conexao = new NpgsqlConnection(_cachedConnectionString);
             Conexao.Open();
         }

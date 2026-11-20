@@ -663,7 +663,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // FLUXO NORMAL DE VENDA -> Abre formPagamento (onde Carnê, Dinheiro, etc. são lançados)
+
             using (var formPagto = new formPagamento(subtotal, desconto, descontoPct, totalFinal, itens, idCliente))
             {
                 if (formPagto.ShowDialog(this) == DialogResult.OK)
@@ -695,27 +695,27 @@ namespace ProjetoExtensionista2026_2
 
                         string sqlInsertSale = @"
                             INSERT INTO public.sale (
-                                sale_date, 
-                                subtotal, 
-                                discount, 
-                                total, 
-                                payment_status, 
-                                notes, 
+                                sale_date,
+                                subtotal,
+                                discount,
+                                total,
+                                payment_status,
+                                notes,
                                 id_client,
                                 seller_name,
                                 sale_type
-                            ) 
+                            )
                             VALUES (
-                                NOW(), 
-                                @subtotal, 
-                                @discount, 
-                                @total, 
-                                'PENDENTE', 
-                                'Orçamento gerado pelo PDV', 
+                                NOW(),
+                                @subtotal,
+                                @discount,
+                                @total,
+                                'PENDENTE',
+                                'Orçamento gerado pelo PDV',
                                 @id_client,
                                 @seller_name,
                                 'ORCAMENTO'
-                            ) 
+                            )
                             RETURNING public.sale.id_sale;";
 
                         using (var cmdSale = new NpgsqlCommand(sqlInsertSale, conexao, transacao))
@@ -733,21 +733,21 @@ namespace ProjetoExtensionista2026_2
                         {
                             string sqlItem = @"
                                 INSERT INTO public.sale_product (
-                                    id_sale, 
-                                    id_product, 
-                                    quantity, 
-                                    unit_price, 
+                                    id_sale,
+                                    id_product,
+                                    quantity,
+                                    unit_price,
                                     unit_cost,
-                                    subtotal, 
+                                    subtotal,
                                     discount_product
-                                ) 
+                                )
                                 VALUES (
-                                    @id_sale, 
-                                    @id_product, 
-                                    @quantity, 
-                                    @unit_price, 
+                                    @id_sale,
+                                    @id_product,
+                                    @quantity,
+                                    @unit_price,
                                     0,
-                                    @subtotal, 
+                                    @subtotal,
                                     0
                                 );";
 

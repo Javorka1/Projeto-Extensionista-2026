@@ -23,7 +23,7 @@ namespace ProjetoExtensionista2026_2
             string novaSenha = txtNovaSenha.Text;
             string confirmaSenha = txtConfirmaSenha.Text;
 
-            // Validações
+
             if (string.IsNullOrEmpty(senhaAtual))
             {
                 MessageBox.Show("Por favor, digite a sua senha atual.", "Atenção", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -52,7 +52,7 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // Tenta alterar a senha no Program
+
             bool sucesso = Program.AlterarSenha(senhaAtual, novaSenha);
 
             if (sucesso)

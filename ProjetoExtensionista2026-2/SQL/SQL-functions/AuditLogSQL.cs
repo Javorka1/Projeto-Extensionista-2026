@@ -51,7 +51,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
             }
             catch
             {
-                // O histórico não deve impedir a operação principal do sistema.
+
             }
         }
 

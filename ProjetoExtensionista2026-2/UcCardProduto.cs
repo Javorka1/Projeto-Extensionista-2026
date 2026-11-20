@@ -91,9 +91,9 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        /// <summary>
-        /// Configura se o card pode exibir o preço de custo e se permite abrir para edição.
-        /// </summary>
+
+
+
         public void ConfigurarPermissoes(bool podeVerCusto, bool podeEditar)
         {
             PodeVerCusto = podeVerCusto;
@@ -287,7 +287,7 @@ namespace ProjetoExtensionista2026_2
             }
             catch
             {
-                // Retorna imagem padrão em caso de falha de rede, arquivo ou Base64
+
             }
 
             return _imagemPadrao;

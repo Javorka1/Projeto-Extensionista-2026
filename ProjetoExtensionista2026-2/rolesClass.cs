@@ -10,14 +10,14 @@ namespace ProjetoExtensionista2026_2
 
             string r = (role ?? "").ToLowerInvariant();
 
-            // Configuração dos botões modernos da sidebar
+
             formPrincipal.btnNavPrincipal.Visible = true;
             formPrincipal.btnNavConfig.Visible = true;
             formPrincipal.btnSair.Visible = true;
 
             if (r == "admin")
             {
-                // Administrador tem acesso completo
+
                 formPrincipal.btnNavVendas.Visible = true;
                 formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = true;
@@ -34,7 +34,7 @@ namespace ProjetoExtensionista2026_2
             }
             else if (r == "seller")
             {
-                // Vendedor acessa Vendas, Registro de Vendas e Principal
+
                 formPrincipal.btnNavVendas.Visible = true;
                 formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = false;
@@ -48,7 +48,7 @@ namespace ProjetoExtensionista2026_2
             }
             else if (r == "stocker")
             {
-                // Estoquista acessa Estoque e Principal
+
                 formPrincipal.btnNavVendas.Visible = false;
                 formPrincipal.btnNavRegistroVendas.Visible = false;
                 formPrincipal.btnNavEstoque.Visible = true;
@@ -62,7 +62,7 @@ namespace ProjetoExtensionista2026_2
             }
             else if (r == "monetary")
             {
-                // Financeiro acessa Financeiro, Registro de Vendas e Principal
+
                 formPrincipal.btnNavVendas.Visible = false;
                 formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = false;
@@ -76,7 +76,7 @@ namespace ProjetoExtensionista2026_2
             }
             else
             {
-                // Acesso restrito
+
                 formPrincipal.btnNavVendas.Visible = false;
                 formPrincipal.btnNavRegistroVendas.Visible = false;
                 formPrincipal.btnNavEstoque.Visible = false;

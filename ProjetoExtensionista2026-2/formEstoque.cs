@@ -16,7 +16,7 @@ namespace ProjetoExtensionista2026_2
                 Dock = DockStyle.Fill
             };
 
-            // Permite ver custos e gerenciar produtos no módulo de estoque administrativo
+
             _ucEstoque.ConfigurarPerfilVendedor(false);
 
             this.Controls.Add(_ucEstoque);

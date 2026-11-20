@@ -441,10 +441,10 @@ namespace ProjetoExtensionista2026_2
 
                 string msg = ProdutoIdEmEdicao.HasValue
                     ? "Produto atualizado com sucesso!"
-                    : $"Produto cadastrado com sucesso! (Código: {idFinal})";
+                    : $"Produto cadastrado com sucesso! (Código: {res.Item1})";
 
                 AuditLogSQL.Register(
-                    (ProdutoIdEmEdicao.HasValue ? "Produto atualizado: " : "Produto cadastrado: ") + nome + " (Código: " + idFinal + ")",
+                    (ProdutoIdEmEdicao.HasValue ? "Produto atualizado: " : "Produto cadastrado: ") + nome + " (Código: " + res.Item1 + ")",
                     LoginSQL.SessaoUsuario.Nome);
 
                 MessageBox.Show(msg, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);

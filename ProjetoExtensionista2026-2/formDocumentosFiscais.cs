@@ -224,7 +224,7 @@ namespace ProjetoExtensionista2026_2
                 }
                 catch
                 {
-                    // Spooler parado ou sem impressoras instaladas
+
                 }
 
                 return (Lista: lista, Padrao: padrao);

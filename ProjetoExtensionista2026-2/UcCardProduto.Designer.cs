@@ -2,15 +2,15 @@ namespace ProjetoExtensionista2026_2
 {
     partial class UcCardProduto
     {
-        /// <summary> 
-        /// Variável de designer necessária.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary> 
-        /// Limpar os recursos que estão sendo usados.
-        /// </summary>
-        /// <param name="disposing">true se for necessário descartar os recursos gerenciados; caso contrário, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@ namespace ProjetoExtensionista2026_2
 
         #region Código gerado pelo Designer de Componentes
 
-        /// <summary> 
-        /// Método necessário para suporte ao Designer - não modifique 
-        /// o conteúdo deste método com o editor de código.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             this.lblTitulo = new System.Windows.Forms.Label();
@@ -42,9 +42,9 @@ namespace ProjetoExtensionista2026_2
             ((System.ComponentModel.ISupportInitialize)(this.picFoto)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblTitulo
-            // 
+
+
+
             this.lblTitulo.AutoEllipsis = true;
             this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.Location = new System.Drawing.Point(122, 27);
@@ -53,9 +53,9 @@ namespace ProjetoExtensionista2026_2
             this.lblTitulo.Size = new System.Drawing.Size(152, 60);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Produto ...";
-            // 
-            // lblDescricao
-            // 
+
+
+
             this.lblDescricao.AutoEllipsis = true;
             this.lblDescricao.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescricao.Location = new System.Drawing.Point(8, 148);
@@ -65,9 +65,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescricao.TabIndex = 2;
             this.lblDescricao.Tag = "subtitulo";
             this.lblDescricao.Text = "Descricao ...";
-            // 
-            // btnAdicionar
-            // 
+
+
+
             this.btnAdicionar.BackColor = System.Drawing.SystemColors.ControlLight;
             this.btnAdicionar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnAdicionar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -78,9 +78,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAdicionar.Text = "Adicionar";
             this.btnAdicionar.UseVisualStyleBackColor = false;
             this.btnAdicionar.Click += new System.EventHandler(this.btnAdicionar_Click);
-            // 
-            // UpDownProduto
-            // 
+
+
+
             this.UpDownProduto.BackColor = System.Drawing.SystemColors.ControlLight;
             this.UpDownProduto.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.UpDownProduto.Location = new System.Drawing.Point(8, 210);
@@ -88,9 +88,9 @@ namespace ProjetoExtensionista2026_2
             this.UpDownProduto.Size = new System.Drawing.Size(70, 30);
             this.UpDownProduto.TabIndex = 4;
             this.UpDownProduto.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // lblPrecoVenda
-            // 
+
+
+
             this.lblPrecoVenda.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPrecoVenda.ForeColor = System.Drawing.Color.LimeGreen;
             this.lblPrecoVenda.Location = new System.Drawing.Point(122, 91);
@@ -99,9 +99,9 @@ namespace ProjetoExtensionista2026_2
             this.lblPrecoVenda.TabIndex = 5;
             this.lblPrecoVenda.Text = "R$ 00,00";
             this.lblPrecoVenda.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // picFoto
-            // 
+
+
+
             this.picFoto.ErrorImage = null;
             this.picFoto.Location = new System.Drawing.Point(8, 30);
             this.picFoto.Name = "picFoto";
@@ -109,9 +109,9 @@ namespace ProjetoExtensionista2026_2
             this.picFoto.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFoto.TabIndex = 0;
             this.picFoto.TabStop = false;
-            // 
-            // lblEstoque
-            // 
+
+
+
             this.lblEstoque.BackColor = System.Drawing.Color.PaleGreen;
             this.lblEstoque.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblEstoque.Location = new System.Drawing.Point(168, 0);
@@ -120,9 +120,9 @@ namespace ProjetoExtensionista2026_2
             this.lblEstoque.TabIndex = 7;
             this.lblEstoque.Text = "Estoque: ";
             this.lblEstoque.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // panel1
-            // 
+
+
+
             this.panel1.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.panel1.Controls.Add(this.lblCodigo);
             this.panel1.Controls.Add(this.lblEstoque);
@@ -131,9 +131,9 @@ namespace ProjetoExtensionista2026_2
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(280, 24);
             this.panel1.TabIndex = 8;
-            // 
-            // lblCodigo
-            // 
+
+
+
             this.lblCodigo.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.lblCodigo.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCodigo.Location = new System.Drawing.Point(0, 0);
@@ -143,9 +143,9 @@ namespace ProjetoExtensionista2026_2
             this.lblCodigo.TabIndex = 8;
             this.lblCodigo.Text = "Código";
             this.lblCodigo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblOculto
-            // 
+
+
+
             this.lblOculto.Cursor = System.Windows.Forms.Cursors.Hand;
             this.lblOculto.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOculto.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -156,9 +156,9 @@ namespace ProjetoExtensionista2026_2
             this.lblOculto.Text = "Mostrar ocultados...";
             this.lblOculto.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblOculto.Click += new System.EventHandler(this.btnOculto_Click);
-            // 
-            // UcCardProduto
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;

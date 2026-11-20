@@ -2,15 +2,15 @@ namespace ProjetoExtensionista2026_2
 {
     partial class formPagamento
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
+
+
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+
+
+
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +22,10 @@ namespace ProjetoExtensionista2026_2
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
+
+
+
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -74,9 +74,9 @@ namespace ProjetoExtensionista2026_2
             this.panel5.SuspendLayout();
             this.panel9.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // panel1
-            // 
+
+
+
             this.panel1.BackColor = System.Drawing.Color.Transparent;
             this.panel1.Controls.Add(this.flowLayoutPanel1);
             this.panel1.Controls.Add(this.panel2);
@@ -88,16 +88,16 @@ namespace ProjetoExtensionista2026_2
             this.panel1.Padding = new System.Windows.Forms.Padding(10, 0, 10, 0);
             this.panel1.Size = new System.Drawing.Size(884, 40);
             this.panel1.TabIndex = 0;
-            // 
-            // flowLayoutPanel1
-            // 
+
+
+
             this.flowLayoutPanel1.Location = new System.Drawing.Point(356, 39);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
             this.flowLayoutPanel1.Size = new System.Drawing.Size(200, 100);
             this.flowLayoutPanel1.TabIndex = 1;
-            // 
-            // panel2
-            // 
+
+
+
             this.panel2.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel2.Location = new System.Drawing.Point(10, 39);
@@ -105,9 +105,9 @@ namespace ProjetoExtensionista2026_2
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(864, 1);
             this.panel2.TabIndex = 1;
-            // 
-            // label1
-            // 
+
+
+
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(10, 0);
@@ -116,9 +116,9 @@ namespace ProjetoExtensionista2026_2
             this.label1.TabIndex = 0;
             this.label1.Text = "Finalizar Venda";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // panel3
-            // 
+
+
+
             this.panel3.Controls.Add(this.btnCancelar);
             this.panel3.Controls.Add(this.btnFinalizar);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -126,9 +126,9 @@ namespace ProjetoExtensionista2026_2
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(884, 70);
             this.panel3.TabIndex = 1;
-            // 
-            // btnCancelar
-            // 
+
+
+
             this.btnCancelar.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.btnCancelar.BackColor = System.Drawing.Color.Red;
             this.btnCancelar.DialogResult = System.Windows.Forms.DialogResult.Cancel;
@@ -142,9 +142,9 @@ namespace ProjetoExtensionista2026_2
             this.btnCancelar.TabIndex = 13;
             this.btnCancelar.Text = "Cancelar [Esc]";
             this.btnCancelar.UseVisualStyleBackColor = false;
-            // 
-            // btnFinalizar
-            // 
+
+
+
             this.btnFinalizar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.btnFinalizar.BackColor = System.Drawing.Color.SeaGreen;
             this.btnFinalizar.FlatAppearance.BorderSize = 0;
@@ -158,9 +158,9 @@ namespace ProjetoExtensionista2026_2
             this.btnFinalizar.Text = "Finalizar [F12]";
             this.btnFinalizar.UseVisualStyleBackColor = false;
             this.btnFinalizar.Click += new System.EventHandler(this.btnFinalizar_Click);
-            // 
-            // panel4
-            // 
+
+
+
             this.panel4.Controls.Add(this.panel8);
             this.panel4.Controls.Add(this.panel7);
             this.panel4.Controls.Add(this.groupBox1);
@@ -170,9 +170,9 @@ namespace ProjetoExtensionista2026_2
             this.panel4.Padding = new System.Windows.Forms.Padding(7);
             this.panel4.Size = new System.Drawing.Size(350, 401);
             this.panel4.TabIndex = 2;
-            // 
-            // panel8
-            // 
+
+
+
             this.panel8.BackColor = System.Drawing.Color.LightSlateGray;
             this.panel8.Controls.Add(this.lblExcedente);
             this.panel8.Controls.Add(this.lblRestante);
@@ -182,9 +182,9 @@ namespace ProjetoExtensionista2026_2
             this.panel8.Name = "panel8";
             this.panel8.Size = new System.Drawing.Size(336, 41);
             this.panel8.TabIndex = 17;
-            // 
-            // lblExcedente
-            // 
+
+
+
             this.lblExcedente.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblExcedente.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblExcedente.ForeColor = System.Drawing.SystemColors.Window;
@@ -193,9 +193,9 @@ namespace ProjetoExtensionista2026_2
             this.lblExcedente.Size = new System.Drawing.Size(122, 26);
             this.lblExcedente.TabIndex = 15;
             this.lblExcedente.Text = "Restante:";
-            // 
-            // lblRestante
-            // 
+
+
+
             this.lblRestante.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblRestante.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRestante.ForeColor = System.Drawing.SystemColors.Window;
@@ -205,9 +205,9 @@ namespace ProjetoExtensionista2026_2
             this.lblRestante.TabIndex = 14;
             this.lblRestante.Text = "R$000.000.000,00";
             this.lblRestante.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // panel7
-            // 
+
+
+
             this.panel7.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.panel7.Controls.Add(this.txtDescontoPorcentagem);
             this.panel7.Controls.Add(this.label3);
@@ -221,9 +221,9 @@ namespace ProjetoExtensionista2026_2
             this.panel7.Name = "panel7";
             this.panel7.Size = new System.Drawing.Size(336, 133);
             this.panel7.TabIndex = 16;
-            // 
-            // txtDescontoPorcentagem
-            // 
+
+
+
             this.txtDescontoPorcentagem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDescontoPorcentagem.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.txtDescontoPorcentagem.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -236,9 +236,9 @@ namespace ProjetoExtensionista2026_2
             this.txtDescontoPorcentagem.TabIndex = 13;
             this.txtDescontoPorcentagem.Text = "100%";
             this.txtDescontoPorcentagem.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // label3
-            // 
+
+
+
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -247,9 +247,9 @@ namespace ProjetoExtensionista2026_2
             this.label3.Size = new System.Drawing.Size(122, 26);
             this.label3.TabIndex = 8;
             this.label3.Text = "Subtotal:";
-            // 
-            // lblSubtotal
-            // 
+
+
+
             this.lblSubtotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblSubtotal.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSubtotal.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -259,9 +259,9 @@ namespace ProjetoExtensionista2026_2
             this.lblSubtotal.TabIndex = 10;
             this.lblSubtotal.Text = "R$000.000.000,00";
             this.lblSubtotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label6
-            // 
+
+
+
             this.label6.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -270,9 +270,9 @@ namespace ProjetoExtensionista2026_2
             this.label6.Size = new System.Drawing.Size(93, 26);
             this.label6.TabIndex = 11;
             this.label6.Text = "Desconto";
-            // 
-            // lblTotal
-            // 
+
+
+
             this.lblTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTotal.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTotal.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -282,9 +282,9 @@ namespace ProjetoExtensionista2026_2
             this.lblTotal.TabIndex = 5;
             this.lblTotal.Text = "R$000.000.000,00";
             this.lblTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // label2
-            // 
+
+
+
             this.label2.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.SystemColors.ControlText;
@@ -293,9 +293,9 @@ namespace ProjetoExtensionista2026_2
             this.label2.Size = new System.Drawing.Size(122, 26);
             this.label2.TabIndex = 6;
             this.label2.Text = "Valor Total:";
-            // 
-            // txtDesconto
-            // 
+
+
+
             this.txtDesconto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDesconto.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.txtDesconto.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -307,9 +307,9 @@ namespace ProjetoExtensionista2026_2
             this.txtDesconto.TabIndex = 12;
             this.txtDesconto.Text = "- R$ 00,00";
             this.txtDesconto.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            // 
-            // groupBox1
-            // 
+
+
+
             this.groupBox1.BackColor = System.Drawing.SystemColors.ActiveCaption;
             this.groupBox1.Controls.Add(this.dgvPagamentos);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -319,9 +319,9 @@ namespace ProjetoExtensionista2026_2
             this.groupBox1.TabIndex = 13;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Pagamentos";
-            // 
-            // dgvPagamentos
-            // 
+
+
+
             this.dgvPagamentos.AllowUserToAddRows = false;
             this.dgvPagamentos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvPagamentos.BackgroundColor = System.Drawing.SystemColors.Window;
@@ -349,36 +349,36 @@ namespace ProjetoExtensionista2026_2
             this.dgvPagamentos.Size = new System.Drawing.Size(322, 150);
             this.dgvPagamentos.TabIndex = 0;
             this.dgvPagamentos.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPagamentos_CellClick);
-            // 
-            // ColTipo
-            // 
+
+
+
             dataGridViewCellStyle7.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ColTipo.DefaultCellStyle = dataGridViewCellStyle7;
             this.ColTipo.FillWeight = 63.49424F;
             this.ColTipo.HeaderText = "Tipo de Pagamento";
             this.ColTipo.Name = "ColTipo";
             this.ColTipo.ReadOnly = true;
-            // 
-            // ColValor
-            // 
+
+
+
             dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ColValor.DefaultCellStyle = dataGridViewCellStyle8;
             this.ColValor.FillWeight = 42.32949F;
             this.ColValor.HeaderText = "Valor";
             this.ColValor.Name = "ColValor";
             this.ColValor.ReadOnly = true;
-            // 
-            // ColParcela
-            // 
+
+
+
             dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ColParcela.DefaultCellStyle = dataGridViewCellStyle9;
             this.ColParcela.FillWeight = 27.21181F;
             this.ColParcela.HeaderText = "Parcelas";
             this.ColParcela.Name = "ColParcela";
             this.ColParcela.ReadOnly = true;
-            // 
-            // ColRemover
-            // 
+
+
+
             dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle10.ForeColor = System.Drawing.Color.Red;
@@ -389,9 +389,9 @@ namespace ProjetoExtensionista2026_2
             this.ColRemover.ReadOnly = true;
             this.ColRemover.Text = "X";
             this.ColRemover.UseColumnTextForButtonValue = true;
-            // 
-            // panel5
-            // 
+
+
+
             this.panel5.Controls.Add(this.panelConteudo);
             this.panel5.Controls.Add(this.panel9);
             this.panel5.Controls.Add(this.panel6);
@@ -400,17 +400,17 @@ namespace ProjetoExtensionista2026_2
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(528, 401);
             this.panel5.TabIndex = 3;
-            // 
-            // panelConteudo
-            // 
+
+
+
             this.panelConteudo.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panelConteudo.Location = new System.Drawing.Point(1, 33);
             this.panelConteudo.Name = "panelConteudo";
             this.panelConteudo.Size = new System.Drawing.Size(527, 368);
             this.panelConteudo.TabIndex = 2;
-            // 
-            // panel9
-            // 
+
+
+
             this.panel9.BackColor = System.Drawing.Color.LightGray;
             this.panel9.Controls.Add(this.btnObservacoes);
             this.panel9.Controls.Add(this.btnPagamento);
@@ -419,9 +419,9 @@ namespace ProjetoExtensionista2026_2
             this.panel9.Name = "panel9";
             this.panel9.Size = new System.Drawing.Size(527, 35);
             this.panel9.TabIndex = 1;
-            // 
-            // btnObservacoes
-            // 
+
+
+
             this.btnObservacoes.BackColor = System.Drawing.SystemColors.ControlDark;
             this.btnObservacoes.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnObservacoes.FlatAppearance.BorderColor = System.Drawing.Color.White;
@@ -435,9 +435,9 @@ namespace ProjetoExtensionista2026_2
             this.btnObservacoes.Text = "Observações";
             this.btnObservacoes.UseVisualStyleBackColor = false;
             this.btnObservacoes.Click += new System.EventHandler(this.btnObservacoes_Click);
-            // 
-            // btnPagamento
-            // 
+
+
+
             this.btnPagamento.BackColor = System.Drawing.SystemColors.Control;
             this.btnPagamento.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnPagamento.FlatAppearance.BorderColor = System.Drawing.Color.White;
@@ -451,18 +451,18 @@ namespace ProjetoExtensionista2026_2
             this.btnPagamento.Text = "Pagamento";
             this.btnPagamento.UseVisualStyleBackColor = false;
             this.btnPagamento.Click += new System.EventHandler(this.btnPagamento_Click);
-            // 
-            // panel6
-            // 
+
+
+
             this.panel6.BackColor = System.Drawing.SystemColors.ControlText;
             this.panel6.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel6.Location = new System.Drawing.Point(0, 0);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(1, 401);
             this.panel6.TabIndex = 0;
-            // 
-            // formPagamento
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(884, 522);

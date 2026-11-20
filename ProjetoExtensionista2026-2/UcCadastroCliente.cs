@@ -1,4 +1,4 @@
-﻿using Npgsql;
+using Npgsql;
 using NpgsqlTypes;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
@@ -36,10 +36,10 @@ namespace ProjetoExtensionista2026_2
 
         private void ConfigurarCampos()
         {
-            // Destaque azul suave via GerenciadorTema
+
             txtNome.Tag = txtCpfCnpj.Tag = txtTelefone.Tag = "obrigatorio";
 
-            // Limites alinhados com a tabela customer
+
             txtNome.MaxLength = 150;
             txtApelido.MaxLength = 150;
             txtCpfCnpj.MaxLength = 18;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -64,9 +64,9 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        /// <summary>
-        /// Abre o módulo se ainda não estiver aberto; se já existir, apenas foca na aba existente.
-        /// </summary>
+
+
+
         public AbaItem AbrirOuFocarAba(
             string chaveUnica,
             string titulo,
@@ -99,9 +99,9 @@ namespace ProjetoExtensionista2026_2
             return AdicionarAba(titulo, fabricaTela(), podeFechar, validacaoFechamento, chaveUnica, fabricaTela);
         }
 
-        /// <summary>
-        /// Cria uma nova aba independente em segundo plano (ideal para múltiplos atendimentos no Caixa).
-        /// </summary>
+
+
+
         public AbaItem AdicionarAba(
             string titulo,
             Control tela,

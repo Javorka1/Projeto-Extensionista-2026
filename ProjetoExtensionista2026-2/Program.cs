@@ -8,9 +8,9 @@ namespace ProjetoExtensionista2026_2
 {
     internal static class Program
     {
-        /// <summary>
-        /// Ponto de entrada principal para o aplicativo.
-        /// </summary>
+
+
+
         private static string token2 = "Pablo é lindo";
         public static string SenhaAtual { get; set; } = "123456";
 
@@ -31,7 +31,7 @@ namespace ProjetoExtensionista2026_2
 
         public static bool verificarHash2(string hashSended, string token)
         {
-            if (token == token2) 
+            if (token == token2)
             {
                 if (hashSended == SenhaAtual.GetHashCode().ToString())
                 {
@@ -53,7 +53,7 @@ namespace ProjetoExtensionista2026_2
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Carrega o tema salvo do usuário
+
             GerenciadorTema.CarregarTemaSalvo();
 
             Application.Run(new formLogin());

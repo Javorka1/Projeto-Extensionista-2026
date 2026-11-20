@@ -2,10 +2,10 @@ namespace ProjetoExtensionista2026_2
 {
     partial class FormConfig
     {
-        /// <summary>Required designer variable.</summary>
+
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>Clean up any resources being used.</summary>
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -17,7 +17,7 @@ namespace ProjetoExtensionista2026_2
 
         #region Windows Form Designer generated code
 
-        /// <summary>Required method for Designer support.</summary>
+
         private void InitializeComponent()
         {
             this.lblTituloPrincipal = new System.Windows.Forms.Label();
@@ -42,9 +42,9 @@ namespace ProjetoExtensionista2026_2
             this.grpSobre.SuspendLayout();
             this.tblConfigGrid.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblTituloPrincipal
-            // 
+
+
+
             this.lblTituloPrincipal.AutoSize = true;
             this.lblTituloPrincipal.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTituloPrincipal.Location = new System.Drawing.Point(30, 20);
@@ -52,9 +52,9 @@ namespace ProjetoExtensionista2026_2
             this.lblTituloPrincipal.Size = new System.Drawing.Size(280, 26);
             this.lblTituloPrincipal.TabIndex = 0;
             this.lblTituloPrincipal.Text = "Configurações do Sistema";
-            // 
-            // grpAparencia
-            // 
+
+
+
             this.grpAparencia.Controls.Add(this.btnAlternarTema);
             this.grpAparencia.Controls.Add(this.lblDescAparencia);
             this.grpAparencia.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -65,9 +65,9 @@ namespace ProjetoExtensionista2026_2
             this.grpAparencia.TabIndex = 1;
             this.grpAparencia.TabStop = false;
             this.grpAparencia.Text = "Aparência";
-            // 
-            // lblDescAparencia
-            // 
+
+
+
             this.lblDescAparencia.AutoSize = true;
             this.lblDescAparencia.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescAparencia.Location = new System.Drawing.Point(20, 30);
@@ -75,9 +75,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescAparencia.Size = new System.Drawing.Size(295, 32);
             this.lblDescAparencia.TabIndex = 0;
             this.lblDescAparencia.Text = "Alterne entre o tema claro e escuro.\r\nSua preferência é salva automaticamente.";
-            // 
-            // btnAlternarTema
-            // 
+
+
+
             this.btnAlternarTema.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAlternarTema.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAlternarTema.Location = new System.Drawing.Point(23, 85);
@@ -87,9 +87,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAlternarTema.Text = "Mudar para Modo Escuro";
             this.btnAlternarTema.UseVisualStyleBackColor = true;
             this.btnAlternarTema.Click += new System.EventHandler(this.btnAlternarTema_Click);
-            // 
-            // grpBanco
-            // 
+
+
+
             this.grpBanco.Controls.Add(this.lblDescBanco);
             this.grpBanco.Controls.Add(this.btnTestarBanco);
             this.grpBanco.Controls.Add(this.lblStatusBanco);
@@ -101,9 +101,9 @@ namespace ProjetoExtensionista2026_2
             this.grpBanco.TabIndex = 2;
             this.grpBanco.TabStop = false;
             this.grpBanco.Text = "Banco de Dados";
-            // 
-            // lblDescBanco
-            // 
+
+
+
             this.lblDescBanco.AutoSize = true;
             this.lblDescBanco.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescBanco.Location = new System.Drawing.Point(20, 30);
@@ -111,9 +111,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescBanco.Size = new System.Drawing.Size(262, 32);
             this.lblDescBanco.TabIndex = 0;
             this.lblDescBanco.Text = "Supabase PostgreSQL (Nuvem)\r\nVerifique a conectividade com o servidor.";
-            // 
-            // btnTestarBanco
-            // 
+
+
+
             this.btnTestarBanco.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnTestarBanco.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.btnTestarBanco.Location = new System.Drawing.Point(23, 80);
@@ -123,9 +123,9 @@ namespace ProjetoExtensionista2026_2
             this.btnTestarBanco.Text = "Testar Conexão";
             this.btnTestarBanco.UseVisualStyleBackColor = true;
             this.btnTestarBanco.Click += new System.EventHandler(this.btnTestarBanco_Click);
-            // 
-            // lblStatusBanco
-            // 
+
+
+
             this.lblStatusBanco.AutoSize = true;
             this.lblStatusBanco.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStatusBanco.Location = new System.Drawing.Point(20, 145);
@@ -133,9 +133,9 @@ namespace ProjetoExtensionista2026_2
             this.lblStatusBanco.Size = new System.Drawing.Size(130, 16);
             this.lblStatusBanco.TabIndex = 2;
             this.lblStatusBanco.Text = "Status: Não testado";
-            // 
-            // grpSeguranca
-            // 
+
+
+
             this.grpSeguranca.Controls.Add(this.lblUsuarioLogado);
             this.grpSeguranca.Controls.Add(this.lblDescSeguranca);
             this.grpSeguranca.Controls.Add(this.btnAlterarSenha);
@@ -147,9 +147,9 @@ namespace ProjetoExtensionista2026_2
             this.grpSeguranca.TabIndex = 3;
             this.grpSeguranca.TabStop = false;
             this.grpSeguranca.Text = "Segurança e Acesso";
-            // 
-            // lblUsuarioLogado
-            // 
+
+
+
             this.lblUsuarioLogado.AutoSize = true;
             this.lblUsuarioLogado.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsuarioLogado.Location = new System.Drawing.Point(20, 30);
@@ -157,9 +157,9 @@ namespace ProjetoExtensionista2026_2
             this.lblUsuarioLogado.Size = new System.Drawing.Size(160, 16);
             this.lblUsuarioLogado.TabIndex = 0;
             this.lblUsuarioLogado.Text = "Usuário: Administrador";
-            // 
-            // lblDescSeguranca
-            // 
+
+
+
             this.lblDescSeguranca.AutoSize = true;
             this.lblDescSeguranca.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblDescSeguranca.Location = new System.Drawing.Point(20, 55);
@@ -167,9 +167,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescSeguranca.Size = new System.Drawing.Size(275, 16);
             this.lblDescSeguranca.TabIndex = 1;
             this.lblDescSeguranca.Text = "Altere a sua senha de acesso ao sistema.";
-            // 
-            // btnAlterarSenha
-            // 
+
+
+
             this.btnAlterarSenha.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAlterarSenha.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.btnAlterarSenha.Location = new System.Drawing.Point(23, 85);
@@ -179,9 +179,9 @@ namespace ProjetoExtensionista2026_2
             this.btnAlterarSenha.Text = "Alterar Senha";
             this.btnAlterarSenha.UseVisualStyleBackColor = true;
             this.btnAlterarSenha.Click += new System.EventHandler(this.btnAlterarSenha_Click);
-            // 
-            // grpSobre
-            // 
+
+
+
             this.grpSobre.Controls.Add(this.lblInfoSobre);
             this.grpSobre.Controls.Add(this.lnkGitHub);
             this.grpSobre.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -192,9 +192,9 @@ namespace ProjetoExtensionista2026_2
             this.grpSobre.TabIndex = 4;
             this.grpSobre.TabStop = false;
             this.grpSobre.Text = "Sobre o Sistema";
-            // 
-            // lblInfoSobre
-            // 
+
+
+
             this.lblInfoSobre.AutoSize = true;
             this.lblInfoSobre.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblInfoSobre.Location = new System.Drawing.Point(20, 30);
@@ -202,9 +202,9 @@ namespace ProjetoExtensionista2026_2
             this.lblInfoSobre.Size = new System.Drawing.Size(298, 48);
             this.lblInfoSobre.TabIndex = 0;
             this.lblInfoSobre.Text = "Projeto Extensionista 2026-2\r\nVersão: 1.0.0 (Beta)\r\nDesenvolvido pela turma de Programação 2";
-            // 
-            // lnkGitHub
-            // 
+
+
+
             this.lnkGitHub.AutoSize = true;
             this.lnkGitHub.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lnkGitHub.Location = new System.Drawing.Point(20, 100);
@@ -214,13 +214,13 @@ namespace ProjetoExtensionista2026_2
             this.lnkGitHub.TabStop = true;
             this.lnkGitHub.Text = "Ver repositório no GitHub";
             this.lnkGitHub.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lnkGitHub_LinkClicked);
-            // 
-            // FormConfig
-            // 
+
+
+
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(920, 568);
-            this.tblConfigGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tblConfigGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tblConfigGrid.ColumnCount = 2;
             this.tblConfigGrid.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
