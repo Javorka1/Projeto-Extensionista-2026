@@ -10,6 +10,7 @@ namespace ProjetoExtensionista2026_2
     {
         public event Action<string, decimal, int> AoAdicionarPagamento;
 
+        private const long MaxValorCentavos = 999_999_999;
         private long _valorCentavos = 0;
         private decimal _saldoRestante = 0m;
         private Button _botaoFormaAtivo = null;
@@ -20,6 +21,7 @@ namespace ProjetoExtensionista2026_2
         public UcPagamento()
         {
             InitializeComponent();
+            DoubleBuffered = true;
             ConfigurarEventos();
             ResetarForma();
         }
@@ -32,28 +34,28 @@ namespace ProjetoExtensionista2026_2
 
         private void ConfigurarEventos()
         {
-            // Vinculação dos métodos de pagamento
             if (btnDinheiro != null) btnDinheiro.Click += (s, e) => SelecionarForma(btnDinheiro, "Dinheiro", false);
             if (btnDebito != null) btnDebito.Click += (s, e) => SelecionarForma(btnDebito, "Cartão de Débito", false);
             if (btnCredito != null) btnCredito.Click += (s, e) => SelecionarForma(btnCredito, "Cartão de Crédito", true);
             if (btnPix != null) btnPix.Click += (s, e) => SelecionarForma(btnPix, "Pix", false);
             if (btnCarne != null) btnCarne.Click += (s, e) => SelecionarForma(btnCarne, "Carnê", true);
-
-            // Botões rápidos de valor
             if (btnExato != null) btnExato.Click += (s, e) => DefinirValorExato();
             if (btn10 != null) btn10.Click += (s, e) => Incrementar(10m);
             if (btn100 != null) btn100.Click += (s, e) => Incrementar(100m);
             if (btn1000 != null) btn1000.Click += (s, e) => Incrementar(1000m);
-
-            // Digitação no txtPagamento
             if (txtPagamento != null)
             {
                 txtPagamento.KeyPress += (s, e) =>
                 {
                     e.Handled = true;
                     if (!char.IsDigit(e.KeyChar)) return;
-                    _valorCentavos = (_valorCentavos * 10) + (e.KeyChar - '0');
-                    AtualizarTexto();
+
+                    long proximo = (_valorCentavos * 10) + (e.KeyChar - '0');
+                    if (proximo <= MaxValorCentavos)
+                    {
+                        _valorCentavos = proximo;
+                        AtualizarTexto();
+                    }
                 };
 
                 txtPagamento.KeyDown += (s, e) =>
@@ -72,12 +74,7 @@ namespace ProjetoExtensionista2026_2
             _botaoFormaAtivo = botao;
             _formaSelecionada = nomeForma;
 
-            Button[] todos = { btnDinheiro, btnDebito, btnCredito, btnPix, btnCarne };
-            foreach (var b in todos.Where(x => x != null))
-            {
-                bool selecionado = (b == botao);
-                b.Tag = selecionado ? "pagamento_ativo" : "pagamento_item";
-            }
+            AtualizarEstiloBotoesForma(botao);
 
             if (gpbLancamentoValores != null)
             {
@@ -97,15 +94,34 @@ namespace ProjetoExtensionista2026_2
             {
                 lblParcelas.Tag = permiteParcelamento ? null : "subtitulo";
                 lblParcelas.Text = permiteParcelamento ? "Parcelas:" : "Parcelas (À vista):";
+                GerenciadorTema.AplicarTema(lblParcelas);
             }
 
-            GerenciadorTema.AplicarTema(this);
             DefinirValorExato();
             txtPagamento?.Focus();
         }
 
-        private void Incrementar(decimal v) { _valorCentavos += (long)(v * 100m); AtualizarTexto(); }
-        private void DefinirValorExato() { _valorCentavos = (long)Math.Round(_saldoRestante * 100m); AtualizarTexto(); }
+        private void AtualizarEstiloBotoesForma(Button botaoSelecionado)
+        {
+            Button[] todos = { btnDinheiro, btnDebito, btnCredito, btnPix, btnCarne };
+            foreach (var b in todos.Where(x => x != null))
+            {
+                b.Tag = (b == botaoSelecionado) ? "pagamento_ativo" : "pagamento_item";
+                GerenciadorTema.AplicarTema(b);
+            }
+        }
+
+        private void Incrementar(decimal v)
+        {
+            _valorCentavos = Math.Min(MaxValorCentavos, _valorCentavos + (long)Math.Round(v * 100m));
+            AtualizarTexto();
+        }
+
+        private void DefinirValorExato()
+        {
+            _valorCentavos = Math.Min(MaxValorCentavos, (long)Math.Round(_saldoRestante * 100m));
+            AtualizarTexto();
+        }
 
         private void AtualizarTexto()
         {
@@ -120,6 +136,8 @@ namespace ProjetoExtensionista2026_2
         {
             _botaoFormaAtivo = null;
             _formaSelecionada = null;
+
+            AtualizarEstiloBotoesForma(null);
 
             if (gpbLancamentoValores != null)
             {
@@ -138,15 +156,9 @@ namespace ProjetoExtensionista2026_2
             {
                 lblParcelas.Tag = "subtitulo";
                 lblParcelas.Text = "Parcelas:";
+                GerenciadorTema.AplicarTema(lblParcelas);
             }
 
-            Button[] todos = { btnDinheiro, btnDebito, btnCredito, btnPix, btnCarne };
-            foreach (var b in todos.Where(x => x != null))
-            {
-                b.Tag = "pagamento_item";
-            }
-
-            GerenciadorTema.AplicarTema(this);
             _valorCentavos = 0;
             AtualizarTexto();
         }
@@ -164,8 +176,6 @@ namespace ProjetoExtensionista2026_2
                 MessageBox.Show("Informe um valor maior que zero.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            // Apenas Dinheiro aceita valor maior que o restante para gerar troco
             if (_botaoFormaAtivo != btnDinheiro && ValorAtual > _saldoRestante)
             {
                 MessageBox.Show($"Para {_formaSelecionada}, o valor não pode exceder o restante ({_saldoRestante:C2}).\nTroco é aceito apenas em Dinheiro.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);

@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.IO;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Npgsql;
@@ -14,10 +12,67 @@ namespace ProjetoExtensionista2026_2
     public partial class FormFinanceiro : Form
     {
         private DataTable _dtProdutosCache;
+        private bool _carregandoDados;
+        private bool _precisaAtualizar;
 
         public FormFinanceiro()
         {
             InitializeComponent();
+            ConfigurarSincronizacaoEventos();
+        }
+
+        private void ConfigurarSincronizacaoEventos()
+        {
+            Action aoMudarDados = async () =>
+            {
+                if (IsDisposed || !IsHandleCreated)
+                    return;
+
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new Action(async () =>
+                    {
+                        if (Visible)
+                        {
+                            _precisaAtualizar = false;
+                            await AtualizarTudoAsync();
+                        }
+                        else
+                        {
+                            _precisaAtualizar = true;
+                        }
+                    }));
+                    return;
+                }
+
+                if (Visible)
+                {
+                    _precisaAtualizar = false;
+                    await AtualizarTudoAsync();
+                }
+                else
+                {
+                    _precisaAtualizar = true;
+                }
+            };
+
+            EventosSistema.VendaConcluida += aoMudarDados;
+            EventosSistema.EstoqueAtualizado += aoMudarDados;
+
+            VisibleChanged += async (s, e) =>
+            {
+                if (Visible && _precisaAtualizar && !IsDisposed && IsHandleCreated)
+                {
+                    _precisaAtualizar = false;
+                    await AtualizarTudoAsync();
+                }
+            };
+
+            FormClosed += (s, e) =>
+            {
+                EventosSistema.VendaConcluida -= aoMudarDados;
+                EventosSistema.EstoqueAtualizado -= aoMudarDados;
+            };
         }
 
         private async void FormFinanceiro_Load(object sender, EventArgs e)
@@ -50,15 +105,16 @@ namespace ProjetoExtensionista2026_2
 
         private async Task AtualizarTudoAsync()
         {
+            if (_carregandoDados) return;
+
+            _carregandoDados = true;
             try
             {
                 btnAtualizar.Enabled = false;
                 btnAtualizar.Text = "Carregando...";
-
-                // Executa tudo em UMA ÚNICA conexão em background para não travar a tela
                 var resultado = await Task.Run(() => BuscarDadosUnificadosNoBanco());
+                if (IsDisposed) return;
 
-                // 1. Preenche ComboBox de Categorias
                 string catAnterior = cmbCategoria.SelectedItem?.ToString() ?? "Todas";
                 cmbCategoria.Items.Clear();
                 cmbCategoria.Items.Add("Todas");
@@ -69,14 +125,12 @@ namespace ProjetoExtensionista2026_2
                 int idx = cmbCategoria.Items.IndexOf(catAnterior);
                 cmbCategoria.SelectedIndex = idx >= 0 ? idx : 0;
 
-                // 2. Preenche Cards de Indicadores (KPIs)
                 lblValorCustoEstoque.Text = resultado.CustoTotal.ToString("C2");
                 lblValorReceitaPotencial.Text = resultado.ReceitaPotencial.ToString("C2");
                 lblValorLucroEstimado.Text = resultado.LucroProjetado.ToString("C2");
                 lblValorMargemMedia.Text = $"{resultado.MargemMedia:N1}%";
                 lblValorLucroEstimado.ForeColor = resultado.LucroProjetado >= 0 ? Color.ForestGreen : Color.Crimson;
 
-                // 3. Preenche as 3 Tabelas
                 _dtProdutosCache = resultado.TabelaProdutos;
                 dgvProdutosFinanceiro.DataSource = _dtProdutosCache;
                 dgvResumoCategoria.DataSource = resultado.TabelaPorCategoria;
@@ -90,12 +144,17 @@ namespace ProjetoExtensionista2026_2
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar dados financeiros: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!IsDisposed)
+                    MessageBox.Show("Erro ao carregar dados financeiros: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                btnAtualizar.Text = "Atualizar Dados";
-                btnAtualizar.Enabled = true;
+                _carregandoDados = false;
+                if (!IsDisposed)
+                {
+                    btnAtualizar.Text = "Atualizar Dados";
+                    btnAtualizar.Enabled = true;
+                }
             }
         }
 
@@ -164,7 +223,6 @@ namespace ProjetoExtensionista2026_2
                 GROUP BY s.name
                 ORDER BY ""Total Custo (R$)"" DESC;";
 
-            // Abre APENAS UMA conexão com o Supabase para buscar tudo de uma vez!
             using (var db = new Connection())
             {
                 db.IniciarConexao();
@@ -185,7 +243,6 @@ namespace ProjetoExtensionista2026_2
                     adapterProd.Fill(dtProd);
                     res.TabelaProdutos = dtProd;
 
-                    // Calcula os 4 indicadores em memória a partir da própria tabela já carregada (0ms de custo extra no banco!)
                     decimal custo = 0m;
                     decimal venda = 0m;
                     foreach (DataRow row in dtProd.Rows)
@@ -241,7 +298,6 @@ namespace ProjetoExtensionista2026_2
 
         private void btnFiltrar_Click(object sender, EventArgs e)
         {
-            // Filtra instantaneamente em memória sem precisar ir no banco de novo!
             AplicarFiltroLocal();
             SelecionarAba(0);
         }

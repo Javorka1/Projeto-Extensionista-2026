@@ -71,6 +71,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.lblAtualizado = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picFotoPreview)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -251,6 +252,7 @@
             this.txtNome.Name = "txtNome";
             this.txtNome.Size = new System.Drawing.Size(375, 25);
             this.txtNome.TabIndex = 43;
+            this.txtNome.Tag = "obrigatorio";
             // 
             // label1
             // 
@@ -323,16 +325,16 @@
             // 
             this.txtEmail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtEmail.Location = new System.Drawing.Point(274, 55);
+            this.txtEmail.Location = new System.Drawing.Point(246, 55);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(248, 25);
+            this.txtEmail.Size = new System.Drawing.Size(276, 25);
             this.txtEmail.TabIndex = 90;
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(275, 35);
+            this.label7.Location = new System.Drawing.Point(243, 35);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(42, 17);
             this.label7.TabIndex = 89;
@@ -344,7 +346,7 @@
             this.txtTelefone.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTelefone.Location = new System.Drawing.Point(16, 55);
             this.txtTelefone.Name = "txtTelefone";
-            this.txtTelefone.Size = new System.Drawing.Size(242, 25);
+            this.txtTelefone.Size = new System.Drawing.Size(212, 25);
             this.txtTelefone.TabIndex = 88;
             // 
             // label10
@@ -361,16 +363,16 @@
             // 
             this.txtBairro.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtBairro.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBairro.Location = new System.Drawing.Point(274, 106);
+            this.txtBairro.Location = new System.Drawing.Point(246, 106);
             this.txtBairro.Name = "txtBairro";
-            this.txtBairro.Size = new System.Drawing.Size(248, 25);
+            this.txtBairro.Size = new System.Drawing.Size(276, 25);
             this.txtBairro.TabIndex = 94;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(275, 86);
+            this.label11.Location = new System.Drawing.Point(243, 86);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(46, 17);
             this.label11.TabIndex = 93;
@@ -382,7 +384,7 @@
             this.txtCep.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCep.Location = new System.Drawing.Point(16, 106);
             this.txtCep.Name = "txtCep";
-            this.txtCep.Size = new System.Drawing.Size(242, 25);
+            this.txtCep.Size = new System.Drawing.Size(212, 25);
             this.txtCep.TabIndex = 92;
             // 
             // label13
@@ -468,33 +470,33 @@
             this.cboUf.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cboUf.FormattingEnabled = true;
             this.cboUf.Items.AddRange(new object[] {
-            "AC - Acre",
-            "AL - Alagoas",
-            "AP - Amapá",
-            "AM - Amazonas",
-            "BA - Bahia",
-            "CE - Ceará",
-            "DF - Distrito Federal",
-            "ES - Espírito Santo",
-            "GO - Goiás",
-            "MA - Maranhão",
-            "MT - Mato Grosso",
-            "MS - Mato Grosso do Sul",
-            "MG - Minas Gerais",
-            "PA - Pará",
-            "PB - Paraíba",
-            "PR - Paraná",
-            "PE - Pernambuco",
-            "PI - Piauí",
-            "RJ - Rio de Janeiro",
-            "RN - Rio Grande do Norte",
-            "RS - Rio Grande do Sul",
-            "RO - Rondônia",
-            "RR - Roraima",
-            "SC - Santa Catarina",
-            "SP - São Paulo",
-            "SE - Sergipe",
-            "TO - Tocantins"});
+            "AC",
+            "AL",
+            "AP",
+            "AM",
+            "BA",
+            "CE",
+            "DF",
+            "ES",
+            "GO",
+            "MA",
+            "MT",
+            "MS",
+            "MG",
+            "PA",
+            "PB",
+            "PR",
+            "PE",
+            "PI",
+            "RJ",
+            "RN",
+            "RS",
+            "RO",
+            "RR",
+            "SC",
+            "SP",
+            "SE",
+            "TO"});
             this.cboUf.Location = new System.Drawing.Point(398, 221);
             this.cboUf.Name = "cboUf";
             this.cboUf.Size = new System.Drawing.Size(124, 23);
@@ -572,10 +574,22 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Observacoes / Notas";
             // 
+            // lblAtualizado
+            // 
+            this.lblAtualizado.AutoSize = true;
+            this.lblAtualizado.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAtualizado.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.lblAtualizado.Location = new System.Drawing.Point(201, 512);
+            this.lblAtualizado.Name = "lblAtualizado";
+            this.lblAtualizado.Size = new System.Drawing.Size(68, 13);
+            this.lblAtualizado.TabIndex = 110;
+            this.lblAtualizado.Text = "Atualizado: ";
+            // 
             // UcCadastroCliente
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.lblAtualizado);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnLimpar);
@@ -598,6 +612,7 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -645,5 +660,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.Label lblAtualizado;
     }
 }

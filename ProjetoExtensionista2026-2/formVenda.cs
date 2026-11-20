@@ -23,6 +23,7 @@ namespace ProjetoExtensionista2026_2
 
         private ClienteDTO _clienteSelecionado;
         public long IdClienteSelecionado => _clienteSelecionado?.Id ?? 1;
+        public bool TemItensNoCarrinho => panelCarrinho != null && panelCarrinho.Controls.Count > 0;
 
         public formVenda()
         {
@@ -165,6 +166,8 @@ namespace ProjetoExtensionista2026_2
                 {
                     Dock = DockStyle.Fill
                 };
+
+                cadastroCliente.AoConcluirOperacao += () => EventosSistema.NotificarClienteAtualizado();
 
                 formularioCadastro.Controls.Add(cadastroCliente);
                 GerenciadorTema.AplicarTema(formularioCadastro);
@@ -628,6 +631,8 @@ namespace ProjetoExtensionista2026_2
                     if (btnAvancarPagamento != null) btnAvancarPagamento.Enabled = false;
 
                     long idOrcamento = SalvarOrcamentoNoBanco(subtotal, desconto, totalFinal, itens, idCliente);
+                    EventosSistema.NotificarVendaConcluida();
+
                     var dadosOrcamento = MontarDadosDocumentoOrcamento(idOrcamento, desconto, itens);
 
                     Cursor = Cursors.Default;
@@ -663,8 +668,8 @@ namespace ProjetoExtensionista2026_2
             {
                 if (formPagto.ShowDialog(this) == DialogResult.OK)
                 {
+                    EventosSistema.NotificarVendaConcluida();
                     LimparCarrinhoCompleto();
-                    _ucEstoque?.BuscarProdutosNoSupabase(string.Empty);
                     _ucEstoque?.FocarCampoBusca();
                 }
             }
@@ -688,7 +693,6 @@ namespace ProjetoExtensionista2026_2
 
                         long idOrcamento;
 
-                        // Grava com sale_type = 'ORCAMENTO' e payment_status = 'PENDENTE'
                         string sqlInsertSale = @"
                             INSERT INTO public.sale (
                                 sale_date, 

@@ -53,6 +53,8 @@ namespace ProjetoExtensionista2026_2
         public static Color CorAviso => ModoEscuro ? Color.FromArgb(245, 158, 11) : Color.FromArgb(217, 119, 6);        // Amber
         public static Color CorPerigo => ModoEscuro ? Color.FromArgb(239, 68, 68) : Color.FromArgb(220, 38, 38);        // Rose
         public static Color CorRoxo => ModoEscuro ? Color.FromArgb(168, 85, 247) : Color.FromArgb(126, 34, 206);        // Purple
+                                                                                                                        // Adicione junto às cores semânticas do GerenciadorTema.cs:
+        public static Color FundoObrigatorio => ModoEscuro ? Color.FromArgb(30, 43, 69) : InputFocoClaro;
 
         public static void CarregarTemaSalvo()
         {

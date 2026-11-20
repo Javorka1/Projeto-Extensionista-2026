@@ -26,6 +26,9 @@ namespace ProjetoExtensionista2026_2
         private ContextMenuStrip _menuContextoGrid;
         private string _valorCelulaClicada = string.Empty;
 
+        private bool _precisaAtualizar;
+        private bool _ignorandoProprioEvento;
+
         private bool EhModoPopup => this.FindForm()?.Modal ?? false;
 
         public UcConsultaCliente()
@@ -42,6 +45,75 @@ namespace ProjetoExtensionista2026_2
 
             ConfigurarEventos();
             ConfigurarMenuContexto();
+            ConfigurarSincronizacaoEventos();
+        }
+
+        private void ConfigurarSincronizacaoEventos()
+        {
+            Action aoMudarClientes = async () =>
+            {
+                if (_ignorandoProprioEvento || IsDisposed || !IsHandleCreated)
+                    return;
+
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new Action(async () =>
+                    {
+                        if (Visible)
+                        {
+                            _precisaAtualizar = false;
+                            await BuscarClientesBancoAsync(txtPesquisa?.Text.Trim() ?? string.Empty);
+                        }
+                        else
+                        {
+                            _precisaAtualizar = true;
+                        }
+                    }));
+                    return;
+                }
+
+                if (Visible)
+                {
+                    _precisaAtualizar = false;
+                    await BuscarClientesBancoAsync(txtPesquisa?.Text.Trim() ?? string.Empty);
+                }
+                else
+                {
+                    _precisaAtualizar = true;
+                }
+            };
+
+            EventosSistema.ClienteAtualizado += aoMudarClientes;
+
+            VisibleChanged += async (s, e) =>
+            {
+                if (Visible && _precisaAtualizar && !IsDisposed && IsHandleCreated)
+                {
+                    _precisaAtualizar = false;
+                    await BuscarClientesBancoAsync(txtPesquisa?.Text.Trim() ?? string.Empty);
+                }
+            };
+
+            HandleDestroyed += (s, e) =>
+            {
+                EventosSistema.ClienteAtualizado -= aoMudarClientes;
+                _ctsBusca?.Cancel();
+                _ctsBusca?.Dispose();
+                _menuContextoGrid?.Dispose();
+            };
+        }
+
+        private void NotificarAlteracaoPropria()
+        {
+            _ignorandoProprioEvento = true;
+            try
+            {
+                EventosSistema.NotificarClienteAtualizado();
+            }
+            finally
+            {
+                _ignorandoProprioEvento = false;
+            }
         }
 
         private void ConfigurarEventos()
@@ -157,7 +229,6 @@ namespace ProjetoExtensionista2026_2
 
                 var cli = _listaClientes[hit.RowIndex];
 
-                // Exibe a opção de histórico apenas no modo tela cheia (Gestão de Clientes)
                 bool mostrarHistorico = !EhModoPopup;
                 itemHistorico.Visible = mostrarHistorico;
                 sepHistorico.Visible = mostrarHistorico;
@@ -175,7 +246,6 @@ namespace ProjetoExtensionista2026_2
                 itemCopiarTel.Enabled = !string.IsNullOrWhiteSpace(cli.Telefone);
                 itemCopiarEnd.Enabled = FormatarEnderecoResumido(cli) != "Não informado";
 
-                // Aplica cores do tema atual no menu
                 Color fundo = GerenciadorTema.ModoEscuro ? GerenciadorTema.FundoCardEscuro : GerenciadorTema.FundoCardClaro;
                 Color texto = GerenciadorTema.ModoEscuro ? GerenciadorTema.TextoEscuro : GerenciadorTema.TextoClaro;
                 _menuContextoGrid.BackColor = fundo;
@@ -323,7 +393,7 @@ namespace ProjetoExtensionista2026_2
 
         private void AtualizarExibicaoGrid()
         {
-            if (dgwClientes == null) return;
+            if (dgwClientes == null || IsDisposed) return;
 
             IEnumerable<ClienteDTO> consultaOrdenada;
 
@@ -365,7 +435,7 @@ namespace ProjetoExtensionista2026_2
                         : _listaClientes.OrderBy(c => c.Ativo).ThenBy(c => c.Id);
                     break;
 
-                default: // "Id"
+                default:
                     consultaOrdenada = _ordemCrescente
                         ? _listaClientes.OrderBy(c => c.Id)
                         : _listaClientes.OrderByDescending(c => c.Id);
@@ -512,7 +582,7 @@ namespace ProjetoExtensionista2026_2
                     return lista;
                 }, token);
 
-                if (token.IsCancellationRequested || dgwClientes == null) return;
+                if (token.IsCancellationRequested || dgwClientes == null || IsDisposed) return;
 
                 _listaClientes = resultados ?? new List<ClienteDTO>();
                 AtualizarExibicaoGrid();
@@ -523,7 +593,8 @@ namespace ProjetoExtensionista2026_2
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao consultar clientes: {ex.Message}", "Falha de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!IsDisposed)
+                    MessageBox.Show($"Erro ao consultar clientes: {ex.Message}", "Falha de Conexão", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -624,6 +695,8 @@ namespace ProjetoExtensionista2026_2
 
             if (atualizado)
             {
+                NotificarAlteracaoPropria();
+
                 string termoAtual = txtPesquisa?.Text.Trim() ?? string.Empty;
                 await BuscarClientesBancoAsync(termoAtual);
 

@@ -493,12 +493,12 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 1. Gravação isolada no Supabase
             try
             {
                 Cursor = Cursors.WaitCursor;
                 if (btnFinalizar != null) btnFinalizar.Enabled = false;
                 GravarVendaNoBanco();
+                EventosSistema.NotificarVendaConcluida();
             }
             catch (Exception ex)
             {
@@ -508,7 +508,6 @@ namespace ProjetoExtensionista2026_2
                 return;
             }
 
-            // 2. A venda JÁ está salva; abre a tela de documentos de forma independente
             try
             {
                 Cursor = Cursors.Default;
@@ -700,7 +699,6 @@ namespace ProjetoExtensionista2026_2
                             }
                             else
                             {
-                                // Efetivação de orçamento: atualiza custo unitário e dá baixa no estoque dos itens já gravados
                                 foreach (var item in _itensVenda)
                                 {
                                     string sqlBaixaOrcamento = @"

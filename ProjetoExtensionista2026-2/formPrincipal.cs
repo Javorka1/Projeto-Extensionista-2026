@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using ProjetoExtensionista2026_2.SQL.SQL_functions;
 
@@ -8,16 +10,38 @@ namespace ProjetoExtensionista2026_2
     public partial class formPrincipal : Form
     {
         private Button _botaoNavAtivo;
+        private GerenciadorAbas _abas;
+        private Panel _panelBarraAbas;
+        private int _contadorCaixa = 0;
 
         public formPrincipal()
         {
             InitializeComponent();
+            InicializarSistemaAbas();
             GerenciadorTema.AplicarTema(this);
+        }
+
+        private void InicializarSistemaAbas()
+        {
+            _abas = new GerenciadorAbas(panelBarraAbas, panelWorkspace, mostrarBotaoAdicionar: true)
+            {
+                LimiteMaximoAbas = 6
+            };
+
+            _abas.AoSolicitarNovaAba += () =>
+            {
+                if (btnNavVendas.Visible)
+                    AbrirNovaAbaCaixa();
+                else if (btnNavEstoque.Visible)
+                    AbrirModuloUnico(btnNavEstoque, "estoque", "Gestão de Estoque", () => new formEstoque());
+                else if (btnNavFinanceiro.Visible)
+                    AbrirModuloUnico(btnNavFinanceiro, "financeiro", "Painel Financeiro", () => new FormFinanceiro());
+            };
         }
 
         private void formPrincipal_Load(object sender, EventArgs e)
         {
-            using (var sql = new LoginSQL()) 
+            using (var sql = new LoginSQL())
             {
                 string nomeUsuario = LoginSQL.SessaoUsuario.Nome;
                 string role = sql.RolePicker(nomeUsuario);
@@ -25,26 +49,20 @@ namespace ProjetoExtensionista2026_2
                 if (!string.IsNullOrEmpty(role))
                 {
                     LoginSQL.SessaoUsuario.Role = role;
-                    
-                    // Configura o Card de Usuário
                     ConfigurarCardUsuario(nomeUsuario, role);
-
-                    // Configura os botões da sidebar de acordo com a permissão
                     var rolesManager = new rolesClass();
                     rolesManager.RoleSidebar(this, role, nomeUsuario, LoginSQL.SessaoUsuario.Hash);
-
-                    // Abre a tela padrão inicial (Vendas se tiver permissão, senão Principal/Financeiro)
                     if (btnNavVendas.Visible)
                     {
-                        AtivarNavegacao(btnNavVendas, new formVenda());
+                        AbrirNovaAbaCaixa();
                     }
                     else if (btnNavClientes.Visible)
                     {
-                        AtivarNavegacao(btnNavClientes, new FormFinanceiro());
+                        AbrirModuloUnico(btnNavClientes, "financeiro", "Painel Financeiro", () => new FormFinanceiro());
                     }
                     else if (btnNavEstoque.Visible)
                     {
-                        AtivarNavegacao(btnNavEstoque, new formEstoque());
+                        AbrirModuloUnico(btnNavEstoque, "estoque", "Gestão de Estoque", () => new formEstoque());
                     }
                 }
                 else
@@ -61,11 +79,9 @@ namespace ProjetoExtensionista2026_2
 
             lblNomeUsuario.Text = nome;
 
-            // Iniciais no avatar
             string iniciais = nome.Length >= 2 ? nome.Substring(0, 2).ToUpper() : nome.ToUpper();
             lblAvatar.Text = iniciais;
 
-            // Formatação do cargo
             switch (role.ToLower())
             {
                 case "admin":
@@ -91,102 +107,157 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        public void AtivarNavegacao(Button botaoClicado, Form formFilho)
+        private void DestacarBotaoSidebar(Button botaoClicado)
         {
-            // Reseta botão anterior
             if (_botaoNavAtivo != null)
-            {
                 _botaoNavAtivo.Tag = "nav_item";
-            }
 
-            // Ativa o novo botão
             _botaoNavAtivo = botaoClicado;
             if (_botaoNavAtivo != null)
-            {
                 _botaoNavAtivo.Tag = "nav_ativa";
-            }
 
             GerenciadorTema.AplicarTema(pnlNav);
+        }
 
-            // Carrega formulário no workspace
-            AbrirFormNoWorkspace(formFilho);
+        private void VincularSincronizacaoSidebar(Form formFilho, Button botaoSidebar)
+        {
+            if (formFilho == null || botaoSidebar == null) return;
+
+            formFilho.VisibleChanged += (s, e) =>
+            {
+                if (formFilho.Visible)
+                    DestacarBotaoSidebar(botaoSidebar);
+            };
+        }
+
+        private void AbrirNovaAbaCaixa()
+        {
+            _contadorCaixa++;
+            int numero = _contadorCaixa;
+
+            var vendaForm = new formVenda();
+            VincularSincronizacaoSidebar(vendaForm, btnNavVendas);
+
+            var aba = _abas.AdicionarAba(
+                titulo: $"Frente de Caixa #{numero}",
+                tela: vendaForm,
+                podeFechar: true,
+                validacaoFechamento: () =>
+                {
+                    return MessageBox.Show(
+                        $"Deseja fechar a aba Frente de Caixa #{numero}?",
+                        "Fechar Aba",
+                        MessageBoxButtons.YesNo,
+                        MessageBoxIcon.Question) == DialogResult.Yes;
+                },
+                chaveUnica: null,
+                fabricaDuplicacao: () =>
+                {
+                    var novo = new formVenda();
+                    VincularSincronizacaoSidebar(novo, btnNavVendas);
+                    return novo;
+                }
+            );
+
+            if (aba != null)
+                DestacarBotaoSidebar(btnNavVendas);
+        }
+
+        private void AbrirModuloUnico(Button botaoSidebar, string chaveUnica, string titulo, Func<Form> fabricaForm)
+        {
+            var aba = _abas.AbrirOuFocarAba(
+                chaveUnica: chaveUnica,
+                titulo: titulo,
+                fabricaTela: () =>
+                {
+                    Form frm = fabricaForm();
+                    VincularSincronizacaoSidebar(frm, botaoSidebar);
+                    return frm;
+                }
+            );
+
+            if (aba != null)
+                DestacarBotaoSidebar(botaoSidebar);
+        }
+        public void AtivarNavegacao(Button botaoClicado, Form formFilho)
+        {
+            if (formFilho == null) return;
+
+            DestacarBotaoSidebar(botaoClicado);
+            VincularSincronizacaoSidebar(formFilho, botaoClicado);
+
+            string titulo = botaoClicado != null && !string.IsNullOrWhiteSpace(botaoClicado.Text)
+                ? botaoClicado.Text.Trim()
+                : formFilho.Text;
+
+            _abas.AdicionarAba(titulo, formFilho, podeFechar: true);
         }
 
         public void AbrirFormNoWorkspace(object formFilho)
         {
-            if (this.panelWorkspace.Controls.Count > 0)
-            {
-                Control antigo = this.panelWorkspace.Controls[0];
-                this.panelWorkspace.Controls.Remove(antigo);
-                antigo.Dispose();
-            }
-
             if (formFilho is Form fh)
             {
-                fh.TopLevel = false;
-                fh.FormBorderStyle = FormBorderStyle.None;
-                fh.Dock = DockStyle.Fill;
-                GerenciadorTema.AplicarTema(fh);
-                this.panelWorkspace.Controls.Add(fh);
-                this.panelWorkspace.Tag = fh;
-                fh.Show();
+                VincularSincronizacaoSidebar(fh, _botaoNavAtivo);
+                _abas.AdicionarAba(string.IsNullOrWhiteSpace(fh.Text) ? "Aba" : fh.Text, fh, podeFechar: true);
             }
         }
 
         public void AbrirHistoricoCliente(DTOs.ClienteDTO cliente)
         {
             if (cliente == null) return;
-            AtivarNavegacao(btnNavRegistroVendas, new FormRegistroVendas(cliente));
+
+            AbrirModuloUnico(
+                btnNavRegistroVendas,
+                chaveUnica: $"historico_cliente_{cliente.Id}",
+                titulo: $"Histórico: {cliente.Nome}",
+                fabricaForm: () => new FormRegistroVendas(cliente)
+            );
         }
 
         private void btnNavPrincipal_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavPrincipal, new FormFinanceiro());
+            AbrirModuloUnico(btnNavPrincipal, "principal", "Principal", () => new FormFinanceiro());
         }
 
         private void btnNavVendas_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavVendas, new formVenda());
+            AbrirNovaAbaCaixa();
         }
 
         private void btnNavRegistroVendas_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavRegistroVendas, new FormRegistroVendas());
+            AbrirModuloUnico(btnNavRegistroVendas, "registro_vendas", "Registro de Vendas", () => new FormRegistroVendas());
         }
 
         private void btnNavEstoque_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavEstoque, new formEstoque());
+            AbrirModuloUnico(btnNavEstoque, "estoque", "Gestão de Estoque", () => new formEstoque());
         }
 
         private void btnNavFinanceiro_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavFinanceiro, new FormFinanceiro());
+            AbrirModuloUnico(btnNavFinanceiro, "financeiro", "Painel Financeiro", () => new FormFinanceiro());
         }
 
         private void btnNavClientes_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavClientes, new formConsultaCliente());
+            AbrirModuloUnico(btnNavClientes, "clientes", "Gestão de Clientes", () => new formConsultaCliente());
         }
 
         private void btnNavConfig_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavConfig, new FormConfig());
+            AbrirModuloUnico(btnNavConfig, "config", "Configurações", () => new FormConfig());
         }
 
         private void btnNavAdmin_Click(object sender, EventArgs e)
         {
-            AtivarNavegacao(btnNavAdmin, new formAdmin());
+            AbrirModuloUnico(btnNavAdmin, "admin", "Admin", () => new formAdmin());
         }
 
         private void btnToggleTema_Click(object sender, EventArgs e)
         {
             GerenciadorTema.AlternarTema(this);
-
-            if (this.panelWorkspace.Controls.Count > 0 && this.panelWorkspace.Controls[0] is Form formAtual)
-            {
-                GerenciadorTema.AplicarTema(formAtual);
-            }
+            _abas?.AtualizarTemaTodasAbas();
         }
 
         private void btnSair_Click(object sender, EventArgs e)
@@ -237,6 +308,18 @@ namespace ProjetoExtensionista2026_2
             }
         }
 
-        
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.F1 && btnNavVendas.Visible)
+            {
+                AbrirNovaAbaCaixa();
+                return true;
+            }
+
+            if (_abas != null && _abas.ProcessarAtalhos(keyData))
+                return true;
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

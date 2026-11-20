@@ -1,9 +1,7 @@
 using System;
 using System.Data;
 using System.Drawing;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using ProjetoExtensionista2026_2.SQL.SQL_functions;
@@ -16,8 +14,9 @@ namespace ProjetoExtensionista2026_2
         private long? _idVendaSelecionada;
         private string _tipoSelecionado = string.Empty;
         private string _statusSelecionado = string.Empty;
-        private readonly Timer _timerAtualizacao;
         private bool _carregandoVendas;
+        private bool _precisaAtualizar;
+        private bool _ignorandoProprioEvento;
 
         private static bool PodeCancelarRegistro
         {
@@ -33,20 +32,80 @@ namespace ProjetoExtensionista2026_2
         public FormRegistroVendas()
         {
             InitializeComponent();
-
-            _timerAtualizacao = new Timer { Interval = 30000 };
-            _timerAtualizacao.Tick += async (s, e) =>
-            {
-                if (!_carregandoVendas && IsHandleCreated && !IsDisposed)
-                    await CarregarVendasAsync();
-            };
-            _timerAtualizacao.Start();
-            FormClosed += (s, e) => _timerAtualizacao.Dispose();
+            ConfigurarSincronizacaoEventos();
         }
 
         public FormRegistroVendas(DTOs.ClienteDTO clienteFiltro) : this()
         {
             _clienteFiltro = clienteFiltro;
+        }
+
+        private void ConfigurarSincronizacaoEventos()
+        {
+            Action aoMudarVendas = async () =>
+            {
+                if (_ignorandoProprioEvento || IsDisposed || !IsHandleCreated)
+                    return;
+
+                if (InvokeRequired)
+                {
+                    BeginInvoke(new Action(async () =>
+                    {
+                        if (Visible)
+                        {
+                            _precisaAtualizar = false;
+                            _idVendaSelecionada = null;
+                            await CarregarVendasAsync();
+                        }
+                        else
+                        {
+                            _precisaAtualizar = true;
+                        }
+                    }));
+                    return;
+                }
+
+                if (Visible)
+                {
+                    _precisaAtualizar = false;
+                    _idVendaSelecionada = null;
+                    await CarregarVendasAsync();
+                }
+                else
+                {
+                    _precisaAtualizar = true;
+                }
+            };
+
+            EventosSistema.VendaConcluida += aoMudarVendas;
+
+            VisibleChanged += async (s, e) =>
+            {
+                if (Visible && _precisaAtualizar && !IsDisposed && IsHandleCreated)
+                {
+                    _precisaAtualizar = false;
+                    _idVendaSelecionada = null;
+                    await CarregarVendasAsync();
+                }
+            };
+
+            FormClosed += (s, e) =>
+            {
+                EventosSistema.VendaConcluida -= aoMudarVendas;
+            };
+        }
+
+        private void NotificarAlteracaoPropria()
+        {
+            _ignorandoProprioEvento = true;
+            try
+            {
+                EventosSistema.NotificarVendaConcluida();
+            }
+            finally
+            {
+                _ignorandoProprioEvento = false;
+            }
         }
 
         private async void FormRegistroVendas_Load(object sender, EventArgs e)
@@ -111,6 +170,8 @@ namespace ProjetoExtensionista2026_2
                 string busca = txtBusca.Text.Trim();
 
                 DataTable dt = await Task.Run(() => VendaSQL.ListarVendas(inicio, fim, tipo, status, busca));
+                if (IsDisposed) return;
+
                 _dtVendasAtual = dt;
 
                 dgvVendas.DataSource = _dtVendasAtual;
@@ -124,14 +185,18 @@ namespace ProjetoExtensionista2026_2
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Erro ao carregar o registro de vendas:\n\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!IsDisposed)
+                    MessageBox.Show("Erro ao carregar o registro de vendas:\n\n" + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
                 _carregandoVendas = false;
-                btnAtualizar.Text = "Atualizar";
-                btnAtualizar.Enabled = true;
-                btnFiltrar.Enabled = true;
+                if (!IsDisposed)
+                {
+                    btnAtualizar.Text = "Atualizar";
+                    btnAtualizar.Enabled = true;
+                    btnFiltrar.Enabled = true;
+                }
             }
         }
 
@@ -257,8 +322,7 @@ namespace ProjetoExtensionista2026_2
             {
                 DetalhesVendaResult detalhes = await Task.Run(() => VendaSQL.ObterDetalhesVenda(idSale));
 
-                // Garante que a seleção não mudou enquanto aguardava o banco
-                if (_idVendaSelecionada != idSale) return;
+                if (IsDisposed || _idVendaSelecionada != idSale) return;
 
                 lblDetalheTitulo.Text = $"{(detalhes.Tipo == "ORCAMENTO" ? "Orçamento" : "Venda")} #{detalhes.IdVenda}  •  {detalhes.Total:C2}";
                 lblDetalheMeta.Text = $"Cliente: {detalhes.ClienteNome}  |  Vendedor: {detalhes.Vendedor}";
@@ -295,7 +359,8 @@ namespace ProjetoExtensionista2026_2
             }
             catch (Exception ex)
             {
-                lblDetalheNotas.Text = "Erro ao carregar detalhes: " + ex.Message;
+                if (!IsDisposed)
+                    lblDetalheNotas.Text = "Erro ao carregar detalhes: " + ex.Message;
             }
         }
 
@@ -394,6 +459,7 @@ namespace ProjetoExtensionista2026_2
                     {
                         _idVendaSelecionada = null;
                         await CarregarVendasAsync();
+                        NotificarAlteracaoPropria();
                     }
                 }
             }
@@ -430,6 +496,7 @@ namespace ProjetoExtensionista2026_2
                     MessageBox.Show($"Venda #{idSale} marcada como PAGO.", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _idVendaSelecionada = null;
                     await CarregarVendasAsync();
+                    NotificarAlteracaoPropria();
                 }
             }
             catch (Exception ex)
@@ -469,6 +536,7 @@ namespace ProjetoExtensionista2026_2
                     MessageBox.Show($"Registro #{idSale} cancelado com sucesso.", "Cancelado", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     _idVendaSelecionada = null;
                     await CarregarVendasAsync();
+                    NotificarAlteracaoPropria();
                 }
             }
             catch (Exception ex)
