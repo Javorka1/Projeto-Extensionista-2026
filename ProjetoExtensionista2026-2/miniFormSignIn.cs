@@ -67,6 +67,7 @@ namespace ProjetoExtensionista2026_2
             string hash = loginSQL.HashificarSenha(password, out _);
             int result = loginSQL.RegistrarUsuario(username, hash);
             if (result == 1){
+                AuditLogSQL.Register("Usuário cadastrado: " + username.Trim(), "Sistema");
                 this.Close();
             }
         }

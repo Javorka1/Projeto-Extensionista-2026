@@ -19,7 +19,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                         UPDATE ""Users"" SET created_at = NOW() WHERE created_at IS NULL;
                         CREATE TABLE IF NOT EXISTS logs (
                             id BIGSERIAL PRIMARY KEY,
-                            occurred_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+                            created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
                             action VARCHAR(120) NOT NULL,
                             username VARCHAR(80) NOT NULL
                         );";
@@ -64,9 +64,9 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                 using (var command = connection.Conexao.CreateCommand())
                 {
                     command.CommandText = @"
-                        SELECT created_at AS occurred_at, action, username
+                         SELECT created_at AS occurred_at, action, username
                         FROM logs
-                        ORDER BY created_at DESC
+                         ORDER BY created_at DESC
                         LIMIT 500;";
                     using (var adapter = new NpgsqlDataAdapter(command))
                     {

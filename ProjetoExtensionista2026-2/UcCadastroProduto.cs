@@ -2,6 +2,7 @@
 using NpgsqlTypes;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
+using ProjetoExtensionista2026_2.SQL.SQL_functions;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -475,6 +476,10 @@ namespace ProjetoExtensionista2026_2
                 string msg = ProdutoIdEmEdicao.HasValue
                     ? "Produto atualizado com sucesso!"
                     : $"Produto cadastrado com sucesso! (Código: {idFinal})";
+
+                AuditLogSQL.Register(
+                    (ProdutoIdEmEdicao.HasValue ? "Produto atualizado: " : "Produto cadastrado: ") + nome + " (Código: " + idFinal + ")",
+                    LoginSQL.SessaoUsuario.Nome);
 
                 MessageBox.Show(msg, "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 

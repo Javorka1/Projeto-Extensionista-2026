@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using ProjetoExtensionista2026_2.SQL.SQL_functions;
 
 namespace ProjetoExtensionista2026_2
 {
@@ -56,6 +57,7 @@ namespace ProjetoExtensionista2026_2
 
             if (sucesso)
             {
+                AuditLogSQL.Register("Senha alterada", LoginSQL.SessaoUsuario.Nome);
                 MessageBox.Show("Senha alterada com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
                 this.Close();

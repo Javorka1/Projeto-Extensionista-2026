@@ -42,21 +42,30 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.areaPrincipal = new System.Windows.Forms.Panel();
             this.quadro = new System.Windows.Forms.Panel();
             this.splitAdmin = new System.Windows.Forms.SplitContainer();
             this.painelLogs = new System.Windows.Forms.Panel();
-            this.painelUsuarios = new System.Windows.Forms.Panel();
-            this.cabecalhoLogs = new System.Windows.Forms.Panel();
-            this.cabecalhoUsuarios = new System.Windows.Forms.Panel();
-            this.lblTituloLogs = new System.Windows.Forms.Label();
-            this.lblSubtituloLogs = new System.Windows.Forms.Label();
-            this.lblTituloUsuarios = new System.Windows.Forms.Label();
-            this.lblSubtituloUsuarios = new System.Windows.Forms.Label();
             this.gridLogs = new System.Windows.Forms.DataGridView();
+            this.cabecalhoLogs = new System.Windows.Forms.Panel();
+            this.lblSubtituloLogs = new System.Windows.Forms.Label();
+            this.lblTituloLogs = new System.Windows.Forms.Label();
+            this.painelUsuarios = new System.Windows.Forms.Panel();
             this.gridUsers = new System.Windows.Forms.DataGridView();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.cabecalhoUsuarios = new System.Windows.Forms.Panel();
+            this.lblSubtituloUsuarios = new System.Windows.Forms.Label();
+            this.lblTituloUsuarios = new System.Windows.Forms.Label();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.DataDG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ActionDG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UserDG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.IdDG = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.UserDG2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.RoleDG = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.areaPrincipal.SuspendLayout();
             this.quadro.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitAdmin)).BeginInit();
@@ -64,11 +73,13 @@
             this.splitAdmin.Panel2.SuspendLayout();
             this.splitAdmin.SuspendLayout();
             this.painelLogs.SuspendLayout();
-            this.painelUsuarios.SuspendLayout();
-            this.cabecalhoLogs.SuspendLayout();
-            this.cabecalhoUsuarios.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridLogs)).BeginInit();
+            this.cabecalhoLogs.SuspendLayout();
+            this.painelUsuarios.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).BeginInit();
+            this.cabecalhoUsuarios.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // areaPrincipal
@@ -95,7 +106,6 @@
             // 
             // splitAdmin
             // 
-            this.splitAdmin.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.splitAdmin.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitAdmin.FixedPanel = System.Windows.Forms.FixedPanel.Panel1;
             this.splitAdmin.IsSplitterFixed = true;
@@ -111,7 +121,8 @@
             // 
             this.splitAdmin.Panel2.Controls.Add(this.painelUsuarios);
             this.splitAdmin.Panel2.Padding = new System.Windows.Forms.Padding(8, 0, 0, 0);
-            this.splitAdmin.SplitterDistance = 390;
+            this.splitAdmin.Size = new System.Drawing.Size(1048, 618);
+            this.splitAdmin.SplitterDistance = 121;
             this.splitAdmin.TabIndex = 0;
             // 
             // painelLogs
@@ -122,82 +133,8 @@
             this.painelLogs.Location = new System.Drawing.Point(0, 0);
             this.painelLogs.Name = "painelLogs";
             this.painelLogs.Padding = new System.Windows.Forms.Padding(8);
-            this.painelLogs.Size = new System.Drawing.Size(382, 616);
+            this.painelLogs.Size = new System.Drawing.Size(113, 618);
             this.painelLogs.TabIndex = 0;
-            // 
-            // painelUsuarios
-            // 
-            this.painelUsuarios.Controls.Add(this.gridUsers);
-            this.painelUsuarios.Controls.Add(this.lblStatus);
-            this.painelUsuarios.Controls.Add(this.cabecalhoUsuarios);
-            this.painelUsuarios.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.painelUsuarios.Location = new System.Drawing.Point(8, 0);
-            this.painelUsuarios.Name = "painelUsuarios";
-            this.painelUsuarios.Padding = new System.Windows.Forms.Padding(8);
-            this.painelUsuarios.Size = new System.Drawing.Size(662, 616);
-            this.painelUsuarios.TabIndex = 0;
-            // 
-            // cabecalhoLogs
-            // 
-            this.cabecalhoLogs.Controls.Add(this.lblSubtituloLogs);
-            this.cabecalhoLogs.Controls.Add(this.lblTituloLogs);
-            this.cabecalhoLogs.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cabecalhoLogs.Height = 58;
-            this.cabecalhoLogs.Name = "cabecalhoLogs";
-            this.cabecalhoLogs.TabIndex = 0;
-            // 
-            // cabecalhoUsuarios
-            // 
-            this.cabecalhoUsuarios.Controls.Add(this.lblSubtituloUsuarios);
-            this.cabecalhoUsuarios.Controls.Add(this.lblTituloUsuarios);
-            this.cabecalhoUsuarios.Dock = System.Windows.Forms.DockStyle.Top;
-            this.cabecalhoUsuarios.Height = 58;
-            this.cabecalhoUsuarios.Name = "cabecalhoUsuarios";
-            this.cabecalhoUsuarios.TabIndex = 0;
-            // 
-            // lblTituloLogs
-            // 
-            this.lblTituloLogs.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblTituloLogs.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblTituloLogs.Location = new System.Drawing.Point(0, 0);
-            this.lblTituloLogs.Name = "lblTituloLogs";
-            this.lblTituloLogs.Padding = new System.Windows.Forms.Padding(4, 2, 0, 0);
-            this.lblTituloLogs.Size = new System.Drawing.Size(366, 30);
-            this.lblTituloLogs.TabIndex = 0;
-            this.lblTituloLogs.Text = "Histórico de logs";
-            // 
-            // lblSubtituloLogs
-            // 
-            this.lblSubtituloLogs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblSubtituloLogs.Location = new System.Drawing.Point(0, 30);
-            this.lblSubtituloLogs.Name = "lblSubtituloLogs";
-            this.lblSubtituloLogs.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.lblSubtituloLogs.Size = new System.Drawing.Size(366, 28);
-            this.lblSubtituloLogs.TabIndex = 1;
-            this.lblSubtituloLogs.Tag = "subtitulo";
-            this.lblSubtituloLogs.Text = "Ações realizadas pelos usuários";
-            // 
-            // lblTituloUsuarios
-            // 
-            this.lblTituloUsuarios.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblTituloUsuarios.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblTituloUsuarios.Location = new System.Drawing.Point(0, 0);
-            this.lblTituloUsuarios.Name = "lblTituloUsuarios";
-            this.lblTituloUsuarios.Padding = new System.Windows.Forms.Padding(4, 2, 0, 0);
-            this.lblTituloUsuarios.Size = new System.Drawing.Size(630, 30);
-            this.lblTituloUsuarios.TabIndex = 0;
-            this.lblTituloUsuarios.Text = "Usuários";
-            // 
-            // lblSubtituloUsuarios
-            // 
-            this.lblSubtituloUsuarios.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblSubtituloUsuarios.Location = new System.Drawing.Point(0, 30);
-            this.lblSubtituloUsuarios.Name = "lblSubtituloUsuarios";
-            this.lblSubtituloUsuarios.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-            this.lblSubtituloUsuarios.Size = new System.Drawing.Size(630, 28);
-            this.lblSubtituloUsuarios.TabIndex = 1;
-            this.lblSubtituloUsuarios.Tag = "subtitulo";
-            this.lblSubtituloUsuarios.Text = "Gerencie acesso, cargo e status";
             // 
             // gridLogs
             // 
@@ -211,8 +148,52 @@
             this.gridLogs.ReadOnly = true;
             this.gridLogs.RowHeadersVisible = false;
             this.gridLogs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridLogs.Size = new System.Drawing.Size(366, 542);
+            this.gridLogs.Size = new System.Drawing.Size(97, 544);
             this.gridLogs.TabIndex = 1;
+            // 
+            // cabecalhoLogs
+            // 
+            this.cabecalhoLogs.Controls.Add(this.lblSubtituloLogs);
+            this.cabecalhoLogs.Controls.Add(this.lblTituloLogs);
+            this.cabecalhoLogs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cabecalhoLogs.Location = new System.Drawing.Point(8, 8);
+            this.cabecalhoLogs.Name = "cabecalhoLogs";
+            this.cabecalhoLogs.Size = new System.Drawing.Size(97, 58);
+            this.cabecalhoLogs.TabIndex = 0;
+            // 
+            // lblSubtituloLogs
+            // 
+            this.lblSubtituloLogs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSubtituloLogs.Location = new System.Drawing.Point(0, 30);
+            this.lblSubtituloLogs.Name = "lblSubtituloLogs";
+            this.lblSubtituloLogs.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
+            this.lblSubtituloLogs.Size = new System.Drawing.Size(97, 28);
+            this.lblSubtituloLogs.TabIndex = 1;
+            this.lblSubtituloLogs.Tag = "subtitulo";
+            this.lblSubtituloLogs.Text = "Ações realizadas pelos usuários";
+            // 
+            // lblTituloLogs
+            // 
+            this.lblTituloLogs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblTituloLogs.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTituloLogs.Location = new System.Drawing.Point(0, 0);
+            this.lblTituloLogs.Name = "lblTituloLogs";
+            this.lblTituloLogs.Padding = new System.Windows.Forms.Padding(4, 2, 0, 0);
+            this.lblTituloLogs.Size = new System.Drawing.Size(97, 30);
+            this.lblTituloLogs.TabIndex = 0;
+            this.lblTituloLogs.Text = "Histórico de logs";
+            // 
+            // painelUsuarios
+            // 
+            this.painelUsuarios.Controls.Add(this.gridUsers);
+            this.painelUsuarios.Controls.Add(this.lblStatus);
+            this.painelUsuarios.Controls.Add(this.cabecalhoUsuarios);
+            this.painelUsuarios.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.painelUsuarios.Location = new System.Drawing.Point(8, 0);
+            this.painelUsuarios.Name = "painelUsuarios";
+            this.painelUsuarios.Padding = new System.Windows.Forms.Padding(8);
+            this.painelUsuarios.Size = new System.Drawing.Size(915, 618);
+            this.painelUsuarios.TabIndex = 0;
             // 
             // gridUsers
             // 
@@ -226,27 +207,143 @@
             this.gridUsers.ReadOnly = true;
             this.gridUsers.RowHeadersVisible = false;
             this.gridUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.gridUsers.Size = new System.Drawing.Size(630, 517);
+            this.gridUsers.Size = new System.Drawing.Size(899, 519);
             this.gridUsers.TabIndex = 1;
             // 
             // lblStatus
             // 
             this.lblStatus.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblStatus.Location = new System.Drawing.Point(8, 583);
+            this.lblStatus.Location = new System.Drawing.Point(8, 585);
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Padding = new System.Windows.Forms.Padding(4, 4, 0, 0);
-            this.lblStatus.Size = new System.Drawing.Size(630, 25);
+            this.lblStatus.Size = new System.Drawing.Size(899, 25);
             this.lblStatus.TabIndex = 2;
             this.lblStatus.Text = "0 usuário(s) encontrado(s).";
+            // 
+            // cabecalhoUsuarios
+            // 
+            this.cabecalhoUsuarios.Controls.Add(this.lblSubtituloUsuarios);
+            this.cabecalhoUsuarios.Controls.Add(this.lblTituloUsuarios);
+            this.cabecalhoUsuarios.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cabecalhoUsuarios.Location = new System.Drawing.Point(8, 8);
+            this.cabecalhoUsuarios.Name = "cabecalhoUsuarios";
+            this.cabecalhoUsuarios.Size = new System.Drawing.Size(899, 58);
+            this.cabecalhoUsuarios.TabIndex = 0;
+            // 
+            // lblSubtituloUsuarios
+            // 
+            this.lblSubtituloUsuarios.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblSubtituloUsuarios.Location = new System.Drawing.Point(0, 30);
+            this.lblSubtituloUsuarios.Name = "lblSubtituloUsuarios";
+            this.lblSubtituloUsuarios.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
+            this.lblSubtituloUsuarios.Size = new System.Drawing.Size(899, 28);
+            this.lblSubtituloUsuarios.TabIndex = 1;
+            this.lblSubtituloUsuarios.Tag = "subtitulo";
+            this.lblSubtituloUsuarios.Text = "Gerencie acesso, cargo e status";
+            // 
+            // lblTituloUsuarios
+            // 
+            this.lblTituloUsuarios.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblTituloUsuarios.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTituloUsuarios.Location = new System.Drawing.Point(0, 0);
+            this.lblTituloUsuarios.Name = "lblTituloUsuarios";
+            this.lblTituloUsuarios.Padding = new System.Windows.Forms.Padding(4, 2, 0, 0);
+            this.lblTituloUsuarios.Size = new System.Drawing.Size(899, 30);
+            this.lblTituloUsuarios.TabIndex = 0;
+            this.lblTituloUsuarios.Text = "Usuários";
+            // 
+            // dataGridView1
+            // 
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.DataDG,
+            this.ActionDG,
+            this.UserDG});
+            this.dataGridView1.Location = new System.Drawing.Point(44, 112);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.Size = new System.Drawing.Size(726, 864);
+            this.dataGridView1.TabIndex = 0;
+            // 
+            // DataDG
+            // 
+            this.DataDG.HeaderText = "Data";
+            this.DataDG.Name = "DataDG";
+            this.DataDG.ReadOnly = true;
+            this.DataDG.Width = 50;
+            // 
+            // ActionDG
+            // 
+            this.ActionDG.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.ActionDG.HeaderText = "Ação";
+            this.ActionDG.Name = "ActionDG";
+            this.ActionDG.ReadOnly = true;
+            // 
+            // UserDG
+            // 
+            this.UserDG.HeaderText = "Usuario";
+            this.UserDG.Name = "UserDG";
+            this.UserDG.ReadOnly = true;
+            this.UserDG.Width = 150;
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.IdDG,
+            this.UserDG2,
+            this.RoleDG});
+            this.dataGridView2.Location = new System.Drawing.Point(919, 113);
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(628, 864);
+            this.dataGridView2.TabIndex = 1;
+            // 
+            // IdDG
+            // 
+            this.IdDG.HeaderText = "ID";
+            this.IdDG.Name = "IdDG";
+            this.IdDG.Width = 40;
+            // 
+            // UserDG2
+            // 
+            this.UserDG2.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.UserDG2.HeaderText = "Usuario";
+            this.UserDG2.Name = "UserDG2";
+            // 
+            // RoleDG
+            // 
+            this.RoleDG.HeaderText = "Cargo";
+            this.RoleDG.Name = "RoleDG";
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(52, 69);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(113, 40);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Logs";
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(924, 70);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(113, 40);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "Users";
             // 
             // formAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1120, 700);
+            this.ClientSize = new System.Drawing.Size(1612, 1041);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.dataGridView2);
+            this.Controls.Add(this.dataGridView1);
+            this.MinimumSize = new System.Drawing.Size(900, 560);
             this.Name = "formAdmin";
             this.Text = "Administração do sistema";
-            this.MinimumSize = new System.Drawing.Size(900, 560);
             this.areaPrincipal.ResumeLayout(false);
             this.quadro.ResumeLayout(false);
             this.splitAdmin.Panel1.ResumeLayout(false);
@@ -254,11 +351,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitAdmin)).EndInit();
             this.splitAdmin.ResumeLayout(false);
             this.painelLogs.ResumeLayout(false);
-            this.painelUsuarios.ResumeLayout(false);
-            this.cabecalhoLogs.ResumeLayout(false);
-            this.cabecalhoUsuarios.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridLogs)).EndInit();
+            this.cabecalhoLogs.ResumeLayout(false);
+            this.painelUsuarios.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).EndInit();
+            this.cabecalhoUsuarios.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -277,5 +376,17 @@
                 System.Math.Max(0, (this.areaPrincipal.ClientSize.Width - this.quadro.Width) / 2),
                 System.Math.Max(0, (this.areaPrincipal.ClientSize.Height - this.quadro.Height) / 2));
         }
+
+        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn DataDG;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ActionDG;
+        private System.Windows.Forms.DataGridViewTextBoxColumn UserDG;
+        private System.Data.Common.DataAdapter dataAdapter1;
+        private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IdDG;
+        private System.Windows.Forms.DataGridViewTextBoxColumn UserDG2;
+        private System.Windows.Forms.DataGridViewComboBoxColumn RoleDG;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }

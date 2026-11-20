@@ -15,6 +15,7 @@ namespace ProjetoExtensionista2026_2
             InitializeComponent();
             ConfigurarControles();
             GerenciadorTema.AplicarTema(this);
+            AplicarEstiloDosDataGridViews();
             Load += formAdmin_Load;
         }
 
@@ -24,7 +25,7 @@ namespace ProjetoExtensionista2026_2
 
             ConfigurarGrid(gridLogs);
             gridLogs.AutoGenerateColumns = false;
-            gridLogs.Columns.Add(new DataGridViewTextBoxColumn { Name = "occurred_at", HeaderText = "Horário", DataPropertyName = "occurred_at", Width = 125, AutoSizeMode = DataGridViewAutoSizeColumnMode.None, DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy HH:mm" } });
+            gridLogs.Columns.Add(new DataGridViewTextBoxColumn { Name = "created_at", HeaderText = "Horário", DataPropertyName = "created_at", Width = 125, AutoSizeMode = DataGridViewAutoSizeColumnMode.None, DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy HH:mm" } });
             gridLogs.Columns.Add(new DataGridViewTextBoxColumn { Name = "action", HeaderText = "Ação", DataPropertyName = "action", Width = 145, AutoSizeMode = DataGridViewAutoSizeColumnMode.None });
             gridLogs.Columns.Add(new DataGridViewTextBoxColumn { Name = "username", HeaderText = "Usuário", DataPropertyName = "username", Width = 95, AutoSizeMode = DataGridViewAutoSizeColumnMode.None });
 
@@ -37,7 +38,29 @@ namespace ProjetoExtensionista2026_2
             gridUsers.Columns.Add(new DataGridViewCheckBoxColumn { Name = "active", HeaderText = "Ativo", DataPropertyName = "active", Width = 55, AutoSizeMode = DataGridViewAutoSizeColumnMode.None });
             gridUsers.Columns.Add(new DataGridViewButtonColumn { Name = "edit", HeaderText = "", Text = "Editar", UseColumnTextForButtonValue = true, Width = 65, AutoSizeMode = DataGridViewAutoSizeColumnMode.None });
             gridUsers.Columns.Add(new DataGridViewButtonColumn { Name = "delete", HeaderText = "", Text = "Apagar", UseColumnTextForButtonValue = true, Width = 65, AutoSizeMode = DataGridViewAutoSizeColumnMode.None });
-            gridUsers.CellContentClick += GridUsers_CellContentClick;
+
+            gridLogs.Visible = false;
+            gridUsers.Visible = false;
+
+            ConfigurarGrid(dataGridView1);
+            dataGridView1.Columns.Clear();
+            dataGridView1.AutoGenerateColumns = false;
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn { Name = "occurred_at", HeaderText = "Horário", DataPropertyName = "occurred_at", Width = 145, DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy HH:mm" } });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn { Name = "action", HeaderText = "Ação", DataPropertyName = "action", Width = 220 });
+            dataGridView1.Columns.Add(new DataGridViewTextBoxColumn { Name = "username", HeaderText = "Usuário", DataPropertyName = "username", Width = 140 });
+
+            ConfigurarGrid(dataGridView2);
+            dataGridView2.Columns.Clear();
+            dataGridView2.AutoGenerateColumns = false;
+            dataGridView2.Columns.Add(new DataGridViewTextBoxColumn { Name = "id", HeaderText = "ID", DataPropertyName = "id", Width = 42 });
+            dataGridView2.Columns.Add(new DataGridViewTextBoxColumn { Name = "username", HeaderText = "Nome", DataPropertyName = "username", Width = 145 });
+            dataGridView2.Columns.Add(new DataGridViewTextBoxColumn { Name = "role", HeaderText = "Cargo", DataPropertyName = "role", Width = 90 });
+            dataGridView2.Columns.Add(new DataGridViewTextBoxColumn { Name = "created_at", HeaderText = "Criação", DataPropertyName = "created_at", Width = 125, DefaultCellStyle = new DataGridViewCellStyle { Format = "dd/MM/yyyy HH:mm" } });
+            dataGridView2.Columns.Add(new DataGridViewCheckBoxColumn { Name = "status", HeaderText = "Status", DataPropertyName = "status", Width = 55 });
+            dataGridView2.Columns.Add(new DataGridViewCheckBoxColumn { Name = "active", HeaderText = "Ativo", DataPropertyName = "active", Width = 55 });
+            dataGridView2.Columns.Add(new DataGridViewButtonColumn { Name = "edit", HeaderText = "", Text = "Editar", UseColumnTextForButtonValue = true, Width = 65 });
+            dataGridView2.Columns.Add(new DataGridViewButtonColumn { Name = "delete", HeaderText = "", Text = "Apagar", UseColumnTextForButtonValue = true, Width = 65 });
+            dataGridView2.CellContentClick += GridUsers_CellContentClick;
         }
 
         private void ConfigurarGrid(DataGridView grid)
@@ -61,6 +84,44 @@ namespace ProjetoExtensionista2026_2
             grid.DefaultCellStyle = new DataGridViewCellStyle { Padding = new Padding(5, 2, 5, 2) };
         }
 
+        private void AplicarEstiloDosDataGridViews()
+        {
+            Color fundo = GerenciadorTema.ModoEscuro ? GerenciadorTema.InputEscuro : GerenciadorTema.InputClaro;
+            Color linhaAlternada = GerenciadorTema.ModoEscuro ? GerenciadorTema.LinhaAlternadaEscura : GerenciadorTema.LinhaAlternadaClara;
+            Color borda = GerenciadorTema.ModoEscuro ? GerenciadorTema.BordaEscura : GerenciadorTema.BordaClara;
+            Color texto = GerenciadorTema.ModoEscuro ? GerenciadorTema.TextoEscuro : GerenciadorTema.TextoClaro;
+
+            foreach (DataGridView grid in new[] { dataGridView1, dataGridView2 })
+            {
+                grid.BackgroundColor = fundo;
+                grid.GridColor = borda;
+                grid.ForeColor = texto;
+                grid.DefaultCellStyle.BackColor = fundo;
+                grid.DefaultCellStyle.ForeColor = texto;
+                grid.DefaultCellStyle.SelectionBackColor = GerenciadorTema.CorDestaque;
+                grid.DefaultCellStyle.SelectionForeColor = Color.White;
+                grid.RowsDefaultCellStyle.BackColor = fundo;
+                grid.RowsDefaultCellStyle.ForeColor = texto;
+                grid.AlternatingRowsDefaultCellStyle.BackColor = linhaAlternada;
+                grid.AlternatingRowsDefaultCellStyle.ForeColor = texto;
+                grid.ColumnHeadersDefaultCellStyle.BackColor = GerenciadorTema.CorDestaque;
+                grid.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
+                grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = GerenciadorTema.CorDestaque;
+                grid.ColumnHeadersDefaultCellStyle.SelectionForeColor = Color.White;
+            }
+
+            dataGridView1.Columns["action"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView1.Columns["username"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView2.Columns["id"].Width = 55;
+            dataGridView2.Columns["username"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            dataGridView2.Columns["role"].Width = 80;
+            dataGridView2.Columns["created_at"].Width = 115;
+            dataGridView2.Columns["status"].Width = 65;
+            dataGridView2.Columns["active"].Width = 65;
+            dataGridView2.Columns["edit"].Width = 65;
+            dataGridView2.Columns["delete"].Width = 65;
+        }
+
         private void formAdmin_Load(object sender, EventArgs e)
         {
             try
@@ -76,21 +137,21 @@ namespace ProjetoExtensionista2026_2
 
         private void CarregarDados()
         {
-            gridLogs.DataSource = AuditLogSQL.GetLogs();
+            dataGridView1.DataSource = AuditLogSQL.GetLogs();
             var users = new DataTable();
             using (var connection = new Connection())
             {
                 connection.IniciarConexao();
                 using (var command = connection.Conexao.CreateCommand())
                 {
-                    command.CommandText = @"SELECT id, username, role, created_at, active FROM ""Users"" ORDER BY id;";
+                    command.CommandText = @"SELECT id, username, role, created_at, status, active FROM ""Users"" ORDER BY id;";
                     using (var adapter = new NpgsqlDataAdapter(command))
                     {
                         adapter.Fill(users);
                     }
                 }
             }
-            gridUsers.DataSource = users;
+            dataGridView2.DataSource = users;
             lblStatus.Text = users.Rows.Count + " usuário(s) encontrado(s).";
         }
 
@@ -99,11 +160,11 @@ namespace ProjetoExtensionista2026_2
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
                 return;
 
-            var row = gridUsers.Rows[e.RowIndex];
+            var row = dataGridView2.Rows[e.RowIndex];
             var id = Convert.ToInt32(row.Cells["id"].Value);
-            if (gridUsers.Columns[e.ColumnIndex].Name == "edit")
+            if (dataGridView2.Columns[e.ColumnIndex].Name == "edit")
                 EditarUsuario(id, Convert.ToString(row.Cells["username"].Value), Convert.ToString(row.Cells["role"].Value), Convert.ToBoolean(row.Cells["active"].Value));
-            else if (gridUsers.Columns[e.ColumnIndex].Name == "delete")
+            else if (dataGridView2.Columns[e.ColumnIndex].Name == "delete")
                 ApagarUsuario(id, Convert.ToString(row.Cells["username"].Value));
         }
 

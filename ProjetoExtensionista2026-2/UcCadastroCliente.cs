@@ -2,6 +2,7 @@
 using NpgsqlTypes;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
+using ProjetoExtensionista2026_2.SQL.SQL_functions;
 using System;
 using System.Drawing;
 using System.IO;
@@ -300,6 +301,10 @@ namespace ProjetoExtensionista2026_2
                 string mensagem = ClienteIdEmEdicao.HasValue
                     ? "Cliente atualizado com sucesso!"
                     : $"Cliente cadastrado com sucesso. Código: {txtCodigo.Text}";
+
+                AuditLogSQL.Register(
+                    (ClienteIdEmEdicao.HasValue ? "Cliente atualizado: " : "Cliente cadastrado: ") + nome,
+                    LoginSQL.SessaoUsuario.Nome);
 
                 MessageBox.Show(mensagem, "Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
