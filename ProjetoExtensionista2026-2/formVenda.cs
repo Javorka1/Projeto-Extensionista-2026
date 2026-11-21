@@ -1,5 +1,4 @@
-using Npgsql;
-using NpgsqlTypes;
+using MySql.Data.MySqlClient;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using ProjetoExtensionista2026_2.SQL.SQL_functions;
@@ -45,7 +44,7 @@ namespace ProjetoExtensionista2026_2
             panelConteudo.Controls.Clear();
             panelConteudo.Controls.Add(_ucEstoque);
             _ucEstoque.BringToFront();
-            _ucEstoque.BuscarProdutosNoSupabase(string.Empty);
+            _ucEstoque.BuscarProdutosNoBanco(string.Empty);
 
             if (cmbTipoVenda != null && cmbTipoVenda.SelectedIndex < 0 && cmbTipoVenda.Items.Count > 0)
                 cmbTipoVenda.SelectedIndex = 0;
@@ -694,7 +693,7 @@ namespace ProjetoExtensionista2026_2
                         long idOrcamento;
 
                         string sqlInsertSale = @"
-                            INSERT INTO public.sale (
+                            INSERT INTO sale (
                                 sale_date,
                                 subtotal,
                                 discount,
@@ -715,24 +714,24 @@ namespace ProjetoExtensionista2026_2
                                 @id_client,
                                 @seller_name,
                                 'ORCAMENTO'
-                            )
-                            RETURNING public.sale.id_sale;";
+                            );";
 
-                        using (var cmdSale = new NpgsqlCommand(sqlInsertSale, conexao, transacao))
+                        using (var cmdSale = new MySqlCommand(sqlInsertSale, conexao, transacao))
                         {
-                            cmdSale.Parameters.Add(new NpgsqlParameter("subtotal", NpgsqlDbType.Numeric) { Value = subtotal });
-                            cmdSale.Parameters.Add(new NpgsqlParameter("discount", NpgsqlDbType.Numeric) { Value = desconto });
-                            cmdSale.Parameters.Add(new NpgsqlParameter("total", NpgsqlDbType.Numeric) { Value = totalFinal });
-                            cmdSale.Parameters.Add(new NpgsqlParameter("id_client", NpgsqlDbType.Bigint) { Value = idCliente });
-                            cmdSale.Parameters.Add(new NpgsqlParameter("seller_name", NpgsqlDbType.Text) { Value = nomeVendedor });
+                            cmdSale.Parameters.AddWithValue("@subtotal", subtotal);
+                            cmdSale.Parameters.AddWithValue("@discount", desconto);
+                            cmdSale.Parameters.AddWithValue("@total", totalFinal);
+                            cmdSale.Parameters.AddWithValue("@id_client", idCliente);
+                            cmdSale.Parameters.AddWithValue("@seller_name", nomeVendedor);
 
-                            idOrcamento = Convert.ToInt64(cmdSale.ExecuteScalar());
+                            cmdSale.ExecuteNonQuery();
+                            idOrcamento = Convert.ToInt64(cmdSale.LastInsertedId);
                         }
 
                         foreach (var item in itens)
                         {
                             string sqlItem = @"
-                                INSERT INTO public.sale_product (
+                                INSERT INTO sale_product (
                                     id_sale,
                                     id_product,
                                     quantity,
@@ -751,13 +750,13 @@ namespace ProjetoExtensionista2026_2
                                     0
                                 );";
 
-                            using (var cmdItem = new NpgsqlCommand(sqlItem, conexao, transacao))
+                            using (var cmdItem = new MySqlCommand(sqlItem, conexao, transacao))
                             {
-                                cmdItem.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idOrcamento });
-                                cmdItem.Parameters.Add(new NpgsqlParameter("id_product", NpgsqlDbType.Integer) { Value = (int)item.IdProduto });
-                                cmdItem.Parameters.Add(new NpgsqlParameter("quantity", NpgsqlDbType.Numeric) { Value = item.Quantidade });
-                                cmdItem.Parameters.Add(new NpgsqlParameter("unit_price", NpgsqlDbType.Numeric) { Value = item.PrecoUnitario });
-                                cmdItem.Parameters.Add(new NpgsqlParameter("subtotal", NpgsqlDbType.Numeric) { Value = item.TotalItem });
+                                cmdItem.Parameters.AddWithValue("@id_sale", idOrcamento);
+                                cmdItem.Parameters.AddWithValue("@id_product", (int)item.IdProduto);
+                                cmdItem.Parameters.AddWithValue("@quantity", item.Quantidade);
+                                cmdItem.Parameters.AddWithValue("@unit_price", item.PrecoUnitario);
+                                cmdItem.Parameters.AddWithValue("@subtotal", item.TotalItem);
 
                                 cmdItem.ExecuteNonQuery();
                             }

@@ -1,5 +1,4 @@
-using Npgsql;
-using NpgsqlTypes;
+using MySql.Data.MySqlClient;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using ProjetoExtensionista2026_2.SQL.SQL_functions;
@@ -73,7 +72,7 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        using (var cmd = new NpgsqlCommand("SELECT COALESCE(MAX(id_customer), 0) + 1 FROM public.customer;", db.Conexao))
+                        using (var cmd = new MySqlCommand("SELECT COALESCE(MAX(id_customer), 0) + 1 FROM customer;", db.Conexao))
                             return await cmd.ExecuteScalarAsync();
                     }
                 });
@@ -128,9 +127,9 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        using (var cmd = new NpgsqlCommand("SELECT updated_at FROM public.customer WHERE id_customer = @id;", db.Conexao))
+                        using (var cmd = new MySqlCommand("SELECT updated_at FROM customer WHERE id_customer = @id;", db.Conexao))
                         {
-                            cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, idCliente);
+                            cmd.Parameters.AddWithValue("@id", idCliente);
                             object res = await cmd.ExecuteScalarAsync();
                             return res != null && res != DBNull.Value ? Convert.ToDateTime(res) : (DateTime?)null;
                         }
@@ -210,14 +209,13 @@ namespace ProjetoExtensionista2026_2
                         db.IniciarConexao();
 
                         string sql = ehEdicao
-                            ? @"UPDATE public.customer SET
+                            ? @"UPDATE customer SET
                                     name = @name, nickname = @nickname, cpf_cnpj = @cpf_cnpj, rg_ie = @rg_ie,
                                     phone = @phone, email = @email, cep = @cep, street = @street,
                                     number_address = @number_address, neighborhood = @neighborhood, city = @city,
                                     uf = @uf, notes = @notes, is_active = @is_active, updated_at = NOW()
-                                WHERE id_customer = @id
-                                RETURNING id_customer, updated_at;"
-                            : @"INSERT INTO public.customer (
+                                WHERE id_customer = @id;"
+                            : @"INSERT INTO customer (
                                     name, nickname, cpf_cnpj, rg_ie, phone, email, cep,
                                     street, number_address, neighborhood, complement, city,
                                     uf, notes, is_active
@@ -225,13 +223,12 @@ namespace ProjetoExtensionista2026_2
                                     @name, @nickname, @cpf_cnpj, @rg_ie, @phone, @email, @cep,
                                     @street, @number_address, @neighborhood, NULL, @city,
                                     @uf, @notes, @is_active
-                                )
-                                RETURNING id_customer, updated_at;";
+                                );";
 
-                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                        using (var cmd = new MySqlCommand(sql, db.Conexao))
                         {
                             if (ehEdicao)
-                                cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Bigint, ClienteIdEmEdicao.Value);
+                                cmd.Parameters.AddWithValue("@id", ClienteIdEmEdicao.Value);
 
                             cmd.Parameters.AddWithValue("@name", nome);
                             cmd.Parameters.AddWithValue("@nickname", apelido);
@@ -248,22 +245,23 @@ namespace ProjetoExtensionista2026_2
                             cmd.Parameters.AddWithValue("@notes", notas);
                             cmd.Parameters.AddWithValue("@is_active", ativo);
 
-                            using (var reader = await cmd.ExecuteReaderAsync())
+                            await cmd.ExecuteNonQueryAsync();
+                            long id = ehEdicao ? ClienteIdEmEdicao.Value : Convert.ToInt64(cmd.LastInsertedId);
+                            using (var cmdData = new MySqlCommand("SELECT updated_at FROM customer WHERE id_customer = @id;", db.Conexao))
                             {
-                                await reader.ReadAsync();
-                                long id = Convert.ToInt64(reader["id_customer"]);
-                                DateTime? atualizado = reader["updated_at"] != DBNull.Value
-                                    ? Convert.ToDateTime(reader["updated_at"])
+                                cmdData.Parameters.AddWithValue("@id", id);
+                                object atualizado = await cmdData.ExecuteScalarAsync();
+                                DateTime? dataAtualizacao = atualizado != null && atualizado != DBNull.Value
+                                    ? Convert.ToDateTime(atualizado)
                                     : (DateTime?)null;
-
-                                return (id, atualizado);
+                                return (id, dataAtualizacao);
                             }
                         }
                     }
                 });
 
                 txtCodigo.Text = res.id.ToString();
-                AtualizarDataAtualizacao(res.atualizado);
+                AtualizarDataAtualizacao(res.dataAtualizacao);
 
                 string mensagem = ehEdicao
                     ? "Cliente atualizado com sucesso!"
@@ -284,7 +282,7 @@ namespace ProjetoExtensionista2026_2
                     formulario.Close();
                 }
             }
-            catch (PostgresException ex) when (ex.SqlState == "23505")
+            catch (MySqlException ex) when (ex.Number == 1062)
             {
                 MessageBox.Show("O CPF/CNPJ informado já está cadastrado.", "Cadastro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }

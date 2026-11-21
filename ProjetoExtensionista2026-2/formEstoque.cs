@@ -26,7 +26,7 @@ namespace ProjetoExtensionista2026_2
             {
                 if (this.Visible && _ucEstoque != null)
                 {
-                    await _ucEstoque.BuscarProdutosNoSupabaseAsync("");
+                    await _ucEstoque.BuscarProdutosNoBancoAsync("");
                 }
             };
         }
@@ -36,7 +36,7 @@ namespace ProjetoExtensionista2026_2
             base.OnShown(e);
             if (_ucEstoque != null)
             {
-                await _ucEstoque.BuscarProdutosNoSupabaseAsync("");
+                await _ucEstoque.BuscarProdutosNoBancoAsync("");
             }
         }
 
@@ -44,7 +44,7 @@ namespace ProjetoExtensionista2026_2
         {
             if (_ucEstoque != null)
             {
-                await _ucEstoque.BuscarProdutosNoSupabaseAsync("");
+                await _ucEstoque.BuscarProdutosNoBancoAsync("");
             }
         }
     }

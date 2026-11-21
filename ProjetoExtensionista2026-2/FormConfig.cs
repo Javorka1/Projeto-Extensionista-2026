@@ -37,7 +37,7 @@ namespace ProjetoExtensionista2026_2
 
         private void btnTestarBanco_Click(object sender, EventArgs e)
         {
-            lblStatusBanco.Text = "Conectando ao Supabase...";
+            lblStatusBanco.Text = "Conectando ao MySQL...";
             lblStatusBanco.ForeColor = Color.DarkOrange;
             btnTestarBanco.Enabled = false;
             this.Refresh();

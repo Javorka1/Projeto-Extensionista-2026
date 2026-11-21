@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Npgsql;
-using NpgsqlTypes;
+using MySql.Data.MySqlClient;
 
 namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 {
@@ -40,17 +39,19 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 
 
 
-        public static void EnsureSchema(NpgsqlConnection conexaoExistente = null, NpgsqlTransaction transacao = null)
+        public static void EnsureSchema(MySqlConnection conexaoExistente = null, MySqlTransaction transacao = null)
         {
             if (_schemaGarantido) return;
 
-            const string sql = @"ALTER TABLE public.sale ADD COLUMN IF NOT EXISTS seller_name VARCHAR(120);";
-
             if (conexaoExistente != null)
             {
-                using (var cmd = new NpgsqlCommand(sql, conexaoExistente, transacao))
+                using (var check = new MySqlCommand("SHOW COLUMNS FROM sale LIKE 'seller_name';", conexaoExistente, transacao))
                 {
-                    cmd.ExecuteNonQuery();
+                    if (check.ExecuteScalar() == null)
+                    {
+                        using (var alter = new MySqlCommand("ALTER TABLE sale ADD COLUMN seller_name VARCHAR(120);", conexaoExistente, transacao))
+                            alter.ExecuteNonQuery();
+                    }
                 }
                 _schemaGarantido = true;
                 return;
@@ -59,9 +60,13 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
             using (var db = new Connection())
             {
                 db.IniciarConexao();
-                using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                using (var check = new MySqlCommand("SHOW COLUMNS FROM sale LIKE 'seller_name';", db.Conexao))
                 {
-                    cmd.ExecuteNonQuery();
+                    if (check.ExecuteScalar() == null)
+                    {
+                        using (var alter = new MySqlCommand("ALTER TABLE sale ADD COLUMN seller_name VARCHAR(120);", db.Conexao))
+                            alter.ExecuteNonQuery();
+                    }
                 }
             }
 
@@ -78,34 +83,34 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 
             string sql = @"
                 SELECT
-                    s.id_sale AS ""ID"",
-                    s.sale_date AS ""Data/Hora"",
-                    COALESCE(NULLIF(TRIM(c.name), ''), 'Consumidor Não Identificado') AS ""Cliente"",
-                    COALESCE(NULLIF(TRIM(s.seller_name), ''), 'Não informado') AS ""Vendedor"",
-                    COALESCE(s.sale_type, 'VENDA') AS ""Tipo"",
-                    COALESCE(sp.formas, CASE WHEN s.sale_type = 'ORCAMENTO' THEN 'Orçamento' ELSE '-' END) AS ""Pagamento"",
-                    COALESCE(s.payment_status, 'PAGO') AS ""Status"",
-                    COALESCE(s.discount, 0) AS ""Desconto (R$)"",
-                    COALESCE(s.total, 0) AS ""Total (R$)""
-                FROM public.sale s
-                LEFT JOIN public.customer c ON c.id_customer = s.id_client
+                    s.id_sale AS `ID`,
+                    s.sale_date AS `Data/Hora`,
+                    COALESCE(NULLIF(TRIM(c.name), ''), 'Consumidor Não Identificado') AS `Cliente`,
+                    COALESCE(NULLIF(TRIM(s.seller_name), ''), 'Não informado') AS `Vendedor`,
+                    COALESCE(s.sale_type, 'VENDA') AS `Tipo`,
+                    COALESCE(sp.formas, CASE WHEN s.sale_type = 'ORCAMENTO' THEN 'Orçamento' ELSE '-' END) AS `Pagamento`,
+                    COALESCE(s.payment_status, 'PAGO') AS `Status`,
+                    COALESCE(s.discount, 0) AS `Desconto (R$)`,
+                    COALESCE(s.total, 0) AS `Total (R$)`
+                FROM sale s
+                LEFT JOIN customer c ON c.id_customer = s.id_client
                 LEFT JOIN (
                     SELECT
                         id_sale,
-                        STRING_AGG(DISTINCT payment_method, ' + ') AS formas
-                    FROM public.sale_payment
+                        GROUP_CONCAT(DISTINCT payment_method SEPARATOR ' + ') AS formas
+                    FROM sale_payment
                     GROUP BY id_sale
                 ) sp ON sp.id_sale = s.id_sale
-                WHERE s.sale_date >= (@inicio::date AT TIME ZONE 'America/Sao_Paulo')
-                  AND s.sale_date < ((@fim::date + INTERVAL '1 day') AT TIME ZONE 'America/Sao_Paulo')
+                WHERE s.sale_date >= @inicio
+                  AND s.sale_date < @fim
                   AND (@tipo = 'Todos' OR UPPER(COALESCE(s.sale_type, 'VENDA')) = UPPER(@tipo))
                   AND (@status = 'Todos' OR UPPER(COALESCE(s.payment_status, 'PAGO')) = UPPER(@status))
                   AND (
                         @busca = ''
-                        OR CAST(s.id_sale AS TEXT) ILIKE @buscaLike
-                        OR COALESCE(c.name, '') ILIKE @buscaLike
-                        OR COALESCE(c.cpf_cnpj, '') ILIKE @buscaLike
-                        OR COALESCE(s.seller_name, '') ILIKE @buscaLike
+                        OR CAST(s.id_sale AS CHAR) LIKE @buscaLike
+                        OR c.name LIKE @buscaLike
+                        OR c.cpf_cnpj LIKE @buscaLike
+                        OR s.seller_name LIKE @buscaLike
                   )
                 ORDER BY s.sale_date DESC, s.id_sale DESC
                 LIMIT 500;";
@@ -115,16 +120,16 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
             using (var db = new Connection())
             {
                 db.IniciarConexao();
-                using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                using (var cmd = new MySqlCommand(sql, db.Conexao))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("inicio", NpgsqlDbType.Timestamp) { Value = inicio });
-                    cmd.Parameters.Add(new NpgsqlParameter("fim", NpgsqlDbType.Timestamp) { Value = fimExclusivo });
-                    cmd.Parameters.Add(new NpgsqlParameter("tipo", NpgsqlDbType.Text) { Value = string.IsNullOrWhiteSpace(tipo) ? "Todos" : tipo });
-                    cmd.Parameters.Add(new NpgsqlParameter("status", NpgsqlDbType.Text) { Value = string.IsNullOrWhiteSpace(status) ? "Todos" : status });
-                    cmd.Parameters.Add(new NpgsqlParameter("busca", NpgsqlDbType.Text) { Value = buscaLimpa });
-                    cmd.Parameters.Add(new NpgsqlParameter("buscaLike", NpgsqlDbType.Text) { Value = $"%{buscaLimpa}%" });
+                    cmd.Parameters.AddWithValue("@inicio", inicio);
+                    cmd.Parameters.AddWithValue("@fim", fimExclusivo);
+                    cmd.Parameters.AddWithValue("@tipo", string.IsNullOrWhiteSpace(tipo) ? "Todos" : tipo);
+                    cmd.Parameters.AddWithValue("@status", string.IsNullOrWhiteSpace(status) ? "Todos" : status);
+                    cmd.Parameters.AddWithValue("@busca", buscaLimpa);
+                    cmd.Parameters.AddWithValue("@buscaLike", $"%{buscaLimpa}%");
 
-                    using (var adapter = new NpgsqlDataAdapter(cmd))
+                    using (var adapter = new MySqlDataAdapter(cmd))
                     {
                         adapter.Fill(tabela);
                     }
@@ -157,14 +162,14 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                         COALESCE(s.subtotal, 0) AS subtotal,
                         COALESCE(s.discount, 0) AS discount,
                         COALESCE(s.total, 0) AS total
-                    FROM public.sale s
-                    LEFT JOIN public.customer c ON c.id_customer = s.id_client
+                    FROM sale s
+                    LEFT JOIN customer c ON c.id_customer = s.id_client
                     WHERE s.id_sale = @id_sale
                     LIMIT 1;";
 
-                using (var cmd = new NpgsqlCommand(sqlCabecalho, db.Conexao))
+                using (var cmd = new MySqlCommand(sqlCabecalho, db.Conexao))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                    cmd.Parameters.AddWithValue("@id_sale", idSale);
                     using (var reader = cmd.ExecuteReader())
                     {
                         if (reader.Read())
@@ -185,20 +190,20 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 
                 const string sqlItens = @"
                     SELECT
-                        sp.id_product AS ""Cód."",
-                        COALESCE(p.name, 'Produto #' || sp.id_product) AS ""Produto"",
-                        sp.quantity AS ""Qtd."",
-                        sp.unit_price AS ""Unit. (R$)"",
-                        sp.subtotal AS ""Subtotal (R$)""
-                    FROM public.sale_product sp
-                    LEFT JOIN public.product p ON p.id_product = sp.id_product
+                        sp.id_product AS `Cód.`,
+                        COALESCE(p.name, CONCAT('Produto #', sp.id_product)) AS `Produto`,
+                        sp.quantity AS `Qtd.`,
+                        sp.unit_price AS `Unit. (R$)`,
+                        sp.subtotal AS `Subtotal (R$)`
+                    FROM sale_product sp
+                    LEFT JOIN product p ON p.id_product = sp.id_product
                     WHERE sp.id_sale = @id_sale
                     ORDER BY sp.id_product ASC;";
 
-                using (var cmdItens = new NpgsqlCommand(sqlItens, db.Conexao))
+                using (var cmdItens = new MySqlCommand(sqlItens, db.Conexao))
                 {
-                    cmdItens.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
-                    using (var adapter = new NpgsqlDataAdapter(cmdItens))
+                    cmdItens.Parameters.AddWithValue("@id_sale", idSale);
+                    using (var adapter = new MySqlDataAdapter(cmdItens))
                     {
                         adapter.Fill(detalhes.Itens);
                     }
@@ -208,15 +213,15 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                     SELECT
                         payment_method AS ""Forma de Pagamento"",
                         amount AS ""Valor (R$)"",
-                        installments || 'x' AS ""Parcelas""
-                    FROM public.sale_payment
+                        CONCAT(installments, 'x') AS `Parcelas`
+                    FROM sale_payment
                     WHERE id_sale = @id_sale
                     ORDER BY created_at ASC;";
 
-                using (var cmdPag = new NpgsqlCommand(sqlPagamentos, db.Conexao))
+                using (var cmdPag = new MySqlCommand(sqlPagamentos, db.Conexao))
                 {
-                    cmdPag.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
-                    using (var adapter = new NpgsqlDataAdapter(cmdPag))
+                    cmdPag.Parameters.AddWithValue("@id_sale", idSale);
+                    using (var adapter = new MySqlDataAdapter(cmdPag))
                     {
                         adapter.Fill(detalhes.Pagamentos);
                     }
@@ -237,13 +242,13 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 
                 const string sqlCab = @"
                     SELECT COALESCE(id_client, 1), COALESCE(subtotal, 0), COALESCE(discount, 0), COALESCE(total, 0)
-                    FROM public.sale
+                    FROM sale
                     WHERE id_sale = @id_sale
                     LIMIT 1;";
 
-                using (var cmd = new NpgsqlCommand(sqlCab, db.Conexao))
+                using (var cmd = new MySqlCommand(sqlCab, db.Conexao))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                    cmd.Parameters.AddWithValue("@id_sale", idSale);
                     using (var r = cmd.ExecuteReader())
                     {
                         if (r.Read())
@@ -259,17 +264,17 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                 const string sqlItens = @"
                     SELECT
                         sp.id_product,
-                        COALESCE(p.name, 'Produto #' || sp.id_product) AS nome,
+                        COALESCE(p.name, CONCAT('Produto #', sp.id_product)) AS nome,
                         sp.quantity,
                         sp.unit_price
-                    FROM public.sale_product sp
-                    LEFT JOIN public.product p ON p.id_product = sp.id_product
+                    FROM sale_product sp
+                    LEFT JOIN product p ON p.id_product = sp.id_product
                     WHERE sp.id_sale = @id_sale
                     ORDER BY sp.id_product ASC;";
 
-                using (var cmdItens = new NpgsqlCommand(sqlItens, db.Conexao))
+                using (var cmdItens = new MySqlCommand(sqlItens, db.Conexao))
                 {
-                    cmdItens.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                    cmdItens.Parameters.AddWithValue("@id_sale", idSale);
                     using (var r = cmdItens.ExecuteReader())
                     {
                         while (r.Read())
@@ -314,13 +319,13 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                         COALESCE(s.notes, ''),
                         COALESCE(s.id_client, 1),
                         COALESCE(NULLIF(TRIM(s.seller_name), ''), 'Sistema')
-                    FROM public.sale s
+                    FROM sale s
                     WHERE s.id_sale = @id_sale
                     LIMIT 1;";
 
-                using (var cmd = new NpgsqlCommand(sqlSale, db.Conexao))
+                using (var cmd = new MySqlCommand(sqlSale, db.Conexao))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                    cmd.Parameters.AddWithValue("@id_sale", idSale);
                     using (var r = cmd.ExecuteReader())
                     {
                         if (r.Read())
@@ -338,10 +343,10 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 
                 if (idCliente > 1)
                 {
-                    const string sqlCliente = @"SELECT * FROM public.customer WHERE id_customer = @id_customer LIMIT 1;";
-                    using (var cmdCli = new NpgsqlCommand(sqlCliente, db.Conexao))
+                    const string sqlCliente = @"SELECT * FROM customer WHERE id_customer = @id_customer LIMIT 1;";
+                    using (var cmdCli = new MySqlCommand(sqlCliente, db.Conexao))
                     {
-                        cmdCli.Parameters.Add(new NpgsqlParameter("id_customer", NpgsqlDbType.Bigint) { Value = idCliente });
+                        cmdCli.Parameters.AddWithValue("@id_customer", idCliente);
                         using (var r = cmdCli.ExecuteReader())
                         {
                             if (r.Read())
@@ -375,17 +380,17 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                 const string sqlItens = @"
                     SELECT
                         sp.id_product,
-                        COALESCE(p.name, 'Produto #' || sp.id_product) AS nome,
+                        COALESCE(p.name, CONCAT('Produto #', sp.id_product)) AS nome,
                         sp.quantity,
                         sp.unit_price
-                    FROM public.sale_product sp
-                    LEFT JOIN public.product p ON p.id_product = sp.id_product
+                    FROM sale_product sp
+                    LEFT JOIN product p ON p.id_product = sp.id_product
                     WHERE sp.id_sale = @id_sale
                     ORDER BY sp.id_product ASC;";
 
-                using (var cmdItens = new NpgsqlCommand(sqlItens, db.Conexao))
+                using (var cmdItens = new MySqlCommand(sqlItens, db.Conexao))
                 {
-                    cmdItens.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                    cmdItens.Parameters.AddWithValue("@id_sale", idSale);
                     using (var r = cmdItens.ExecuteReader())
                     {
                         while (r.Read())
@@ -411,16 +416,16 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                 {
                     const string sqlPag = @"
                         SELECT payment_method, amount, COALESCE(installments, 1)
-                        FROM public.sale_payment
+                        FROM sale_payment
                         WHERE id_sale = @id_sale
                         ORDER BY created_at ASC;";
 
                     var metodos = new List<string>();
                     decimal somaPagamentos = 0m;
 
-                    using (var cmdPag = new NpgsqlCommand(sqlPag, db.Conexao))
+                    using (var cmdPag = new MySqlCommand(sqlPag, db.Conexao))
                     {
-                        cmdPag.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                        cmdPag.Parameters.AddWithValue("@id_sale", idSale);
                         using (var r = cmdPag.ExecuteReader())
                         {
                             while (r.Read())
@@ -477,16 +482,16 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
             {
                 db.IniciarConexao();
                 const string sql = @"
-                    UPDATE public.sale
+                    UPDATE sale
                     SET issued_fiscal_coupon = @cupom,
                         issued_promissory_note = @promissoria
                     WHERE id_sale = @id_sale;";
 
-                using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                using (var cmd = new MySqlCommand(sql, db.Conexao))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("cupom", NpgsqlDbType.Boolean) { Value = emitiuCupom });
-                    cmd.Parameters.Add(new NpgsqlParameter("promissoria", NpgsqlDbType.Boolean) { Value = emitiuPromissoria });
-                    cmd.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                    cmd.Parameters.AddWithValue("@cupom", emitiuCupom);
+                    cmd.Parameters.AddWithValue("@promissoria", emitiuPromissoria);
+                    cmd.Parameters.AddWithValue("@id_sale", idSale);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -498,14 +503,14 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
             {
                 db.IniciarConexao();
                 const string sql = @"
-                    UPDATE public.sale
+                    UPDATE sale
                     SET payment_status = 'PAGO'
                     WHERE id_sale = @id_sale
                       AND UPPER(COALESCE(payment_status, '')) = 'PENDENTE';";
 
-                using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                using (var cmd = new MySqlCommand(sql, db.Conexao))
                 {
-                    cmd.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                    cmd.Parameters.AddWithValue("@id_sale", idSale);
                     int afetadas = cmd.ExecuteNonQuery();
                     if (afetadas > 0)
                     {
@@ -531,13 +536,13 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 
                         const string sqlSelect = @"
                             SELECT COALESCE(sale_type, 'VENDA'), COALESCE(payment_status, '')
-                            FROM public.sale
+                            FROM sale
                             WHERE id_sale = @id_sale
                             FOR UPDATE;";
 
-                        using (var cmdSel = new NpgsqlCommand(sqlSelect, db.Conexao, tx))
+                        using (var cmdSel = new MySqlCommand(sqlSelect, db.Conexao, tx))
                         {
-                            cmdSel.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                            cmdSel.Parameters.AddWithValue("@id_sale", idSale);
                             using (var r = cmdSel.ExecuteReader())
                             {
                                 if (!r.Read()) return false;
@@ -550,13 +555,13 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                             return false;
 
                         const string sqlCancel = @"
-                            UPDATE public.sale
+                            UPDATE sale
                             SET payment_status = 'CANCELADA'
                             WHERE id_sale = @id_sale;";
 
-                        using (var cmdCancel = new NpgsqlCommand(sqlCancel, db.Conexao, tx))
+                        using (var cmdCancel = new MySqlCommand(sqlCancel, db.Conexao, tx))
                         {
-                            cmdCancel.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                            cmdCancel.Parameters.AddWithValue("@id_sale", idSale);
                             cmdCancel.ExecuteNonQuery();
                         }
 
@@ -564,15 +569,14 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                         if (tipo != "ORCAMENTO")
                         {
                             const string sqlEstorno = @"
-                                UPDATE public.product p
-                                SET stock_quantity = p.stock_quantity + sp.quantity
-                                FROM public.sale_product sp
-                                WHERE sp.id_sale = @id_sale
-                                  AND p.id_product = sp.id_product;";
+                                UPDATE product p
+                                INNER JOIN sale_product sp ON p.id_product = sp.id_product
+                                SET p.stock_quantity = p.stock_quantity + sp.quantity
+                                WHERE sp.id_sale = @id_sale;";
 
-                            using (var cmdEstorno = new NpgsqlCommand(sqlEstorno, db.Conexao, tx))
+                            using (var cmdEstorno = new MySqlCommand(sqlEstorno, db.Conexao, tx))
                             {
-                                cmdEstorno.Parameters.Add(new NpgsqlParameter("id_sale", NpgsqlDbType.Bigint) { Value = idSale });
+                                cmdEstorno.Parameters.AddWithValue("@id_sale", idSale);
                                 cmdEstorno.ExecuteNonQuery();
                                 estornouEstoque = true;
                             }
@@ -595,7 +599,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
             }
         }
 
-        private static string LerTexto(NpgsqlDataReader reader, params string[] possiveisColunas)
+        private static string LerTexto(MySqlDataReader reader, params string[] possiveisColunas)
         {
             foreach (string coluna in possiveisColunas)
             {

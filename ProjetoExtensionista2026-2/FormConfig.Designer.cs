@@ -110,7 +110,7 @@ namespace ProjetoExtensionista2026_2
             this.lblDescBanco.Name = "lblDescBanco";
             this.lblDescBanco.Size = new System.Drawing.Size(262, 32);
             this.lblDescBanco.TabIndex = 0;
-            this.lblDescBanco.Text = "Supabase PostgreSQL (Nuvem)\r\nVerifique a conectividade com o servidor.";
+            this.lblDescBanco.Text = "MySQL\r\nVerifique a conectividade com o servidor.";
 
 
 

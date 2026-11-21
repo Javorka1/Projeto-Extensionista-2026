@@ -47,7 +47,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                     {
                         using (var cmd = conn.Conexao.CreateCommand())
                         {
-                            cmd.CommandText = "SELECT role FROM \"Users\" WHERE username = @u;";
+                            cmd.CommandText = "SELECT role FROM `Users` WHERE username = @u;";
                             cmd.Parameters.AddWithValue("u", username);
                             var role = cmd.ExecuteScalar()?.ToString();
                             return role;
@@ -83,7 +83,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                     {
                         using (var cmd = conn.Conexao.CreateCommand())
                         {
-                            cmd.CommandText = "SELECT count(*) FROM \"Users\" WHERE username = @u AND hash = @p;";
+                            cmd.CommandText = "SELECT count(*) FROM `Users` WHERE username = @u AND hash = @p;";
                             cmd.Parameters.AddWithValue("u", username);
                             cmd.Parameters.AddWithValue("p", passwordHash);
                             int count = Convert.ToInt32(cmd.ExecuteScalar());
@@ -119,7 +119,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                     {
                         using (var cmd = conn.Conexao.CreateCommand())
                         {
-                            cmd.CommandText = "INSERT INTO \"Users\" (username, hash) VALUES (@u, @p);";
+                            cmd.CommandText = "INSERT INTO `Users` (username, hash) VALUES (@u, @p);";
                             cmd.Parameters.AddWithValue("u", username);
                             cmd.Parameters.AddWithValue("p", passwordHash);
                             cmd.ExecuteNonQuery();

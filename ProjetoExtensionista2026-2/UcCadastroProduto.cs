@@ -1,5 +1,4 @@
-﻿using Npgsql;
-using NpgsqlTypes;
+﻿using MySql.Data.MySqlClient;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using ProjetoExtensionista2026_2.SQL.SQL_functions;
@@ -62,10 +61,10 @@ namespace ProjetoExtensionista2026_2
         }
 
         public Task CarregarCategoriasBancoAsync(long? idSelecionar = null) =>
-            CarregarComboAsync(cboCategoria, "SELECT id_category, name_category FROM public.category ORDER BY name_category ASC;", idSelecionar);
+            CarregarComboAsync(cboCategoria, "SELECT id_category, name_category FROM category ORDER BY name_category ASC;", idSelecionar);
 
         public Task CarregarFornecedoresBancoAsync(long? idSelecionar = null) =>
-            CarregarComboAsync(cboFornecedor, "SELECT id_supplier, name FROM public.supplier WHERE is_active = TRUE ORDER BY name ASC;", idSelecionar);
+            CarregarComboAsync(cboFornecedor, "SELECT id_supplier, name FROM supplier WHERE is_active = TRUE ORDER BY name ASC;", idSelecionar);
 
         private async Task CarregarComboAsync(ComboBox combo, string sql, long? idSelecionar)
         {
@@ -77,7 +76,7 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                        using (var cmd = new MySqlCommand(sql, db.Conexao))
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
@@ -114,11 +113,13 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        const string sql = @"
-                            INSERT INTO public.category (name_category)
-                            SELECT @cat WHERE NOT EXISTS (SELECT 1 FROM public.category WHERE LOWER(TRIM(name_category)) = LOWER(@cat));
-                            SELECT id_category FROM public.category WHERE LOWER(TRIM(name_category)) = LOWER(@cat) LIMIT 1;";
-                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                        const string sql = "INSERT IGNORE INTO category (name_category) VALUES (@cat);";
+                        using (var cmd = new MySqlCommand(sql, db.Conexao))
+                        {
+                            cmd.Parameters.AddWithValue("@cat", nome);
+                            cmd.ExecuteNonQuery();
+                        }
+                        using (var cmd = new MySqlCommand("SELECT id_category FROM category WHERE name_category = @cat LIMIT 1;", db.Conexao))
                         {
                             cmd.Parameters.AddWithValue("@cat", nome);
                             return Convert.ToInt64(cmd.ExecuteScalar());
@@ -146,16 +147,20 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        const string sql = @"
-                            INSERT INTO public.supplier (name, document, phone, is_active)
-                            SELECT @nome, @doc, @tel, TRUE WHERE NOT EXISTS (SELECT 1 FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome));
-                            SELECT id_supplier FROM public.supplier WHERE LOWER(TRIM(name)) = LOWER(@nome) LIMIT 1;";
-                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                        using (var cmd = new MySqlCommand("SELECT id_supplier FROM supplier WHERE LOWER(TRIM(name)) = LOWER(@nome) LIMIT 1;", db.Conexao))
                         {
                             cmd.Parameters.AddWithValue("@nome", dados.Nome.Trim());
-                            cmd.Parameters.AddWithValue("@doc", string.IsNullOrWhiteSpace(dados.Documento) ? (object)DBNull.Value : dados.Documento);
+                            object existente = cmd.ExecuteScalar();
+                            if (existente != null && existente != DBNull.Value)
+                                return Convert.ToInt64(existente);
+                        }
+                        using (var cmd = new MySqlCommand("INSERT INTO supplier (name, document, phone, is_active) VALUES (@nome, @doc, @tel, TRUE);", db.Conexao))
+                        {
+                            cmd.Parameters.AddWithValue("@nome", dados.Nome.Trim());
+                            cmd.Parameters.AddWithValue("@doc", dados.Documento ?? string.Empty);
                             cmd.Parameters.AddWithValue("@tel", string.IsNullOrWhiteSpace(dados.Telefone) ? (object)DBNull.Value : dados.Telefone);
-                            return Convert.ToInt64(cmd.ExecuteScalar());
+                            cmd.ExecuteNonQuery();
+                            return Convert.ToInt64(cmd.LastInsertedId);
                         }
                     }
                 });
@@ -185,7 +190,7 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        using (var cmd = new NpgsqlCommand("SELECT COALESCE(MAX(id_product), 0) + 1 FROM public.product;", db.Conexao))
+                        using (var cmd = new MySqlCommand("SELECT COALESCE(MAX(id_product), 0) + 1 FROM product;", db.Conexao))
                             return await cmd.ExecuteScalarAsync();
                     }
                 });
@@ -261,9 +266,9 @@ namespace ProjetoExtensionista2026_2
                     using (var db = new Connection())
                     {
                         db.IniciarConexao();
-                        using (var cmd = new NpgsqlCommand("SELECT updated_at FROM public.product WHERE id_product = @id;", db.Conexao))
+                        using (var cmd = new MySqlCommand("SELECT updated_at FROM product WHERE id_product = @id;", db.Conexao))
                         {
-                            cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Integer, idProduto);
+                            cmd.Parameters.AddWithValue("@id", idProduto);
                             object res = await cmd.ExecuteScalarAsync();
                             return res != null && res != DBNull.Value ? Convert.ToDateTime(res) : (DateTime?)null;
                         }
@@ -388,16 +393,16 @@ namespace ProjetoExtensionista2026_2
                         db.IniciarConexao();
 
                         string sql = ehEdicao
-                            ? @"UPDATE public.product SET name=@nome, description=@desc, purchase_price=@compra, sale_price=@venda,
+                            ? @"UPDATE product SET name=@nome, description=@desc, purchase_price=@compra, sale_price=@venda,
                                 location=@loc, stock_quantity=@est, min_stock=@min, unit=@un, id_category=@cat, id_supplier=@forn,
-                                is_active=@ativo, image_url=@foto, updated_at=NOW() WHERE id_product=@id RETURNING id_product, updated_at;"
-                            : @"INSERT INTO public.product (name, description, purchase_price, sale_price, location, stock_quantity,
+                                is_active=@ativo, image_url=@foto, updated_at=NOW() WHERE id_product=@id;"
+                            : @"INSERT INTO product (name, description, purchase_price, sale_price, location, stock_quantity,
                                 min_stock, unit, id_category, id_supplier, is_active, image_url) VALUES (@nome, @desc, @compra, @venda,
-                                @loc, @est, @min, @un, @cat, @forn, @ativo, @foto) RETURNING id_product, updated_at;";
+                                @loc, @est, @min, @un, @cat, @forn, @ativo, @foto);";
 
-                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                        using (var cmd = new MySqlCommand(sql, db.Conexao))
                         {
-                            if (ehEdicao) cmd.Parameters.AddWithValue("@id", NpgsqlDbType.Integer, ProdutoIdEmEdicao.Value);
+                            if (ehEdicao) cmd.Parameters.AddWithValue("@id", ProdutoIdEmEdicao.Value);
                             cmd.Parameters.AddWithValue("@nome", nome);
                             cmd.Parameters.AddWithValue("@desc", (object)descricao ?? DBNull.Value);
                             cmd.Parameters.AddWithValue("@compra", numPrecoCompra.Value);
@@ -411,10 +416,16 @@ namespace ProjetoExtensionista2026_2
                             cmd.Parameters.AddWithValue("@ativo", ObterStatusProduto());
                             cmd.Parameters.AddWithValue("@foto", (object)fotoUrl ?? DBNull.Value);
 
-                            using (var r = await cmd.ExecuteReaderAsync())
+                            await cmd.ExecuteNonQueryAsync();
+                            int id = ehEdicao ? ProdutoIdEmEdicao.Value : Convert.ToInt32(cmd.LastInsertedId);
+                            using (var cmdData = new MySqlCommand("SELECT updated_at FROM product WHERE id_product = @id;", db.Conexao))
                             {
-                                await r.ReadAsync();
-                                return (Convert.ToInt32(r["id_product"]), r["updated_at"] != DBNull.Value ? Convert.ToDateTime(r["updated_at"]) : (DateTime?)null);
+                                cmdData.Parameters.AddWithValue("@id", id);
+                                object atualizado = await cmdData.ExecuteScalarAsync();
+                                DateTime? dataAtualizacao = atualizado != null && atualizado != DBNull.Value
+                                    ? Convert.ToDateTime(atualizado)
+                                    : (DateTime?)null;
+                                return (id, dataAtualizacao);
                             }
                         }
                     }

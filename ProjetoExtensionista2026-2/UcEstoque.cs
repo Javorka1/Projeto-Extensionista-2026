@@ -1,4 +1,4 @@
-using Npgsql;
+using MySql.Data.MySqlClient;
 using ProjetoExtensionista2026_2.SQL;
 using System;
 using System.Collections.Generic;
@@ -35,7 +35,7 @@ namespace ProjetoExtensionista2026_2
                 if (Visible)
                 {
                     _precisaAtualizar = false;
-                    BuscarProdutosNoSupabase(_filtroAtual);
+                    BuscarProdutosNoBanco(_filtroAtual);
                 }
                 else
                 {
@@ -51,7 +51,7 @@ namespace ProjetoExtensionista2026_2
                 if (Visible && _precisaAtualizar && !IsDisposed)
                 {
                     _precisaAtualizar = false;
-                    BuscarProdutosNoSupabase(_filtroAtual);
+                    BuscarProdutosNoBanco(_filtroAtual);
                 }
             };
 
@@ -66,7 +66,7 @@ namespace ProjetoExtensionista2026_2
 
         private async void UcEstoque_Load(object sender, EventArgs e)
         {
-            await BuscarProdutosNoSupabaseAsync("");
+            await BuscarProdutosNoBancoAsync("");
         }
 
         public void FocarCampoBusca()
@@ -91,7 +91,7 @@ namespace ProjetoExtensionista2026_2
                 searchBtn.Click += (s, e) =>
                 {
                     _ctsBusca?.Cancel();
-                    _ = BuscarProdutosNoSupabaseAsync(searchTxtBox?.Text ?? "");
+                    _ = BuscarProdutosNoBancoAsync(searchTxtBox?.Text ?? "");
                 };
             }
         }
@@ -111,7 +111,7 @@ namespace ProjetoExtensionista2026_2
 
                 if (!token.IsCancellationRequested)
                 {
-                    await BuscarProdutosNoSupabaseAsync(termo, token);
+                    await BuscarProdutosNoBancoAsync(termo, token);
                 }
             }
             catch (TaskCanceledException)
@@ -128,7 +128,7 @@ namespace ProjetoExtensionista2026_2
                 e.SuppressKeyPress = true;
 
                 _ctsBusca?.Cancel();
-                await BuscarProdutosNoSupabaseAsync(searchTxtBox.Text.Trim());
+                await BuscarProdutosNoBancoAsync(searchTxtBox.Text.Trim());
             }
         }
 
@@ -175,16 +175,16 @@ namespace ProjetoExtensionista2026_2
 
 
 
-        public void BuscarProdutosNoSupabase(string filtroTexto)
+        public void BuscarProdutosNoBanco(string filtroTexto)
         {
             _ctsBusca?.Cancel();
-            _ = BuscarProdutosNoSupabaseAsync(filtroTexto);
+            _ = BuscarProdutosNoBancoAsync(filtroTexto);
         }
 
 
 
 
-        public async Task BuscarProdutosNoSupabaseAsync(string filtroTexto, CancellationToken token = default)
+        public async Task BuscarProdutosNoBancoAsync(string filtroTexto, CancellationToken token = default)
         {
             _filtroAtual = filtroTexto?.Trim() ?? "";
 
@@ -213,29 +213,29 @@ namespace ProjetoExtensionista2026_2
                                 s.name AS supplier_product,
                                 p.is_active AS active,
                                 p.image_url AS picture_url
-                            FROM public.product p
-                            LEFT JOIN public.category c ON c.id_category = p.id_category
-                            LEFT JOIN public.supplier s ON s.id_supplier = p.id_supplier
+                            FROM product p
+                            LEFT JOIN category c ON c.id_category = p.id_category
+                            LEFT JOIN supplier s ON s.id_supplier = p.id_supplier
                             WHERE p.is_active = TRUE
                               AND (
                                   @filtro = ''
-                                  OR p.id_product::TEXT = @filtro
-                                  OR p.name ILIKE @filtro_like
-                                  OR p.description ILIKE @filtro_like
-                                  OR p.location ILIKE @filtro_like
-                                  OR c.name_category ILIKE @filtro_like
+                                  OR CAST(p.id_product AS CHAR) = @filtro
+                                  OR LOWER(p.name) LIKE LOWER(@filtro_like)
+                                  OR LOWER(p.description) LIKE LOWER(@filtro_like)
+                                  OR LOWER(p.location) LIKE LOWER(@filtro_like)
+                                  OR LOWER(c.name_category) LIKE LOWER(@filtro_like)
                               )
                             ORDER BY
                                 CASE
-                                    WHEN p.id_product::TEXT = @filtro THEN 1
-                                    WHEN p.name ILIKE @filtro_prefix THEN 2
-                                    WHEN c.name_category ILIKE @filtro_prefix THEN 3
+                                    WHEN CAST(p.id_product AS CHAR) = @filtro THEN 1
+                                    WHEN LOWER(p.name) LIKE LOWER(@filtro_prefix) THEN 2
+                                    WHEN LOWER(c.name_category) LIKE LOWER(@filtro_prefix) THEN 3
                                     ELSE 4
                                 END,
                                 p.name ASC
                             LIMIT 40;";
 
-                        using (var cmd = new NpgsqlCommand(sql, db.Conexao))
+                        using (var cmd = new MySqlCommand(sql, db.Conexao))
                         {
                             cmd.Parameters.AddWithValue("@filtro", _filtroAtual);
                             cmd.Parameters.AddWithValue("@filtro_prefix", _filtroAtual + "%");

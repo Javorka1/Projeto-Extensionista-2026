@@ -4,7 +4,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using ProjetoExtensionista2026_2.SQL;
 using ProjetoExtensionista2026_2.SQL.SQL_functions;
-using Npgsql;
+using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 
 namespace ProjetoExtensionista2026_2
 {
@@ -144,8 +145,8 @@ namespace ProjetoExtensionista2026_2
                 connection.IniciarConexao();
                 using (var command = connection.Conexao.CreateCommand())
                 {
-                    command.CommandText = @"SELECT id, username, role, created_at, status, active FROM ""Users"" ORDER BY id;";
-                    using (var adapter = new NpgsqlDataAdapter(command))
+                    command.CommandText = "SELECT id, username, role, created_at, status, active FROM `Users` ORDER BY id;";
+                    using (var adapter = new MySqlDataAdapter(command))
                     {
                         adapter.Fill(users);
                     }
@@ -180,7 +181,7 @@ namespace ProjetoExtensionista2026_2
                     connection.IniciarConexao();
                     using (var command = connection.Conexao.CreateCommand())
                     {
-                        command.CommandText = @"UPDATE ""Users"" SET username = @username, role = @role, active = @active WHERE id = @id;";
+                        command.CommandText = "UPDATE `Users` SET username = @username, role = @role, active = @active WHERE id = @id;";
                         command.Parameters.AddWithValue("id", id);
                         command.Parameters.AddWithValue("username", dialog.UsernameValue);
                         command.Parameters.AddWithValue("role", dialog.RoleValue);
@@ -203,7 +204,7 @@ namespace ProjetoExtensionista2026_2
                 connection.IniciarConexao();
                 using (var command = connection.Conexao.CreateCommand())
                 {
-                    command.CommandText = @"DELETE FROM ""Users"" WHERE id = @id;";
+                    command.CommandText = "DELETE FROM `Users` WHERE id = @id;";
                     command.Parameters.AddWithValue("id", id);
                     command.ExecuteNonQuery();
                 }

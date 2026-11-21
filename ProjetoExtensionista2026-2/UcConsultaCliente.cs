@@ -1,4 +1,4 @@
-using Npgsql;
+using MySql.Data.MySqlClient;
 using ProjetoExtensionista2026_2.DTOs;
 using ProjetoExtensionista2026_2.SQL;
 using System;
@@ -520,30 +520,30 @@ namespace ProjetoExtensionista2026_2
                                 customer.credit_limit,
                                 customer.is_active,
                                 customer.notes
-                            FROM public.customer
+                            FROM customer
                             WHERE (
                                 @termoOriginal = ''
-                                OR customer.name ILIKE @termoContem
-                                OR customer.nickname ILIKE @termoContem
-                                OR customer.cpf_cnpj ILIKE @termoContem
-                                OR customer.phone ILIKE @termoContem
-                                OR customer.cpf_cnpj ILIKE @apenasDigitos
-                                OR customer.phone ILIKE @apenasDigitos
-                                OR customer.id_customer::TEXT = @termoOriginal
+                                OR LOWER(customer.name) LIKE LOWER(@termoContem)
+                                OR LOWER(customer.nickname) LIKE LOWER(@termoContem)
+                                OR LOWER(customer.cpf_cnpj) LIKE LOWER(@termoContem)
+                                OR LOWER(customer.phone) LIKE LOWER(@termoContem)
+                                OR customer.cpf_cnpj LIKE @apenasDigitos
+                                OR customer.phone LIKE @apenasDigitos
+                                OR CAST(customer.id_customer AS CHAR) = @termoOriginal
                             )
                             ORDER BY
                                 CASE
                                     WHEN @termoOriginal = '' THEN 0
-                                    WHEN customer.id_customer::TEXT = @termoOriginal THEN 1
-                                    WHEN customer.name ILIKE @termoComeca THEN 2
-                                    WHEN customer.nickname ILIKE @termoComeca THEN 3
+                                    WHEN CAST(customer.id_customer AS CHAR) = @termoOriginal THEN 1
+                                    WHEN LOWER(customer.name) LIKE LOWER(@termoComeca) THEN 2
+                                    WHEN LOWER(customer.nickname) LIKE LOWER(@termoComeca) THEN 3
                                     ELSE 4
                                 END,
                                 CASE WHEN @termoOriginal = '' THEN customer.id_customer END ASC,
                                 customer.name ASC
                             LIMIT 50;";
 
-                        using (var comando = new NpgsqlCommand(sql, conexaoDb.Conexao))
+                        using (var comando = new MySqlCommand(sql, conexaoDb.Conexao))
                         {
                             comando.Parameters.AddWithValue("@termoOriginal", termoOriginal);
                             comando.Parameters.AddWithValue("@termoComeca", termoOriginal + "%");

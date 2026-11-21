@@ -4,7 +4,7 @@ using System.Data;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Npgsql;
+using MySql.Data.MySqlClient;
 using ProjetoExtensionista2026_2.SQL;
 
 namespace ProjetoExtensionista2026_2
@@ -174,60 +174,60 @@ namespace ProjetoExtensionista2026_2
         {
             var res = new DadosFinanceirosResult();
 
-            string sqlCategorias = "SELECT name_category FROM public.category ORDER BY name_category ASC;";
+            string sqlCategorias = "SELECT name_category FROM category ORDER BY name_category ASC;";
 
             string sqlProdutos = @"
                 SELECT 
-                    p.id_product AS ""ID"",
-                    p.name AS ""Produto"",
-                    COALESCE(c.name_category, 'Sem Categoria') AS ""Categoria"",
-                    p.stock_quantity AS ""Estoque"",
-                    p.purchase_price AS ""Custo Unit. (R$)"",
-                    p.sale_price AS ""Venda Unit. (R$)"",
-                    (p.sale_price - p.purchase_price) AS ""Lucro Unit. (R$)"",
+                    p.id_product AS `ID`,
+                    p.name AS `Produto`,
+                    COALESCE(c.name_category, 'Sem Categoria') AS `Categoria`,
+                    p.stock_quantity AS `Estoque`,
+                    p.purchase_price AS `Custo Unit. (R$)`,
+                    p.sale_price AS `Venda Unit. (R$)`,
+                    (p.sale_price - p.purchase_price) AS `Lucro Unit. (R$)`,
                     CASE 
                         WHEN p.purchase_price > 0 THEN ROUND(((p.sale_price - p.purchase_price) / p.purchase_price) * 100, 1)
                         ELSE 0 
-                    END AS ""Margem (%)"",
-                    ROUND(p.purchase_price * p.stock_quantity, 2) AS ""Total Custo (R$)"",
-                    ROUND(p.sale_price * p.stock_quantity, 2) AS ""Total Venda (R$)""
-                FROM public.product p
-                LEFT JOIN public.category c ON c.id_category = p.id_category
+                    END AS `Margem (%)`,
+                    ROUND(p.purchase_price * p.stock_quantity, 2) AS `Total Custo (R$)`,
+                    ROUND(p.sale_price * p.stock_quantity, 2) AS `Total Venda (R$)`
+                FROM product p
+                LEFT JOIN category c ON c.id_category = p.id_category
                 WHERE p.is_active = TRUE
                 ORDER BY p.id_product ASC;";
 
             string sqlPorCategoria = @"
                 SELECT 
-                    COALESCE(c.name_category, 'Sem Categoria') AS ""Categoria"",
-                    COUNT(p.id_product) AS ""Qtd Produtos"",
-                    COALESCE(SUM(p.stock_quantity), 0) AS ""Unidades em Estoque"",
-                    ROUND(COALESCE(SUM(p.purchase_price * p.stock_quantity), 0), 2) AS ""Custo Acumulado (R$)"",
-                    ROUND(COALESCE(SUM(p.sale_price * p.stock_quantity), 0), 2) AS ""Venda Acumulada (R$)"",
-                    ROUND(COALESCE(SUM((p.sale_price - p.purchase_price) * p.stock_quantity), 0), 2) AS ""Lucro Projetado (R$)""
-                FROM public.product p
-                LEFT JOIN public.category c ON c.id_category = p.id_category
+                    COALESCE(c.name_category, 'Sem Categoria') AS `Categoria`,
+                    COUNT(p.id_product) AS `Qtd Produtos`,
+                    COALESCE(SUM(p.stock_quantity), 0) AS `Unidades em Estoque`,
+                    ROUND(COALESCE(SUM(p.purchase_price * p.stock_quantity), 0), 2) AS `Custo Acumulado (R$)`,
+                    ROUND(COALESCE(SUM(p.sale_price * p.stock_quantity), 0), 2) AS `Venda Acumulada (R$)`,
+                    ROUND(COALESCE(SUM((p.sale_price - p.purchase_price) * p.stock_quantity), 0), 2) AS `Lucro Projetado (R$)`
+                FROM product p
+                LEFT JOIN category c ON c.id_category = p.id_category
                 WHERE p.is_active = TRUE
                 GROUP BY c.name_category
-                ORDER BY ""Lucro Projetado (R$)"" DESC;";
+                ORDER BY `Lucro Projetado (R$)` DESC;";
 
             string sqlPorFornecedor = @"
                 SELECT 
-                    COALESCE(s.name, 'Sem Fornecedor') AS ""Fornecedor"",
-                    COUNT(p.id_product) AS ""Qtd Produtos"",
-                    COALESCE(SUM(p.stock_quantity), 0) AS ""Unidades em Estoque"",
-                    ROUND(COALESCE(SUM(p.purchase_price * p.stock_quantity), 0), 2) AS ""Total Custo (R$)"",
-                    ROUND(COALESCE(SUM(p.sale_price * p.stock_quantity), 0), 2) AS ""Total Venda (R$)""
-                FROM public.product p
-                LEFT JOIN public.supplier s ON s.id_supplier = p.id_supplier
+                    COALESCE(s.name, 'Sem Fornecedor') AS `Fornecedor`,
+                    COUNT(p.id_product) AS `Qtd Produtos`,
+                    COALESCE(SUM(p.stock_quantity), 0) AS `Unidades em Estoque`,
+                    ROUND(COALESCE(SUM(p.purchase_price * p.stock_quantity), 0), 2) AS `Total Custo (R$)`,
+                    ROUND(COALESCE(SUM(p.sale_price * p.stock_quantity), 0), 2) AS `Total Venda (R$)`
+                FROM product p
+                LEFT JOIN supplier s ON s.id_supplier = p.id_supplier
                 WHERE p.is_active = TRUE
                 GROUP BY s.name
-                ORDER BY ""Total Custo (R$)"" DESC;";
+                ORDER BY `Total Custo (R$)` DESC;";
 
             using (var db = new Connection())
             {
                 db.IniciarConexao();
 
-                using (var cmdCat = new NpgsqlCommand(sqlCategorias, db.Conexao))
+                using (var cmdCat = new MySqlCommand(sqlCategorias, db.Conexao))
                 using (var reader = cmdCat.ExecuteReader())
                 {
                     while (reader.Read())
@@ -237,7 +237,7 @@ namespace ProjetoExtensionista2026_2
                     }
                 }
 
-                using (var adapterProd = new NpgsqlDataAdapter(sqlProdutos, db.Conexao))
+                using (var adapterProd = new MySqlDataAdapter(sqlProdutos, db.Conexao))
                 {
                     var dtProd = new DataTable();
                     adapterProd.Fill(dtProd);
@@ -256,14 +256,14 @@ namespace ProjetoExtensionista2026_2
                     res.MargemMedia = custo > 0 ? (res.LucroProjetado / custo) * 100m : 0m;
                 }
 
-                using (var adapterCat = new NpgsqlDataAdapter(sqlPorCategoria, db.Conexao))
+                using (var adapterCat = new MySqlDataAdapter(sqlPorCategoria, db.Conexao))
                 {
                     var dtCat = new DataTable();
                     adapterCat.Fill(dtCat);
                     res.TabelaPorCategoria = dtCat;
                 }
 
-                using (var adapterForn = new NpgsqlDataAdapter(sqlPorFornecedor, db.Conexao))
+                using (var adapterForn = new MySqlDataAdapter(sqlPorFornecedor, db.Conexao))
                 {
                     var dtForn = new DataTable();
                     adapterForn.Fill(dtForn);
