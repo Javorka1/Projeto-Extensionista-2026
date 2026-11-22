@@ -477,6 +477,21 @@ namespace ProjetoExtensionista2026_2
             return string.Empty;
         }
 
+        // CORREÇÃO (erro MySQL 1442): o custo do produto é lido em um comando separado
+        // e enviado como parâmetro. Assim o INSERT/UPDATE em sale_product não lê a tabela
+        // product no mesmo comando, e a trigger que baixa o estoque pode atualizá-la.
+        private static decimal ObterCustoProduto(MySqlConnection conexao, MySqlTransaction transacao, int idProduto)
+        {
+            using (var cmd = new MySqlCommand(
+                "SELECT COALESCE(purchase_price, 0) FROM product WHERE id_product = @id_product;",
+                conexao, transacao))
+            {
+                cmd.Parameters.AddWithValue("@id_product", idProduto);
+                object resultado = cmd.ExecuteScalar();
+                return (resultado == null || resultado == DBNull.Value) ? 0m : Convert.ToDecimal(resultado);
+            }
+        }
+
         private void FinalizarVenda()
         {
             if (_totalPago < _totalFinal)
@@ -657,8 +672,11 @@ namespace ProjetoExtensionista2026_2
                         {
                             if (!_idVendaAberta.HasValue || _idVendaAberta.Value <= 0)
                             {
+                                // VENDA NOVA: o custo é lido antes e enviado como parâmetro (@unit_cost).
                                 foreach (var item in _itensVenda)
                                 {
+                                    decimal custoUnitario = ObterCustoProduto(conexao, transacao, (int)item.IdProduto);
+
                                     string sqlItem = @"
                                         INSERT INTO sale_product (
                                             id_sale, 
@@ -674,7 +692,7 @@ namespace ProjetoExtensionista2026_2
                                             @id_product, 
                                             @quantity, 
                                             @unit_price, 
-                                            COALESCE((SELECT purchase_price FROM product WHERE id_product = @id_product), 0),
+                                            @unit_cost,
                                             @subtotal, 
                                             @discount_product
                                         );";
@@ -685,6 +703,7 @@ namespace ProjetoExtensionista2026_2
                                         cmdItem.Parameters.AddWithValue("@id_product", (int)item.IdProduto);
                                         cmdItem.Parameters.AddWithValue("@quantity", item.Quantidade);
                                         cmdItem.Parameters.AddWithValue("@unit_price", item.PrecoUnitario);
+                                        cmdItem.Parameters.AddWithValue("@unit_cost", custoUnitario);
                                         cmdItem.Parameters.AddWithValue("@subtotal", item.TotalItem);
                                         cmdItem.Parameters.AddWithValue("@discount_product", 0m);
 
@@ -694,15 +713,19 @@ namespace ProjetoExtensionista2026_2
                             }
                             else
                             {
+                                // EFETIVAR ORÇAMENTO: o custo também é lido antes e enviado como parâmetro.
                                 foreach (var item in _itensVenda)
                                 {
+                                    decimal custoUnitario = ObterCustoProduto(conexao, transacao, (int)item.IdProduto);
+
                                     string sqlBaixaOrcamento = @"
                                         UPDATE sale_product
-                                        SET unit_cost = COALESCE((SELECT purchase_price FROM product WHERE id_product = @id_product), 0)
+                                        SET unit_cost = @unit_cost
                                         WHERE id_sale = @id_sale AND id_product = @id_product;";
 
                                     using (var cmdBaixa = new MySqlCommand(sqlBaixaOrcamento, conexao, transacao))
                                     {
+                                        cmdBaixa.Parameters.AddWithValue("@unit_cost", custoUnitario);
                                         cmdBaixa.Parameters.AddWithValue("@id_sale", idVendaAtual);
                                         cmdBaixa.Parameters.AddWithValue("@id_product", (int)item.IdProduto);
                                         cmdBaixa.ExecuteNonQuery();
@@ -795,6 +818,11 @@ namespace ProjetoExtensionista2026_2
                 dgvPagamentos.Rows.RemoveAt(e.RowIndex);
                 RecalcularTotais(preservarTextoDesconto: false);
             }
+        }
+
+        private void panelConteudo_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
