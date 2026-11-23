@@ -15,6 +15,16 @@ namespace ProjetoExtensionista2026_2
         private void formConfig_Load(object sender, EventArgs e)
         {
             GerenciadorTema.AplicarTema(this);
+            bool isAdmin = EhAdmin();
+            btnConfigurarBanco.Visible = isAdmin;
+            tblBotoesBanco.ColumnStyles[0].Width = isAdmin ? 50F : 100F;
+            tblBotoesBanco.ColumnStyles[1].Width = isAdmin ? 50F : 0F;
+        }
+
+        private static bool EhAdmin()
+        {
+            string role = (SQL.SQL_functions.LoginSQL.SessaoUsuario.Role ?? string.Empty).Trim();
+            return string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase);
         }
 
         private void btnAlternarTema_Click(object sender, EventArgs e)
@@ -56,6 +66,28 @@ namespace ProjetoExtensionista2026_2
             }
 
             btnTestarBanco.Enabled = true;
+        }
+
+        private void btnConfigurarBanco_Click(object sender, EventArgs e)
+        {
+            if (!EhAdmin())
+            {
+                MessageBox.Show(
+                    "Apenas administradores podem configurar a conexão com o banco.",
+                    "Acesso Negado",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (var formBanco = new FormConfigBanco())
+            {
+                if (formBanco.ShowDialog(this) == DialogResult.OK)
+                {
+                    lblStatusBanco.Text = "Status: Configuração salva. Clique em Testar Conexão.";
+                    lblStatusBanco.ForeColor = Color.DarkOrange;
+                }
+            }
         }
 
         private void btnAlterarSenha_Click(object sender, EventArgs e)

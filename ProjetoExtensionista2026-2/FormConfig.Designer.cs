@@ -26,7 +26,9 @@ namespace ProjetoExtensionista2026_2
             this.lblDescAparencia = new System.Windows.Forms.Label();
             this.grpBanco = new System.Windows.Forms.GroupBox();
             this.lblDescBanco = new System.Windows.Forms.Label();
+            this.tblBotoesBanco = new System.Windows.Forms.TableLayoutPanel();
             this.btnTestarBanco = new System.Windows.Forms.Button();
+            this.btnConfigurarBanco = new System.Windows.Forms.Button();
             this.lblStatusBanco = new System.Windows.Forms.Label();
             this.grpSeguranca = new System.Windows.Forms.GroupBox();
             this.lblUsuarioLogado = new System.Windows.Forms.Label();
@@ -91,7 +93,7 @@ namespace ProjetoExtensionista2026_2
 
 
             this.grpBanco.Controls.Add(this.lblDescBanco);
-            this.grpBanco.Controls.Add(this.btnTestarBanco);
+            this.grpBanco.Controls.Add(this.tblBotoesBanco);
             this.grpBanco.Controls.Add(this.lblStatusBanco);
             this.grpBanco.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grpBanco.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -114,15 +116,37 @@ namespace ProjetoExtensionista2026_2
 
 
 
+            this.tblBotoesBanco.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.tblBotoesBanco.ColumnCount = 2;
+            this.tblBotoesBanco.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tblBotoesBanco.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tblBotoesBanco.Controls.Add(this.btnTestarBanco, 0, 0);
+            this.tblBotoesBanco.Controls.Add(this.btnConfigurarBanco, 1, 0);
+            this.tblBotoesBanco.Location = new System.Drawing.Point(23, 80);
+            this.tblBotoesBanco.Margin = new System.Windows.Forms.Padding(0);
+            this.tblBotoesBanco.Name = "tblBotoesBanco";
+            this.tblBotoesBanco.RowCount = 1;
+            this.tblBotoesBanco.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tblBotoesBanco.Size = new System.Drawing.Size(295, 45);
+            this.tblBotoesBanco.TabIndex = 1;
+
+            this.btnTestarBanco.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnTestarBanco.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTestarBanco.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnTestarBanco.Location = new System.Drawing.Point(23, 80);
+            this.btnTestarBanco.Margin = new System.Windows.Forms.Padding(0, 0, 5, 0);
             this.btnTestarBanco.Name = "btnTestarBanco";
-            this.btnTestarBanco.Size = new System.Drawing.Size(295, 45);
-            this.btnTestarBanco.TabIndex = 1;
+            this.btnTestarBanco.TabIndex = 0;
             this.btnTestarBanco.Text = "Testar Conexão";
             this.btnTestarBanco.UseVisualStyleBackColor = true;
             this.btnTestarBanco.Click += new System.EventHandler(this.btnTestarBanco_Click);
+
+            this.btnConfigurarBanco.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnConfigurarBanco.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConfigurarBanco.Margin = new System.Windows.Forms.Padding(5, 0, 0, 0);
+            this.btnConfigurarBanco.Name = "btnConfigurarBanco";
+            this.btnConfigurarBanco.TabIndex = 1;
+            this.btnConfigurarBanco.Text = "Configurar Banco";
+            this.btnConfigurarBanco.UseVisualStyleBackColor = true;
+            this.btnConfigurarBanco.Click += new System.EventHandler(this.btnConfigurarBanco_Click);
 
 
 
@@ -264,7 +288,9 @@ namespace ProjetoExtensionista2026_2
         private System.Windows.Forms.Button btnAlternarTema;
         private System.Windows.Forms.GroupBox grpBanco;
         private System.Windows.Forms.Label lblDescBanco;
+        private System.Windows.Forms.TableLayoutPanel tblBotoesBanco;
         private System.Windows.Forms.Button btnTestarBanco;
+        private System.Windows.Forms.Button btnConfigurarBanco;
         private System.Windows.Forms.Label lblStatusBanco;
         private System.Windows.Forms.GroupBox grpSeguranca;
         private System.Windows.Forms.Label lblUsuarioLogado;

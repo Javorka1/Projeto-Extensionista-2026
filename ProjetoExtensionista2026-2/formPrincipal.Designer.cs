@@ -194,7 +194,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavVendas.Name = "btnNavVendas";
             this.btnNavVendas.Size = new System.Drawing.Size(220, 42);
             this.btnNavVendas.TabIndex = 1;
-            this.btnNavVendas.Tag = "nav_ativa";
+            this.btnNavVendas.Tag = "nav_item";
             this.btnNavVendas.Text = "  Frente de Caixa [F1]";
             this.btnNavVendas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavVendas.UseVisualStyleBackColor = true;
@@ -210,7 +210,7 @@ namespace ProjetoExtensionista2026_2
             this.btnNavPrincipal.Name = "btnNavPrincipal";
             this.btnNavPrincipal.Size = new System.Drawing.Size(220, 42);
             this.btnNavPrincipal.TabIndex = 0;
-            this.btnNavPrincipal.Tag = "nav_item";
+            this.btnNavPrincipal.Tag = "nav_ativa";
             this.btnNavPrincipal.Text = "  Principal";
             this.btnNavPrincipal.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNavPrincipal.UseVisualStyleBackColor = true;
