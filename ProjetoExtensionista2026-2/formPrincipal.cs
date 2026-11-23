@@ -77,19 +77,8 @@ namespace ProjetoExtensionista2026_2
                     ConfigurarCardUsuario(nomeUsuario, role);
                     var rolesManager = new rolesClass();
                     rolesManager.RoleSidebar(this, role, nomeUsuario, LoginSQL.SessaoUsuario.Hash);
-                    if (btnNavVendas.Visible)
-                    {
-                        AbrirNovaAbaCaixa();
+                    AbrirPrincipalPorCargo();
                     }
-                    else if (btnNavClientes.Visible)
-                    {
-                        AbrirModuloUnico(btnNavClientes, "financeiro", "Painel Financeiro", () => new FormFinanceiro());
-                    }
-                    else if (btnNavEstoque.Visible)
-                    {
-                        AbrirModuloUnico(btnNavEstoque, "estoque", "Gestão de Estoque", () => new formEstoque());
-                    }
-                }
                 else
                 {
                     MessageBox.Show("Não foi possível determinar o papel do usuário. O aplicativo será encerrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
