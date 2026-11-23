@@ -11,41 +11,97 @@ namespace ProjetoExtensionista2026_2.SQL
         private static readonly object _lock = new object();
         public MySqlConnection Conexao { get; private set; }
 
+        public static void ResetCache()
+        {
+            lock (_lock)
+            {
+                _cachedConnectionString = null;
+            }
+        }
+
         public static bool TestConnection()
         {
             try
             {
-                string envFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".env");
-                if (File.Exists(envFile))
-                {
-                    DotNetEnv.Env.Load(envFile);
-                }
-                else
-                {
-                    DotNetEnv.Env.TraversePath().Load();
-                }
-
-                var connString = Environment.GetEnvironmentVariable("MYSQL_CONNECTION");
-                if (string.IsNullOrWhiteSpace(connString))
-                    return false;
-
-                var builder = new MySqlConnectionStringBuilder(connString);
-                if (string.IsNullOrWhiteSpace(builder.Server))
-                    return false;
-
-                using (var conn = new MySqlConnection(builder.ConnectionString))
-                {
-                    conn.Open();
-                    conn.Close();
-                }
-
-                return true;
+                CarregarVariaveisAmbiente();
+                string connString = ObterConnectionStringMySql();
+                return TestarConnectionString(connString);
             }
             catch (Exception)
             {
                 return false;
             }
         }
+
+        public static bool TestConnection(string server, uint port, string user, string password, string database = "sistema")
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(server))
+                    return false;
+
+                var builder = new MySqlConnectionStringBuilder
+                {
+                    Server = server.Trim(),
+                    Port = port == 0 ? 3306 : port,
+                    UserID = user ?? string.Empty,
+                    Password = password ?? string.Empty,
+                    Database = string.IsNullOrWhiteSpace(database) ? "sistema" : database
+                };
+
+                return TestarConnectionString(builder.ConnectionString);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private static bool TestarConnectionString(string connString)
+        {
+            if (string.IsNullOrWhiteSpace(connString))
+                return false;
+
+            using (var conn = new MySqlConnection(connString))
+            {
+                conn.Open();
+                conn.Close();
+            }
+
+            return true;
+        }
+
+        public static DbConfig GetCurrentConfigOrFallback()
+        {
+            var jsonConfig = DbConfig.LoadFromJson();
+            if (jsonConfig != null && !string.IsNullOrWhiteSpace(jsonConfig.Server))
+                return jsonConfig;
+
+            try
+            {
+                CarregarVariaveisAmbiente();
+                var rawConn = Environment.GetEnvironmentVariable("MYSQL_CONNECTION");
+                if (!string.IsNullOrWhiteSpace(rawConn))
+                {
+                    var builder = new MySqlConnectionStringBuilder(rawConn);
+                    return new DbConfig
+                    {
+                        Server = string.IsNullOrWhiteSpace(builder.Server) ? "127.0.0.1" : builder.Server,
+                        Port = builder.Port == 0 ? 3306 : builder.Port,
+                        User = string.IsNullOrWhiteSpace(builder.UserID) ? "root" : builder.UserID,
+                        Password = builder.Password ?? string.Empty,
+                        Database = string.IsNullOrWhiteSpace(builder.Database) ? "sistema" : builder.Database
+                    };
+                }
+            }
+            catch
+            {
+                // Ignora erro de parse do .env e retorna valores padr√£o.
+            }
+
+            return new DbConfig();
+        }
+
         private static void CarregarVariaveisAmbiente()
         {
             string envFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".env");
@@ -58,15 +114,30 @@ namespace ProjetoExtensionista2026_2.SQL
                 DotNetEnv.Env.TraversePath().Load();
             }
         }
+
         private static string ObterConnectionStringMySql()
         {
+            var jsonConfig = DbConfig.LoadFromJson();
+            if (jsonConfig != null && !string.IsNullOrWhiteSpace(jsonConfig.Server))
+            {
+                var jsonBuilder = new MySqlConnectionStringBuilder
+                {
+                    Server = jsonConfig.Server.Trim(),
+                    Port = jsonConfig.Port == 0 ? 3306 : jsonConfig.Port,
+                    UserID = jsonConfig.User ?? string.Empty,
+                    Password = jsonConfig.Password ?? string.Empty,
+                    Database = string.IsNullOrWhiteSpace(jsonConfig.Database) ? "sistema" : jsonConfig.Database
+                };
+                return jsonBuilder.ConnectionString;
+            }
+
             var rawConn = Environment.GetEnvironmentVariable("MYSQL_CONNECTION");
             if (string.IsNullOrWhiteSpace(rawConn))
-                throw new InvalidOperationException("A vari·vel de ambiente MYSQL_CONNECTION n„o foi definida.");
+                throw new InvalidOperationException("A vari√°vel de ambiente MYSQL_CONNECTION n√£o foi definida.");
 
             var builder = new MySqlConnectionStringBuilder(rawConn);
             if (string.IsNullOrWhiteSpace(builder.Server))
-                throw new InvalidOperationException("A connection string MYSQL_CONNECTION n„o contÈm o servidor MySQL.");
+                throw new InvalidOperationException("A connection string MYSQL_CONNECTION n√£o cont√©m o servidor MySQL.");
             return builder.ConnectionString;
         }
 
@@ -74,9 +145,9 @@ namespace ProjetoExtensionista2026_2.SQL
         {
             IniciarConexao();
         }
+
         public void IniciarConexao()
         {
-
             if (string.IsNullOrEmpty(_cachedConnectionString))
             {
                 lock (_lock)
@@ -88,7 +159,6 @@ namespace ProjetoExtensionista2026_2.SQL
                     }
                 }
             }
-
 
             Conexao = new MySqlConnection(_cachedConnectionString);
             Conexao.Open();
@@ -102,6 +172,7 @@ namespace ProjetoExtensionista2026_2.SQL
                 Conexao.Dispose();
             }
         }
+
         public void Dispose()
         {
             FecharConexao();
