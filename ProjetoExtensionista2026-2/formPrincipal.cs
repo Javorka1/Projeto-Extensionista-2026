@@ -78,7 +78,7 @@ namespace ProjetoExtensionista2026_2
                     var rolesManager = new rolesClass();
                     rolesManager.RoleSidebar(this, role, nomeUsuario, LoginSQL.SessaoUsuario.Hash);
                     AbrirPrincipalPorCargo();
-                    }
+                }
                 else
                 {
                     MessageBox.Show("Não foi possível determinar o papel do usuário. O aplicativo será encerrado.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -228,9 +228,28 @@ namespace ProjetoExtensionista2026_2
             );
         }
 
+        private void AbrirPrincipalPorCargo()
+        {
+            string role = (LoginSQL.SessaoUsuario.Role ?? string.Empty).Trim().ToLowerInvariant();
+
+            switch (role)
+            {
+                case "admin":
+                case "monetary":
+                    AbrirModuloUnico(btnNavPrincipal, "financeiro", "Painel Financeiro", () => new FormFinanceiro());
+                    break;
+                case "seller":
+                    AbrirModuloUnico(btnNavPrincipal, "principal_vendedor", "Frente de Caixa", () => new formVenda());
+                    break;
+                case "stocker":
+                    AbrirModuloUnico(btnNavPrincipal, "estoque", "Gestão de Estoque", () => new formEstoque());
+                    break;
+            }
+        }
+
         private void btnNavPrincipal_Click(object sender, EventArgs e)
         {
-            AbrirModuloUnico(btnNavPrincipal, "principal", "Principal", () => new FormFinanceiro());
+            AbrirPrincipalPorCargo();
         }
 
         private void btnNavVendas_Click(object sender, EventArgs e)
