@@ -164,14 +164,14 @@ namespace ProjetoExtensionista2026_2
             var row = dataGridView2.Rows[e.RowIndex];
             var id = Convert.ToInt32(row.Cells["id"].Value);
             if (dataGridView2.Columns[e.ColumnIndex].Name == "edit")
-                EditarUsuario(id, Convert.ToString(row.Cells["username"].Value), Convert.ToString(row.Cells["role"].Value), Convert.ToBoolean(row.Cells["active"].Value));
+                EditarUsuario(id, Convert.ToString(row.Cells["username"].Value), Convert.ToString(row.Cells["role"].Value), Convert.ToBoolean(row.Cells["status"].Value), Convert.ToBoolean(row.Cells["active"].Value));
             else if (dataGridView2.Columns[e.ColumnIndex].Name == "delete")
                 ApagarUsuario(id, Convert.ToString(row.Cells["username"].Value));
         }
 
-        private void EditarUsuario(int id, string username, string role, bool active)
+        private void EditarUsuario(int id, string username, string role, bool status, bool active)
         {
-            using (var dialog = new UserEditDialog(username, role, active))
+            using (var dialog = new UserEditDialog(username, role, status, active))
             {
                 if (dialog.ShowDialog(this) != DialogResult.OK)
                     return;
@@ -181,10 +181,11 @@ namespace ProjetoExtensionista2026_2
                     connection.IniciarConexao();
                     using (var command = connection.Conexao.CreateCommand())
                     {
-                        command.CommandText = "UPDATE `Users` SET username = @username, role = @role, active = @active WHERE id = @id;";
+                        command.CommandText = "UPDATE `Users` SET username = @username, role = @role, status = @status, active = @active WHERE id = @id;";
                         command.Parameters.AddWithValue("id", id);
                         command.Parameters.AddWithValue("username", dialog.UsernameValue);
                         command.Parameters.AddWithValue("role", dialog.RoleValue);
+                        command.Parameters.AddWithValue("status", dialog.StatusValue);
                         command.Parameters.AddWithValue("active", dialog.ActiveValue);
                         command.ExecuteNonQuery();
                     }
@@ -216,33 +217,46 @@ namespace ProjetoExtensionista2026_2
         private sealed class UserEditDialog : Form
         {
             private readonly TextBox _username = new TextBox();
-            private readonly TextBox _role = new TextBox();
+            private readonly ComboBox _role = new ComboBox();
+            private readonly CheckBox _status = new CheckBox();
             private readonly CheckBox _active = new CheckBox();
 
             public string UsernameValue { get { return _username.Text.Trim(); } }
-            public string RoleValue { get { return _role.Text.Trim(); } }
+            public string RoleValue { get { return Convert.ToString(_role.SelectedItem); } }
+            public bool StatusValue { get { return _status.Checked; } }
             public bool ActiveValue { get { return _active.Checked; } }
 
-            public UserEditDialog(string username, string role, bool active)
+            public UserEditDialog(string username, string role, bool status, bool active)
             {
                 Text = "Editar usuário";
                 StartPosition = FormStartPosition.CenterParent;
                 FormBorderStyle = FormBorderStyle.FixedDialog;
                 MaximizeBox = false;
                 MinimizeBox = false;
-                ClientSize = new Size(330, 205);
+                ClientSize = new Size(330, 230);
 
                 Controls.Add(new Label { Text = "Nome de usuário", Location = new Point(20, 18), AutoSize = true });
                 _username.Location = new Point(20, 40); _username.Width = 285; _username.Text = username;
                 Controls.Add(_username);
                 Controls.Add(new Label { Text = "Cargo", Location = new Point(20, 75), AutoSize = true });
-                _role.Location = new Point(20, 97); _role.Width = 285; _role.Text = role;
+                _role.Location = new Point(20, 97); _role.Width = 285; _role.DropDownStyle = ComboBoxStyle.DropDownList;
+                _role.Items.AddRange(new object[] { "admin", "seller", "stocker", "monetary", "common" });
+                foreach (var item in _role.Items)
+                {
+                    if (string.Equals(Convert.ToString(item), role, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _role.SelectedItem = item;
+                        break;
+                    }
+                }
                 Controls.Add(_role);
-                _active.Text = "Usuário ativo"; _active.Location = new Point(20, 132); _active.Checked = active;
+                _status.Text = "Conta habilitada (status)"; _status.Location = new Point(20, 132); _status.Checked = status;
+                Controls.Add(_status);
+                _active.Text = "Usuário aprovado (active)"; _active.Location = new Point(20, 156); _active.Checked = active;
                 Controls.Add(_active);
 
-                var save = new Button { Text = "Salvar", DialogResult = DialogResult.OK, Location = new Point(145, 165), Width = 75 };
-                var cancel = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Location = new Point(230, 165), Width = 75 };
+                var save = new Button { Text = "Salvar", DialogResult = DialogResult.OK, Location = new Point(145, 190), Width = 75 };
+                var cancel = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Location = new Point(230, 190), Width = 75 };
                 save.Click += delegate { if (string.IsNullOrWhiteSpace(UsernameValue) || string.IsNullOrWhiteSpace(RoleValue)) { MessageBox.Show("Nome e cargo são obrigatórios.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning); DialogResult = DialogResult.None; } };
                 Controls.Add(save); Controls.Add(cancel);
                 AcceptButton = save; CancelButton = cancel;

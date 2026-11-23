@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `Users`(
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	role ENUM('admin', 'seller', 'stocker', 'monetary', 'common') NOT NULL DEFAULT 'common',
 	status BOOLEAN NOT NULL DEFAULT TRUE,
-	active BOOLEAN NOT NULL DEFAULT TRUE,
+	active BOOLEAN NOT NULL DEFAULT FALSE,
 	CONSTRAINT `Users_pkey` PRIMARY KEY (id),
 	CONSTRAINT `Users_name_key` UNIQUE (username)
 );

@@ -11,6 +11,15 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
 {
     internal class LoginSQL : IDisposable
     {
+        public enum ResultadoLogin
+        {
+            CredenciaisInvalidas,
+            Autenticado,
+            AguardandoAtivacao,
+            ContaDesativada,
+            Erro
+        }
+
         public static class SessaoUsuario
         {
             public static string Role { get; set; } = string.Empty;
@@ -72,7 +81,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
         }
 
 
-        public int VerificarUsuario(string username, string passwordHash)
+        public ResultadoLogin VerificarUsuario(string username, string passwordHash)
         {
             if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(passwordHash))
             {
@@ -83,17 +92,29 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                     {
                         using (var cmd = conn.Conexao.CreateCommand())
                         {
-                            cmd.CommandText = "SELECT count(*) FROM `Users` WHERE username = @u AND hash = @p;";
+                            cmd.CommandText = "SELECT status, active FROM `Users` WHERE username = @u AND hash = @p;";
                             cmd.Parameters.AddWithValue("u", username);
                             cmd.Parameters.AddWithValue("p", passwordHash);
-                            int count = Convert.ToInt32(cmd.ExecuteScalar());
-                            return count;
+                            using (var reader = cmd.ExecuteReader())
+                            {
+                                if (!reader.Read())
+                                    return ResultadoLogin.CredenciaisInvalidas;
+
+                                bool status = !reader.IsDBNull(reader.GetOrdinal("status")) && Convert.ToBoolean(reader["status"]);
+                                bool active = !reader.IsDBNull(reader.GetOrdinal("active")) && Convert.ToBoolean(reader["active"]);
+
+                                if (!status)
+                                    return ResultadoLogin.ContaDesativada;
+                                if (!active)
+                                    return ResultadoLogin.AguardandoAtivacao;
+                                return ResultadoLogin.Autenticado;
+                            }
                         }
                     }
                     catch (Exception ex)
                     {
                         MessageBox.Show(ex.Message, "Erro ao verificar usuário", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return -1;
+                        return ResultadoLogin.Erro;
                     }
                     finally
                     {
@@ -104,7 +125,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
             else
             {
                 MessageBox.Show("Nome de usuário ou senha inválidos.", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return 0;
+                return ResultadoLogin.CredenciaisInvalidas;
             }
         }
 
@@ -119,7 +140,7 @@ namespace ProjetoExtensionista2026_2.SQL.SQL_functions
                     {
                         using (var cmd = conn.Conexao.CreateCommand())
                         {
-                            cmd.CommandText = "INSERT INTO `Users` (username, hash) VALUES (@u, @p);";
+                            cmd.CommandText = "INSERT INTO `Users` (username, hash, status, active) VALUES (@u, @p, TRUE, FALSE);";
                             cmd.Parameters.AddWithValue("u", username);
                             cmd.Parameters.AddWithValue("p", passwordHash);
                             cmd.ExecuteNonQuery();

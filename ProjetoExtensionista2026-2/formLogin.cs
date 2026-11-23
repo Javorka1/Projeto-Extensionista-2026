@@ -61,8 +61,8 @@ namespace ProjetoExtensionista2026_2
             using (LoginSQL loginSQL = new LoginSQL())
             {
                 string hash = loginSQL.HashificarSenha(password, out _);
-                int count = loginSQL.VerificarUsuario(username, hash);
-                bool ver = count == 1;
+                LoginSQL.ResultadoLogin resultado = loginSQL.VerificarUsuario(username, hash);
+                bool ver = resultado == LoginSQL.ResultadoLogin.Autenticado;
 
                 if (ver)
                 {
@@ -90,7 +90,13 @@ namespace ProjetoExtensionista2026_2
                         lockIcon.Image = Properties.Resources.cadeado;
                     }
                     catch { }
-                    MessageBox.Show("Nome de usuário ou senha inválidos.", "Erro de Autenticação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    string mensagem = "Nome de usuário ou senha inválidos.";
+                    if (resultado == LoginSQL.ResultadoLogin.AguardandoAtivacao)
+                        mensagem = "Sua conta ainda aguarda a ativação do administrador.";
+                    else if (resultado == LoginSQL.ResultadoLogin.ContaDesativada)
+                        mensagem = "Esta conta foi desativada. Procure o administrador.";
+
+                    MessageBox.Show(mensagem, "Erro de Autenticação", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
