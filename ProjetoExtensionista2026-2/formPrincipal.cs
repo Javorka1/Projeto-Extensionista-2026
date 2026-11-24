@@ -77,7 +77,7 @@ namespace ProjetoExtensionista2026_2
                     ConfigurarCardUsuario(nomeUsuario, role);
                     var rolesManager = new rolesClass();
                     rolesManager.RoleSidebar(this, role, nomeUsuario, LoginSQL.SessaoUsuario.Hash);
-                    AbrirPrincipalPorCargo();
+                    AbrirModuloUnico(btnNavPrincipal, "principal", "Principal", () => new FormInicio(AbrirModuloPorChave));
                 }
                 else
                 {
@@ -228,28 +228,37 @@ namespace ProjetoExtensionista2026_2
             );
         }
 
-        private void AbrirPrincipalPorCargo()
-        {
-            string role = (LoginSQL.SessaoUsuario.Role ?? string.Empty).Trim().ToLowerInvariant();
-
-            switch (role)
-            {
-                case "admin":
-                case "monetary":
-                    AbrirModuloUnico(btnNavPrincipal, "financeiro", "Painel Financeiro", () => new FormFinanceiro());
-                    break;
-                case "seller":
-                    AbrirModuloUnico(btnNavPrincipal, "principal_vendedor", "Frente de Caixa", () => new formVenda());
-                    break;
-                case "stocker":
-                    AbrirModuloUnico(btnNavPrincipal, "estoque", "Gestão de Estoque", () => new formEstoque());
-                    break;
-            }
-        }
-
         private void btnNavPrincipal_Click(object sender, EventArgs e)
         {
-            AbrirPrincipalPorCargo();
+            AbrirModuloUnico(btnNavPrincipal, "principal", "Principal", () => new FormInicio(AbrirModuloPorChave));
+        }
+
+        private void AbrirModuloPorChave(string chave)
+        {
+            switch (chave)
+            {
+                case "vendas":
+                    if (btnNavVendas.Visible) btnNavVendas.PerformClick();
+                    break;
+                case "registro_vendas":
+                    if (btnNavRegistroVendas.Visible) btnNavRegistroVendas.PerformClick();
+                    break;
+                case "estoque":
+                    if (btnNavEstoque.Visible) btnNavEstoque.PerformClick();
+                    break;
+                case "clientes":
+                    if (btnNavClientes.Visible) btnNavClientes.PerformClick();
+                    break;
+                case "financeiro":
+                    if (btnNavFinanceiro.Visible) btnNavFinanceiro.PerformClick();
+                    break;
+                case "admin":
+                    if (btnNavAdmin.Visible) btnNavAdmin.PerformClick();
+                    break;
+                case "config":
+                    if (btnNavConfig.Visible) btnNavConfig.PerformClick();
+                    break;
+            }
         }
 
         private void btnNavVendas_Click(object sender, EventArgs e)

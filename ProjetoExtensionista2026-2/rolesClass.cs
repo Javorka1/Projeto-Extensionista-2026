@@ -11,7 +11,7 @@ namespace ProjetoExtensionista2026_2
             string r = (role ?? "").ToLowerInvariant();
 
 
-            formPrincipal.btnNavPrincipal.Visible = r == "admin" || r == "seller" || r == "stocker" || r == "monetary";
+            formPrincipal.btnNavPrincipal.Visible = true;
             formPrincipal.btnNavConfig.Visible = true;
             formPrincipal.btnSair.Visible = true;
 
@@ -70,8 +70,8 @@ namespace ProjetoExtensionista2026_2
                 formPrincipal.btnNavVendas.Visible = false;
                 formPrincipal.btnNavRegistroVendas.Visible = true;
                 formPrincipal.btnNavEstoque.Visible = false;
-                formPrincipal.btnNavClientes.Visible = false;
-                formPrincipal.btnNavFinanceiro.Visible = true;
+                formPrincipal.btnNavClientes.Visible = true;
+                formPrincipal.btnNavFinanceiro.Visible = false;
                 formPrincipal.btnNavAdmin.Visible = false;
 
                 formPrincipal.listBoxSidebar.Items.Add("Principal");
